@@ -8,19 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="graduation-cap-solid.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartUp.Core\SmartUp.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="graduation-cap-solid.png" />
   </ItemGroup>
 
 </Project>

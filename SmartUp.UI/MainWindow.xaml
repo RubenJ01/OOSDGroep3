@@ -28,7 +28,26 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Text="Cijfers" FontSize="50" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <StackPanel Grid.Row="1"></StackPanel>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Grid.Row="1">
+                    <Grid Height="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Databases" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" FontWeight="SemiBold"/>
+                        <TextBlock Text="Voorlopig" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center"  Grid.Column="0" Grid.Row="1"/>
+                        <TextBlock Text="3 EC" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="0"/>
+                        <TextBlock Text="6,8" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="0" FontWeight="SemiBold"/>
+                        <TextBlock Text="12-02-2023" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center"  Grid.Column="2" Grid.Row="1"/>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
