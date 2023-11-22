@@ -261,3 +261,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Ignore all YAML files
+*.yaml
+*.yml
+
+# Ignore all .csproj files
+*.csproj
