@@ -2,10 +2,10 @@
 {
     public class StudentGradesTests
     {
-        [Test]
-        public void ()
-        {
-            Assert.Pass();
-        }
+        //[Test]
+        //public void ()
+        //{
+        //    Assert.Pass();
+        //}
     }
 }

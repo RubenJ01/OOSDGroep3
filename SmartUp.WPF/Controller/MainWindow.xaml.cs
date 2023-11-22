@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Printing;
 using System.Windows;
-using System.Windows.Media.Media3D;
 
 namespace SmartUp.UI
 {

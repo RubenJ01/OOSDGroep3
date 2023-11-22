@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3gIdkUig0UBV4P99+g3OgAsmfVsxSof2b+bbNktrCUurg7H3qj2/wss5qIk+zjW1raSfQWrhYgcgrOT1qjB3kg==",
+  "dgSpecHash": "cFQqPYmltUQM/FLLuod/SF6O/ytbcy9jY5JB1AdRPi8pP8l2GCXwYj6DR2rPk91ICnTbIWUtoDlOzGXAm7UeOw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
+  "projectFilePath": "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\abeam\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\abeam\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

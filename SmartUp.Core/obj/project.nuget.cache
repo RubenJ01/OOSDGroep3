@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Tr7gXlYgIDVnjiBC5N2X7+5YgME4vfY9S5Y0ViE7hbrqIkDWSL7aeQVC0+axr8YUj00Y0hh+SXFOZwgdRm0DdA==",
+  "dgSpecHash": "ZtducNBbHz2XFtH9EUw9eA5W5h23obKGV3O2LhUbtKMbLVVk+LmUbP9SFgQt21is9XFtjI7MdLaH6FZkN/B0pg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\SmartUp.Core\\SmartUp.Core.csproj",
+  "projectFilePath": "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\SmartUp.Core\\SmartUp.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\abeam\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\abeam\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

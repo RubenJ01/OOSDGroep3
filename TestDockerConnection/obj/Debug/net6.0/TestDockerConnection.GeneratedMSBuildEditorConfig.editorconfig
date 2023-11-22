@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TestDockerConnection
-build_property.ProjectDir = C:\Users\abeam\Source\Repos\OOSDGroep3\SmartUp\TestDockerConnection\
+build_property.ProjectDir = C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\

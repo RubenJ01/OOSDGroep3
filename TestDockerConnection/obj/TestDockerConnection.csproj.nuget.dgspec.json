@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj": {}
+    "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj": {}
   },
   "projects": {
-    "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj": {
+    "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
+        "projectUniqueName": "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
         "projectName": "TestDockerConnection",
-        "projectPath": "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
+        "projectPath": "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\TestDockerConnection.csproj",
         "packagesPath": "C:\\Users\\abeam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\abeam\\Source\\Repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\obj\\",
+        "outputPath": "C:\\Users\\abeam\\source\\repos\\OOSDGroep3\\SmartUp\\TestDockerConnection\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
