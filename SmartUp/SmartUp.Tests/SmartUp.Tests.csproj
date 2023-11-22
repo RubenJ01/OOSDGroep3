@@ -17,4 +17,9 @@
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartUp.Core\SmartUp.Core.csproj" />
+    <ProjectReference Include="..\SmartUp.DataAccess.SQLServer\SmartUp.DataAccess.SQLServer.csproj" />
+  </ItemGroup>
+
 </Project>
