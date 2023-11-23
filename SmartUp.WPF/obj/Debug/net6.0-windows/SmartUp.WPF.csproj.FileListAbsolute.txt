@@ -45,11 +45,7 @@ C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-wind
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\SmartUp.WPF.genruntimeconfig.cache
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\ref\SmartUp.WPF.dll
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\MainWindow.g.cs
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\Page1.g.cs
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\Page2.g.cs
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\MainWindow.baml
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\Page1.baml
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\Page2.baml
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\testhost.dll
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\SmartUp.Tests.deps.json
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\SmartUp.Tests.runtimeconfig.json
@@ -142,3 +138,7 @@ C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-wind
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\SmartUp.Tests.dll
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\SmartUp.DataAccess.SQLServer.pdb
 C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\bin\Debug\net6.0-windows\SmartUp.Tests.pdb
+C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\GradeStudent.g.cs
+C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\SemesterStudent.g.cs
+C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\GradeStudent.baml
+C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\SmartUp.WPF\obj\Debug\net6.0-windows\View\SemesterStudent.baml

@@ -15,11 +15,11 @@ namespace SmartUp.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ContentArea.Navigate(new Uri("./View/Page1.xaml", UriKind.Relative));
+            ContentArea.Navigate(new Uri("./View/GradeStudent.xaml", UriKind.Relative));
         }
         private void Button_Click1(object sender, RoutedEventArgs e)
         {
-            ContentArea.Navigate(new Uri("./View/Page2.xaml", UriKind.Relative));
+            ContentArea.Navigate(new Uri("./View/SemesterStudent.xaml", UriKind.Relative));
         }
     }
 }

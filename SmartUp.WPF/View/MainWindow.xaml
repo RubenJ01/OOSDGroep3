@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartUp.UI"
         mc:Ignorable="d"
-        Title="SmartUp" Height="1080" Width="1920"
+        Title="SmartUp"  
+        Width="{x:Static SystemParameters.PrimaryScreenWidth}"    
+        Height="{x:Static SystemParameters.PrimaryScreenHeight}"  
         WindowState="Maximized">
     <Grid Background="#E2E2E2">
         <Grid.ColumnDefinitions>
