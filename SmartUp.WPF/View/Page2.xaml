@@ -5,10 +5,56 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SmartUp.UI"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="1080" d:DesignWidth="1880"
       Title="Page2">
 
-    <Grid>
-        <TextBlock Text="Semesters" FontSize="90"></TextBlock>
+    <Grid Background="#E2E2E2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Bottom"/>
+        <TextBlock Text="Semesters" FontSize="50" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left"/>
+            <ScrollViewer Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border BorderThickness="1" Grid.Row="0" Grid.Column="0" CornerRadius="20" Background="Gray" Margin="5">
+                        <TextBlock Text="OOSDD" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+                    
+                </Grid>
+            </ScrollViewer>
+            <ScrollViewer Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Semester titel info" FontSize="30" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0"/>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1">Lorem ipsum dolor sit amet. Ut quibusdam perferendis et saepe quis et laboriosam recusandae et fugit deleniti. Qui sunt sequi sed dolore sequi quo iusto excepturi non reprehenderit aliquam At laborum dolorum et internos voluptate sed vitae quisquam? <LineBreak/><LineBreak/> Ut reiciendis velit ut perferendis consequatur in eveniet maiores et galisum autem vel laudantium libero.
+Et nemo Quis est expedita illo.</TextBlock>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Page>
