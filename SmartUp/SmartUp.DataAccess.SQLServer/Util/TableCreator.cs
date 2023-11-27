@@ -198,10 +198,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             
         public static void FillTables()
         {
-            CourseDao.GetInstance().FillTable();
-            TeacherDao.GetInstance().FillTable();
-            SemesterDao.GetInstance().FillTable();
-            ClassDao.GetInstance().FillTable();
+            //CourseDao.GetInstance().FillTable();
+            //TeacherDao.GetInstance().FillTable();
+            //SemesterDao.GetInstance().FillTable();
+            //ClassDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)

@@ -14,7 +14,7 @@ namespace SmartUp.DataAccess.SQLServer.Util
                 string database = databaseConfig.Database;
                 string username = databaseConfig.User;
                 string password = databaseConfig.Password;
-                string connectionUrl = $"Data Source={server};Initial Catalog={database};Integrated Security=True;";
+                string connectionUrl = $"Data Source={server};Initial Catalog={database};Integrated Security=True; TrustServerCertificate=True;";
 
                 return new SqlConnection(connectionUrl);
             }

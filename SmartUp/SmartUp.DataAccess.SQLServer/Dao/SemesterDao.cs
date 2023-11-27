@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -112,6 +114,38 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
             return abbreviations;
+        }
+
+        public List<Semester> GetAllSemesters()
+        {
+            string query = "SELECT * FROM semester";
+            List<Semester> semesters = new List<Semester>();
+            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string name = reader["name"].ToString();
+                                string abbreviation = reader["abbreviation"].ToString();
+                                string description = reader["description"].ToString();
+                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                                semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return semesters;
         }
     }
 }
