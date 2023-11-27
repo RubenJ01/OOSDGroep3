@@ -1,5 +1,0 @@
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\obj\Debug\net6.0\TestDockerConnection.csproj.AssemblyReference.cache
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\obj\Debug\net6.0\TestDockerConnection.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\obj\Debug\net6.0\TestDockerConnection.AssemblyInfoInputs.cache
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\obj\Debug\net6.0\TestDockerConnection.AssemblyInfo.cs
-C:\Users\abeam\source\repos\OOSDGroep3\SmartUp\TestDockerConnection\obj\Debug\net6.0\TestDockerConnection.csproj.CoreCompileInputs.cache
