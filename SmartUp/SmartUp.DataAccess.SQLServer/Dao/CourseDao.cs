@@ -102,5 +102,35 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
         }
+
+        public List<String> GetAllCourseNames()
+        {
+            List<String> courseNames = new List<string>();
+            String query = "SELECT [name] FROM course;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string courseName = reader["name"].ToString();
+                                courseNames.Add(courseName);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return courseNames;
+        }
     }
+    
 }

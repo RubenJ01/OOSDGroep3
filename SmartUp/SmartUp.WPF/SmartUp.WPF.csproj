@@ -25,4 +25,8 @@
     <Resource Include="Img\SemesterIcon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+
 </Project>

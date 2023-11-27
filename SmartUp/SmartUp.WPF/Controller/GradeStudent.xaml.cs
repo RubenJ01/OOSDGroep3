@@ -1,8 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using SmartUp.DataAccess.SQLServer.DBO.StudentGrade;
-using SmartUp.DataAccess.SQLServer.Util;
-using SmartUp.WPF.Model;
-using System;
+﻿using SmartUp.DataAccess.SQLServer.Dao;
+using SmartUp.DataAccess.SQLServer.Model;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,25 +11,24 @@ namespace SmartUp.UI
         public GradeStudent()
         {
             InitializeComponent();
-            int studentID = 1;
-            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            string studentID = "S000189";
+            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(studentID))
             {
-                string sql = $"SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits FROM grade JOIN course ON course.name=grade.courseName WHERE grade.studentId = {studentID}";
-                GradesModel.grades = StudentGradeList.GetStudentGrades(connection, sql);
-                foreach (GradeStudentModel grade in GradesModel.grades)
-                {
-                    AddGradeView(grade);
-                }
+                AddGradeView(grade);
             }
+          
         }
-        public void AddGradeView(GradeStudentModel model)
+        public void AddGradeView(Grade model)
         {
             Debug.WriteLine("addGradeView");
             Grid grid = new Grid();
-            grid.Height = 100;
+            grid.Height = 120;
             ColumnDefinition colDef1 = new ColumnDefinition();
             ColumnDefinition colDef2 = new ColumnDefinition();
             ColumnDefinition colDef3 = new ColumnDefinition();
+            colDef1.Width = new GridLength(2, GridUnitType.Star);
+            colDef2.Width = new GridLength(1, GridUnitType.Star);
+            colDef3.Width = new GridLength(1, GridUnitType.Star);
             grid.ColumnDefinitions.Add(colDef1);
             grid.ColumnDefinitions.Add(colDef2);
             grid.ColumnDefinitions.Add(colDef3);
@@ -47,6 +43,7 @@ namespace SmartUp.UI
             Course.HorizontalAlignment = HorizontalAlignment.Center;
             Course.VerticalAlignment = VerticalAlignment.Center;
             Course.FontWeight = FontWeights.SemiBold;
+            Course.TextWrapping = TextWrapping.Wrap;
             Grid.SetRow(Course, 0);
             Grid.SetColumn(Course, 0);
 
@@ -76,7 +73,7 @@ namespace SmartUp.UI
             Grid.SetRow(credits, 0);
 
             TextBlock grade = new TextBlock();
-            grade.Text = $"{model.Grade}";
+            grade.Text = $"{model.GradeNumber}";
             grade.FontSize = 20;
             grade.HorizontalAlignment = HorizontalAlignment.Center;
             grade.VerticalAlignment = VerticalAlignment.Center;

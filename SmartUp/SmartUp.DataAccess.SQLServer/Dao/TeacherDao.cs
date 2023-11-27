@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.Core.Util;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -69,5 +71,35 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
         }
+
+        public List<String> GetAllMentorIds()
+        {
+            List<String> mentorIds = new List<string>();
+            String query = "SELECT id FROM teacher WHERE isMentor = 1";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string id = reader["id"].ToString();
+                                mentorIds.Add(id);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return mentorIds;
+        }
+        
     }
 }

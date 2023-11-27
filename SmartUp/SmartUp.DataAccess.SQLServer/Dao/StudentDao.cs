@@ -28,26 +28,39 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 con.Open();
                 Random random = new Random();
-                for (int i = 0; i < 20; i++)
+                int totalStudents = 1;
+                List<String> classNames = ClassDao.GetInstance().GetClassNames();
+                List<String> mentors = TeacherDao.GetInstance().GetAllMentorIds();
+                foreach (string className in classNames)
                 {
-                    string firstName = NameGenerator.GenerateRandomName();
-                    string infix = "";
-                    if (random.Next(5) == 3)
+                    int studentsInClass = random.Next(20, 30);
+                    for (int i = 0; i < studentsInClass; i++)
                     {
-                        infix = NameGenerator.GenerateRandomInfix();
-                    }
-                    string lastName = NameGenerator.GenerateRandomName();
-                    string studentId = $"S{i.ToString($"D{6}")}";
+                        string firstName = NameGenerator.GenerateRandomName();
+                        string infix = "";
+                        if (random.Next(5) == 3)
+                        {
+                            infix = NameGenerator.GenerateRandomInfix();
+                        }
+                        string lastName = NameGenerator.GenerateRandomName();
+                        string studentId = $"S{totalStudents.ToString($"D{6}")}";
+                        string mentorId = mentors[random.Next(mentors.Count)];
+                        string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits, totalCreditsFromP, class) " +
+                                             "VALUES (@Id, @FirstName, @Infix, @LastName, @Mentor, @TotalCredits, @TotalCreditsFromP, @Class);";
 
-                    // Assuming you have a teachers table with columns: teacherId, firstName, infix, lastName, isMentor
-                    string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits, totalCreditsFromP, class) " +
-                                         "VALUES (@TeacherId, @FirstName, @Infix, @LastName, @IsMentor);";
-
-                    using (SqlCommand command = new SqlCommand(insertQuery, con))
-                    {
-                        // command.Parameters.AddWithValue("@TeacherId", teacherId);
-
-                        command.ExecuteNonQuery();
+                        using (SqlCommand command = new SqlCommand(insertQuery, con))
+                        {
+                            command.Parameters.AddWithValue("@Id", studentId);
+                            command.Parameters.AddWithValue("@FirstName", firstName);
+                            command.Parameters.AddWithValue("@Infix", infix);
+                            command.Parameters.AddWithValue("@LastName", lastName);
+                            command.Parameters.AddWithValue("@Mentor", mentorId);
+                            command.Parameters.AddWithValue("@TotalCredits", 0);
+                            command.Parameters.AddWithValue("@TotalCreditsFromP", 0);
+                            command.Parameters.AddWithValue("@Class", className);
+                            command.ExecuteNonQuery();
+                        }
+                        totalStudents++;
                     }
                 }
             }
@@ -65,5 +78,33 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         }
 
 
+        public List<String> GetAllStudentIds()
+        {
+            List<String> studentIds = new List<string>();
+            String query = "SELECT id FROM student;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string id = reader["id"].ToString();
+                                studentIds.Add(id);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return studentIds;
+        }
     }
 }

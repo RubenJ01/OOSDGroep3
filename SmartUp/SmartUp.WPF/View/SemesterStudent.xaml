@@ -40,8 +40,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                <Button Content="Inschrijven" Background="#b3b3b3" Margin="20" Grid.Column="2"/>
-                <Button Content="Uitschrijven" Background="#b3b3b3" Margin="20" Grid.Column="1"/>
+                <!--<Button Content="Inschrijven" Background="#b3b3b3" Margin="20" Grid.Column="2"/>-->
+                <!--<Button Content="Uitschrijven" Background="#b3b3b3" Margin="20" Grid.Column="1"/>-->
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Column="1">

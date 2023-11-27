@@ -51,7 +51,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        private List<String> GetClassNames()
+        public List<String> GetClassNames()
         {
             List<String> semesters = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
             Random random = new Random();
