@@ -1,6 +1,4 @@
-﻿using SmartUp.Core.Util;
-
-namespace SmartUp.DataAccess.SQLServer
+﻿namespace SmartUp.DataAccess.SQLServer
 {
     public class Config
     {

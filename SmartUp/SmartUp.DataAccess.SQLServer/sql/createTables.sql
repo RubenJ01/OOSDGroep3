@@ -7,23 +7,12 @@ BEGIN
 	);
 END;
 
-IF OBJECT_ID('upcomingExam', 'U') IS NULL
-BEGIN
-	CREATE TABLE upcomingExam (
-		studentId varchar(32),
-		courseName varchar(32),
-		[date] DATETIME NOT NULL,
-		PRIMARY KEY (studentId, courseName),
-		FOREIGN KEY (courseName) REFERENCES course([name])
-	);
-END;
-
 IF OBJECT_ID('teacher', 'U') IS NULL
 BEGIN
 	CREATE TABLE teacher (
 		id varchar(32),
-		surname varchar(16) NOT NULL,
-		lastname varchar(16) NOT NULL,
+		firstName varchar(16) NOT NULL,
+		lastName varchar(16) NOT NULL,
 		infix varchar(5),
 		isMentor bit NOT NULL DEFAULT 0,
 		PRIMARY KEY (id)
@@ -34,8 +23,8 @@ IF OBJECT_ID('student', 'U') IS NULL
 BEGIN
     CREATE TABLE student (
         id varchar(32),
-        surname varchar(16) NOT NULL,
-        lastname varchar(16) NOT NULL,
+        firstName varchar(16) NOT NULL,
+        lastName varchar(16) NOT NULL,
         infix varchar(5),
         mentor varchar(32),
         totalCredits int,
@@ -46,13 +35,25 @@ BEGIN
     );
 END;
 
+IF OBJECT_ID('upcomingExam', 'U') IS NULL
+BEGIN
+	CREATE TABLE upcomingExam (
+		studentId varchar(32),
+		courseName varchar(32),
+		[date] DATETIME NOT NULL,
+		PRIMARY KEY (studentId, courseName),
+		FOREIGN KEY (courseName) REFERENCES course([name]),
+		FOREIGN KEY (studentId) REFERENCES student([name])
+	);
+END;
+
 IF OBJECT_ID('grade', 'U') IS NULL
 BEGIN
     CREATE TABLE grade (
         studentId varchar(32),
         courseName varchar(32),
         attempt int,
-        grade int NOT NULL,
+        grade decimal(3, 1) NOT NULL,
         isDefinitive bit NOT NULL,
         [date] DATETIME NOT NULL,
         PRIMARY KEY (studentId, courseName, attempt),
