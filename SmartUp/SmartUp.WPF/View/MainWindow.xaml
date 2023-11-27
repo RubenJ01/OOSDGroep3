@@ -20,12 +20,12 @@
         <StackPanel Grid.Column="0" Background="#FF7F8FAF">
             <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click">
                 <Button.Content>
-                    <Image Source="C:\Users\joell\OneDrive - Windesheim Office365\Leerjaar 2\KBS\OOSDGroep3-SemesterLijstSetup\SmartUp.WPF\Img\GradeIcon.png" Width="100" Height="100"/>
+                    <Image x:Name="ImgGrade" Source="..\Img\GradeIcon.png" Width="100" Height="100"/>
                 </Button.Content>
             </Button>
             <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click1">
                 <Button.Content>
-                    <Image Source="C:\Users\joell\OneDrive - Windesheim Office365\Leerjaar 2\KBS\OOSDGroep3-SemesterLijstSetup\SmartUp.WPF\Img\SemesterIcon.png" Width="120" Height="120"/>
+                    <Image x:Name="ImgSemester" Source="..\Img\SemesterIcon.png" Width="120" Height="120"/>
                 </Button.Content>
             </Button>
         </StackPanel>

@@ -8,12 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Img\GradeIcon.png" />
+    <None Remove="Img\SemesterIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SmartUp.Core\SmartUp.Core.csproj" />
     <ProjectReference Include="..\SmartUp.DataAccess.SQLServer\SmartUp.DataAccess.SQLServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Img\GradeIcon.png" />
+    <Resource Include="Img\SemesterIcon.png" />
   </ItemGroup>
 
 </Project>
