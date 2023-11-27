@@ -17,12 +17,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartUp.UI
 {
-    /// <summary>
-    /// Interaction logic for Page2.xaml
-    /// </summary>
-    public partial class Page2 : Page
+    public partial class SemesterStudent : Page
     {
-        public Page2()
+        public SemesterStudent()
         {
             InitializeComponent();
             AddSemesterBlock("OOSDD");

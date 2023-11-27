@@ -3,9 +3,6 @@ using System.Windows;
 
 namespace SmartUp.UI
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -17,6 +14,7 @@ namespace SmartUp.UI
         {
             ContentArea.Navigate(new Uri("./View/GradeStudent.xaml", UriKind.Relative));
         }
+
         private void Button_Click1(object sender, RoutedEventArgs e)
         {
             ContentArea.Navigate(new Uri("./View/SemesterStudent.xaml", UriKind.Relative));

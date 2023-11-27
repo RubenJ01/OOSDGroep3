@@ -8,13 +8,12 @@ using System.Windows.Controls;
 
 namespace SmartUp.UI
 {
-    public partial class Page1 : Page
+    public partial class GradeStudent : Page
     {
-        public Page1()
+        public GradeStudent()
         {
             InitializeComponent();
             int studentID = 1;
-            // sql -> addGridView
             string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\abeam\\OneDrive\\Documents\\local.SmartUpDB.mdf;Integrated Security=True;Connect Timeout=30";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
