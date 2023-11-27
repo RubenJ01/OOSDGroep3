@@ -18,8 +18,16 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Background="#FF7F8FAF">
-            <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" Content="Cijfers" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click"/>
-            <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" Content="Semester" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click1"/>
+            <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click">
+                <Button.Content>
+                    <Image x:Name="ImgGrade" Source="..\Img\GradeIcon.png" Width="100" Height="100"/>
+                </Button.Content>
+            </Button>
+            <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click1">
+                <Button.Content>
+                    <Image x:Name="ImgSemester" Source="..\Img\SemesterIcon.png" Width="120" Height="120"/>
+                </Button.Content>
+            </Button>
         </StackPanel>
         <Frame Grid.Column="1" x:Name="ContentArea" NavigationUIVisibility="Hidden"/>
     </Grid>

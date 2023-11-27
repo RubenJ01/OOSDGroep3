@@ -10,8 +10,8 @@
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="YamlDotNet" Version="13.7.1" />
-  </ItemGroup>
-
+    <None Remove="Img\GradeIcon.png" />
+    <None Remove="Img\SemesterIcon.png" />
   <ItemGroup>
     <ProjectReference Include="..\SmartUp.Core\SmartUp.Core.csproj" />
     <ProjectReference Include="..\SmartUp.DataAccess.SQLServer\SmartUp.DataAccess.SQLServer.csproj" />
@@ -19,6 +19,11 @@
 
   <ItemGroup>
     <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Img\GradeIcon.png" />
+    <Resource Include="Img\SemesterIcon.png" />
   </ItemGroup>
 
 </Project>
