@@ -11,7 +11,6 @@ namespace SmartUp.UI
         public MainWindow()
         {
             InitializeComponent();
-            ContentArea.Navigate(new Uri("./View/GradeUpdateScreen.xaml", UriKind.Relative));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
