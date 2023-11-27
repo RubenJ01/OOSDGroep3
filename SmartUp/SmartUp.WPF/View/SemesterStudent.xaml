@@ -1,0 +1,60 @@
+﻿<Page x:Class="SmartUp.UI.Page2"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartUp.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="{x:Static SystemParameters.PrimaryScreenHeight}"   
+      d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}"  
+      Title="Page2">
+
+    <Grid Background="#E2E2E2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Bottom"/>
+        <TextBlock Text="Semesters" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0">
+                    <WrapPanel Orientation="Horizontal" x:Name="SemesterWrap" />
+                </ScrollViewer>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                <Button Content="Inschrijven" Background="#b3b3b3" Margin="20" Grid.Column="2"/>
+                <Button Content="Uitschrijven" Background="#b3b3b3" Margin="20" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+            <ScrollViewer Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Semester titel info" FontSize="30" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0"/>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1">Lorem ipsum dolor sit amet. Ut quibusdam perferendis et saepe quis et laboriosam recusandae et fugit deleniti. Qui sunt sequi sed dolore sequi quo iusto excepturi non reprehenderit aliquam At laborum dolorum et internos voluptate sed vitae quisquam? <LineBreak/><LineBreak/> Ut reiciendis velit ut perferendis consequatur in eveniet maiores et galisum autem vel laudantium libero.
+Et nemo Quis est expedita illo.</TextBlock>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>
