@@ -1,4 +1,5 @@
-﻿using SmartUp.DataAccess.SQLServer.Util;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 
 namespace SmartUp.DataAccess.SQLServer.Dao

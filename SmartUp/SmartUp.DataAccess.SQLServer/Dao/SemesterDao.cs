@@ -1,8 +1,5 @@
-﻿using SmartUp.Core.Util;
+﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
-using System;
-using System.Data.SqlClient;
-using YamlDotNet.Core;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -88,7 +85,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        public List<String> GetAllSemesterAbbreviation()
+        public List<String> GetAllSemesterAbbreviations()
         {
             string query = "SELECT abbreviation FROM semester;";
             List<string> abbreviations = new List<string>();

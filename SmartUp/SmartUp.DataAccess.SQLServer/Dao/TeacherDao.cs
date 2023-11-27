@@ -1,4 +1,5 @@
-﻿using SmartUp.Core.Util;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.Core.Util;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 

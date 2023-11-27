@@ -1,6 +1,4 @@
-﻿using SmartUp.DataAccess.SQLServer.Dao;
-using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace SmartUp.Tests.DataAccess.SQLServer.Util
 {

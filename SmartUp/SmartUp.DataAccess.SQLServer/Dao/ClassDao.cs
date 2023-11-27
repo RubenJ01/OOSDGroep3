@@ -1,4 +1,5 @@
-﻿using SmartUp.DataAccess.SQLServer.Util;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -52,7 +53,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         private List<String> GetClassNames()
         {
-            List<String> semesters = SemesterDao.GetInstance().GetAllSemesterAbbreviation();
+            List<String> semesters = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
             Random random = new Random();
             List<String> classNames = new List<string>();
             foreach (string semester in semesters)

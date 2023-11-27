@@ -1,6 +1,6 @@
-﻿using System.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
-namespace SmartUp.DataAccess.SQLServer.Util 
+namespace SmartUp.DataAccess.SQLServer.Util
 {
     public static class DatabaseConnection
     {
