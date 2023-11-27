@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmartUp.DataAccess.SQLServer.Dao;
+using SmartUp.DataAccess.SQLServer.Model;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartUp.UI
 {
@@ -22,18 +13,13 @@ namespace SmartUp.UI
         public SemesterStudent()
         {
             InitializeComponent();
-            AddSemesterBlock("OOSDD");
-            AddSemesterBlock("DBMS");
-            AddSemesterBlock("AC");
-            AddSemesterBlock("PVV");
-            AddSemesterBlock("VVD");
-            AddSemesterBlock("CDA");
-            AddSemesterBlock("FVD");
-            AddSemesterBlock("GL");
-            AddSemesterBlock("BBB");
-            AddSemesterBlock("NLP");
+            foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
+            {
+                AddSemesterBlock(semester);
+            }
         }
-        public void AddSemesterBlock(string semestername)
+
+        public void AddSemesterBlock(Semester semester)
         {
             Border card = new Border();
             card.CornerRadius = new CornerRadius(20, 20, 20, 20);
@@ -49,7 +35,7 @@ namespace SmartUp.UI
             cardGrid.RowDefinitions.Add(rowDefinition1);
 
             TextBlock semesterName = new TextBlock();
-            semesterName.Text = semestername;
+            semesterName.Text = semester.Abbreviation;
             semesterName.VerticalAlignment = VerticalAlignment.Center;
             semesterName.HorizontalAlignment = HorizontalAlignment.Center;
             semesterName.FontSize = 20;
@@ -83,6 +69,15 @@ namespace SmartUp.UI
             card.Child = cardGrid;
 
             SemesterWrap.Children.Add(card);
+
+            card.MouseDown += (sender, e) =>
+            {
+                SemesterName.Text = semester.Name;
+                SemesterDescription.Text = semester.Description;
+            };
         }
+
+
+
     }
 }
