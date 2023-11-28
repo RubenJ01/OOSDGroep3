@@ -40,19 +40,18 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                <Button Content="Inschrijven" Background="#b3b3b3" Margin="20" Grid.Column="2"/>
-                <Button Content="Uitschrijven" Background="#b3b3b3" Margin="20" Grid.Column="1"/>
+                <!--<Button Content="Inschrijven" Background="#b3b3b3" Margin="20" Grid.Column="2"/>-->
+                <!--<Button Content="Uitschrijven" Background="#b3b3b3" Margin="20" Grid.Column="1"/>-->
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="150"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Semester titel info" FontSize="30" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0"/>
-                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1">Lorem ipsum dolor sit amet. Ut quibusdam perferendis et saepe quis et laboriosam recusandae et fugit deleniti. Qui sunt sequi sed dolore sequi quo iusto excepturi non reprehenderit aliquam At laborum dolorum et internos voluptate sed vitae quisquam? <LineBreak/><LineBreak/> Ut reiciendis velit ut perferendis consequatur in eveniet maiores et galisum autem vel laudantium libero.
-Et nemo Quis est expedita illo.</TextBlock>
+                    <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="SemesterName"/>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1" x:Name="SemesterDescription"></TextBlock>
                 </Grid>
             </ScrollViewer>
         </Grid>
