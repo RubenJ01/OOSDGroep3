@@ -1,6 +1,7 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,9 +13,13 @@ namespace SmartUp.UI
         {
             InitializeComponent();
             string studentID = "S000189";
-            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(studentID))
+            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(studentID).OrderByDescending(e => e.PublishedOn))
             {
                 AddGradeView(grade);
+            }
+            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(studentID))
+            {
+                
             }
           
         }
