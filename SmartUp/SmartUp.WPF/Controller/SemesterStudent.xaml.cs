@@ -1,15 +1,20 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using SmartUp.Core.Constants;
+using System.Text;
 
 namespace SmartUp.UI
 {
     public partial class SemesterStudent : Page
     {
+        private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
+
         public SemesterStudent()
         {
             InitializeComponent();
@@ -70,14 +75,44 @@ namespace SmartUp.UI
 
             SemesterWrap.Children.Add(card);
 
-            card.MouseDown += (sender, e) =>
-            {
-                SemesterName.Text = semester.Name;
-                SemesterDescription.Text = semester.Description;
-            };
+            card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
+            SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
+        private static void SemesterWrapMouseDown(Border card)
+        {
+            if (!card.IsMouseOver)
+            {
+                card.Background = Brushes.Gray;
+            }
+        }
 
+        private void CardMouseDown(Semester semester, Border card)
+        {
+            SemesterName.Text = semester.Name;
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
+            stringBuilder.Append($"Vakken in dit semester:\n");
+            foreach (string courseName in SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterAbbreviation(semester.Abbreviation))
+            {
+                stringBuilder.Append($"  - {courseName}\n");
+            }
+            stringBuilder.Append($"\n\n{semester.Description}");
+            SemesterDescription.Text = stringBuilder.ToString();
+            card.Background = Brushes.DarkGray;
+            if (semester.RequiredCreditsFromP > CreditsFromP)
+            {
+                EnrollButton.IsEnabled = false;
+            }
+            else
+            {
+                EnrollButton.IsEnabled = true;
+            }
+        }
 
+        private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
+        {
+            //TODO wegens database
+        }
     }
 }
