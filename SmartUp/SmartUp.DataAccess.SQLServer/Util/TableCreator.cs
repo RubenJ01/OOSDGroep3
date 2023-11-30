@@ -168,6 +168,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             );
         END;"
             );
+            CreateTableIfNotExists("registrationSemester",
+    @"
+        IF OBJECT_ID('registrationSemester', 'U') IS NULL
+        BEGIN
+            CREATE TABLE registrationSemester (
+                studentId varchar(32),
+                abbreviation varchar(10),
+                PRIMARY KEY(studentId)
+            );
+        END;"
+            );
         }
 
         private static void CreateTableIfNotExists(string tableName, string query)
@@ -202,8 +213,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             //TeacherDao.GetInstance().FillTable();
             //SemesterDao.GetInstance().FillTable();
             //ClassDao.GetInstance().FillTable();
-            // StudentDao.GetInstance().FillTable();
-            // GradeDao.GetInstance().FillTable();
+            //StudentDao.GetInstance().FillTable();
+            //GradeDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)

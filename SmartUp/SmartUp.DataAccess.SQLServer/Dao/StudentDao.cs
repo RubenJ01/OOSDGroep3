@@ -106,5 +106,34 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return studentIds;
         }
+
+        public int GetCreditsFromPByStudentID(string studentID)
+        {
+            int creditsFromP = 0;
+            String query = "SELECT totalCreditsFromP FROM student WHERE id = @StudentID;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@StudentID", studentID);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = Int32.Parse(reader["totalCreditsFromP"].ToString());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return creditsFromP;
+        }
     }
 }
