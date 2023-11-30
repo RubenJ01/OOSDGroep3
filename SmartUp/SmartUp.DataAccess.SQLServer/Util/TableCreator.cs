@@ -168,6 +168,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             );
         END;"
             );
+            CreateTableIfNotExists("registrationSemester",
+    @"
+        IF OBJECT_ID('registrationSemester', 'U') IS NULL
+        BEGIN
+            CREATE TABLE registrationSemester (
+                studentId varchar(32),
+                abbreviation varchar(10),
+                PRIMARY KEY(studentId)
+            );
+        END;"
+            );
         }
 
         private static void CreateTableIfNotExists(string tableName, string query)

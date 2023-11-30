@@ -14,6 +14,7 @@ namespace SmartUp.UI
     public partial class SemesterStudent : Page
     {
         private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
+        private static Semester SelectedSemester {  get; set; }
 
         public SemesterStudent()
         {
@@ -84,11 +85,13 @@ namespace SmartUp.UI
             if (!card.IsMouseOver)
             {
                 card.Background = Brushes.Gray;
+   
             }
         }
 
         private void CardMouseDown(Semester semester, Border card)
         {
+            SelectedSemester = semester;
             SemesterName.Text = semester.Name;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
@@ -112,7 +115,10 @@ namespace SmartUp.UI
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
         {
-            //TODO wegens database
+            if(SelectedSemester.Abbreviation != null )
+            {
+                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Abbreviation);
+            }
         }
     }
 }
