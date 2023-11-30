@@ -3,6 +3,7 @@ using SmartUp.Core.Util;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -61,7 +62,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
             finally
             {
@@ -95,7 +96,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
             return mentorIds;

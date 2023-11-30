@@ -41,7 +41,7 @@ namespace SmartUp.DataAccess.SQLServer
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
         }
 

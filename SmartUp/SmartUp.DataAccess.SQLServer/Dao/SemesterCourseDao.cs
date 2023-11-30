@@ -1,29 +1,34 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
-    public class CourseDao
+    public class SemesterCourseDao
     {
-        private static CourseDao? instance;
-        private CourseDao()
+        private static SemesterCourseDao? instance;
+        private SemesterCourseDao()
         {
         }
 
-        public static CourseDao GetInstance()
+        public static SemesterCourseDao GetInstance()
         {
             if (instance == null)
             {
-                instance = new CourseDao();
+                instance = new SemesterCourseDao();
             }
             return instance;
         }
-
         public void FillTable()
         {
-            List<string> itCourses = new List<string>
+            using SqlConnection con = DatabaseConnection.GetConnection();
+            try
+            {
+                con.Open();
+
+                List<string> itCourses = new List<string>
             {
                 "Introduction to Computer Science",
                 "Data Structures and Algorithms",
@@ -74,22 +79,43 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "Health Informatics",
                 "IT for Sustainable Development"
             };
-            using SqlConnection con = DatabaseConnection.GetConnection();
-            try
-            {
-                con.Open();
-                Random random = new Random();
-                foreach (string courseName in itCourses)
+                List<string> itSemester = new List<string>
                 {
-                    int credits = random.Next(1, 6);
-                    string query = "INSERT INTO course ([name], credits) VALUES (@name, @credits);";
-                    using (SqlCommand command = new SqlCommand(query, con))
+                    "ITP",
+                    "DSA",
+                    "OOP",
+                    "DBMS",
+                    "WDD",
+                    "SEP",
+                    "NS",
+                    "AIML",
+                    "CCT",
+                    "CPFA"
+                };
+                int JumpToSemester = 0;
+                for(int i = 0; i < (itCourses.Count -1) ; i++)
+                {
+                    string SemesterName = itSemester[JumpToSemester];
+
+                    string CourseName = itCourses[i];
+                    Debug.WriteLine(CourseName);
+                    string insertQuery = "INSERT INTO semesterCourse (semesterAbbreviation, courseName) " +
+    "VALUES(@semester, @course)";
+                    using (SqlCommand command = new SqlCommand(insertQuery, con))
                     {
-                        command.Parameters.AddWithValue("@name", courseName);
-                        command.Parameters.AddWithValue("@credits", credits);
+                        command.Parameters.AddWithValue("@semester", SemesterName);
+                        command.Parameters.AddWithValue("@course", CourseName);
+                        
+
                         command.ExecuteNonQuery();
                     }
+                    if (i != 0 && i % 5 == 0)
+                    {
+                        JumpToSemester++;
+                    }
+
                 }
+                
             }
             catch (Exception ex)
             {
@@ -104,11 +130,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        public List<String> GetAllCourseNames()
+        public List<SemesterCourse> GetAllSemesters()
         {
-            List<String> courseNames = new List<string>();
-            String query = "SELECT [name] FROM course;";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            string query = "SELECT * FROM semesterCourse";
+            List<SemesterCourse> semesters = new List<SemesterCourse>();
+            using(SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
@@ -119,8 +145,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         {
                             while (reader.Read())
                             {
-                                string courseName = reader["name"].ToString();
-                                courseNames.Add(courseName);
+                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string semesterCourse = reader["courseName"].ToString();
+                                semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
                             }
                         }
                     }
@@ -130,8 +157,37 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
-            return courseNames;
+            return semesters;
+        }
+        
+        public List<string> GetSemesterCoursesBySemesterAbbreviation(string semesterAbbreviation)
+        {
+            string query = "SELECT courseName FROM semesterCourse WHERE semesterAbbreviation = @SemesterAbbreviation";
+            List<string> semestersCourses = new List<string>();
+            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@SemesterAbbreviation", semesterAbbreviation);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string semesterCourse = reader["courseName"].ToString();
+                                semestersCourses.Add(semesterCourse);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return semestersCourses;
         }
     }
-    
 }
