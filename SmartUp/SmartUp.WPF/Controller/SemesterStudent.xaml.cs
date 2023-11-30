@@ -8,19 +8,25 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using SmartUp.Core.Constants;
 using System.Text;
+using System.Collections.Generic;
+using System;
 
 namespace SmartUp.UI
 {
     public partial class SemesterStudent : Page
     {
         private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
+        private static Semester? SelectedSemester { get; set; }
 
         public SemesterStudent()
         {
             InitializeComponent();
             foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
             {
-                AddSemesterBlock(semester);
+                if (semester.RequiredCreditsFromP <= CreditsFromP && StudentMeetsSemesterCriteria(Constants.STUDENT_ID, semester))
+                {
+                    AddSemesterBlock(semester);
+                }
             }
         }
 
@@ -89,18 +95,37 @@ namespace SmartUp.UI
 
         private void CardMouseDown(Semester semester, Border card)
         {
+            SelectedSemester = semester;
             SemesterName.Text = semester.Name;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
-            stringBuilder.Append($"Vakken in dit semester:\n");
-            foreach (string courseName in SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterAbbreviation(semester.Abbreviation))
+
+            List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
+            List<string> CoursesInSemster = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterAbbreviation(semester.Abbreviation);
+
+            if (CriteriaCourses.Count > 0)
             {
-                stringBuilder.Append($"  - {courseName}\n");
+                stringBuilder.Append($"Vakken verplicht gehaald:\n");
+                foreach (SemesterCourse Course in CriteriaCourses)
+                {
+                    stringBuilder.Append($"  - {Course.CourseName}\n");
+                }
             }
+            if (CoursesInSemster != null)
+            {
+                stringBuilder.Append($"\nVakken in dit semester:\n");
+                foreach (string courseName in CoursesInSemster)
+                {
+                    stringBuilder.Append($"  - {courseName}\n");
+                }
+            }
+
             stringBuilder.Append($"\n\n{semester.Description}");
             SemesterDescription.Text = stringBuilder.ToString();
             card.Background = Brushes.DarkGray;
-            if (semester.RequiredCreditsFromP > CreditsFromP)
+
+
+            if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(Constants.STUDENT_ID) == true)
             {
                 EnrollButton.IsEnabled = false;
             }
@@ -108,11 +133,46 @@ namespace SmartUp.UI
             {
                 EnrollButton.IsEnabled = true;
             }
+
+            if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(Constants.STUDENT_ID, semester))
+            {
+                UnsubscribeButton.IsEnabled = true;
+            }
+            else
+            {
+                UnsubscribeButton.IsEnabled = false;
+            }
         }
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
         {
-            //TODO wegens database
+            if (SelectedSemester.Abbreviation != null)
+            {
+                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Abbreviation);
+                UnsubscribeButton.IsEnabled = true;
+                EnrollButton.IsEnabled = false;
+            }
+        }
+
+        private void UnsubscribeFromSemester(object sender, RoutedEventArgs eventArgs)
+        {
+            SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(Constants.STUDENT_ID);
+            UnsubscribeButton.IsEnabled = false;
+            EnrollButton.IsEnabled = true;
+        }
+
+        private bool StudentMeetsSemesterCriteria(string studentID, Semester semester)
+        {
+            List<SemesterCourse> semestersCriteria = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
+            Dictionary<string, decimal> gradesStudent = GradeDao.GetInstance().ReturnGradesAsDictionaryByStudentId(studentID);
+            foreach (SemesterCourse criteria in semestersCriteria)
+            {
+                if (!gradesStudent.ContainsKey(criteria.CourseName) || Convert.ToDecimal(gradesStudent[criteria.CourseName]) < 5.5M)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

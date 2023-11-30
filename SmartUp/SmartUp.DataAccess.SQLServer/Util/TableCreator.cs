@@ -3,6 +3,7 @@ using SmartUp.DataAccess.SQLServer.Util;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -168,6 +169,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             );
         END;"
             );
+            CreateTableIfNotExists("registrationSemester",
+    @"
+        IF OBJECT_ID('registrationSemester', 'U') IS NULL
+        BEGIN
+            CREATE TABLE registrationSemester (
+                studentId varchar(32),
+                abbreviation varchar(10),
+                PRIMARY KEY(studentId)
+            );
+        END;"
+            );
         }
 
         private static void CreateTableIfNotExists(string tableName, string query)
@@ -183,7 +195,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
                 finally
                 {
@@ -205,6 +217,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             //StudentDao.GetInstance().FillTable();
             //GradeDao.GetInstance().FillTable();
             SemesterCriteriaDao.GetInstance().FillTable();
+            //SemesterCourseDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)
@@ -217,8 +230,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
                 
             }

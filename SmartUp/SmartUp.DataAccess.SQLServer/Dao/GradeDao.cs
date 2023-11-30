@@ -2,6 +2,7 @@
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -61,7 +62,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
             finally
             {
@@ -104,7 +105,41 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+
+            return grades;
+        }
+
+        public Dictionary<string, decimal> ReturnGradesAsDictionaryByStudentId(string studentId)
+        {
+            Dictionary<string, decimal> grades = new Dictionary<string, decimal>();
+            string query = "SELECT courseName, grade FROM grade WHERE studentId = @StudentId";
+
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@StudentId", studentId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string courseName = reader["courseName"].ToString();
+                                decimal grade = Convert.ToDecimal(reader["grade"]);
+                                
+                                grades.Add(courseName, grade);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
 

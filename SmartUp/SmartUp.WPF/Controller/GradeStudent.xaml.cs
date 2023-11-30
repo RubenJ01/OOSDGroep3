@@ -22,7 +22,6 @@ namespace SmartUp.UI
         }
         public void AddGradeView(Grade model)
         {
-            Debug.WriteLine("addGradeView");
             Grid grid = new Grid();
             grid.Height = 120;
             ColumnDefinition colDef1 = new ColumnDefinition();

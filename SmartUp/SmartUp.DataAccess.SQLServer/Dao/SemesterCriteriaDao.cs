@@ -31,19 +31,26 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 Random random = new Random();
 
                 List<String> semesterAbbreviations = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
-                List<String> selectedsemesterAbbreviations = semesterAbbreviations.Distinct().Take(random.Next(5) + 1).ToList();
                 List<String> courseNames = CourseDao.GetInstance().GetAllCourseNames();
-                foreach (string semesterAbbreviation in selectedsemesterAbbreviations)
+
+                for (int i = 0; i < 7; i++) // Choose 7 random semesters
                 {
-                    List<String> selectedCourses = courseNames.Distinct().Take(random.Next(3) - 1).ToList();
-                    foreach (string courseName in selectedCourses)
+                    string randomSemesterAbbreviation = semesterAbbreviations[random.Next(semesterAbbreviations.Count)];
+
+                    // Decide the number of random semester criteria to add (1 or 2)
+                    int numberOfCriteria = random.Next(1, 3);
+
+                    for (int j = 0; j < numberOfCriteria; j++)
                     {
+                        string randomCourseName = courseNames[random.Next(courseNames.Count)];
+
                         string query = "INSERT INTO semesterCriteria (semesterAbbreviation, courseName) " +
                             "VALUES (@SemesterAbbreviation, @CourseName)";
+
                         using (SqlCommand command = new SqlCommand(query, con))
                         {
-                            command.Parameters.AddWithValue("@SemesterAbbreviation", semesterAbbreviation);
-                            command.Parameters.AddWithValue("@CourseName", courseName);
+                            command.Parameters.AddWithValue("@SemesterAbbreviation", randomSemesterAbbreviation);
+                            command.Parameters.AddWithValue("@CourseName", randomCourseName);
                             command.ExecuteNonQuery();
                         }
                     }
@@ -51,7 +58,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message} {ex.Source.ToUpper()}");
             }
             finally
             {
@@ -62,7 +69,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        public List<SemesterCourse> GetAllSemesters()
+        public List<SemesterCourse> GetAllSemestersCriteria()
         {
             string query = "SELECT * FROM semesterCriteria";
             List<SemesterCourse> semesters = new List<SemesterCourse>();
@@ -86,7 +93,38 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return semesters;
+        }
+
+        public List<SemesterCourse> GetSemesterCriteriaBySemester(Semester semester)
+        {
+            string query = "SELECT * FROM semesterCriteria WHERE semesterAbbreviation = @semesterabbreviation";
+            List<SemesterCourse> semesters = new List<SemesterCourse>();
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@semesterabbreviation", semester.Abbreviation);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string semesterCourse = reader["courseName"].ToString();
+                                semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
             return semesters;

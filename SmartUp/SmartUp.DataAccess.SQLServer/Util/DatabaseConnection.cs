@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Util
 {
@@ -20,7 +21,7 @@ namespace SmartUp.DataAccess.SQLServer.Util
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during database connection setup: {ex.Message}");
+                Debug.WriteLine($"Error during database connection setup: {ex.Message}");
             }
             return null;
         }
