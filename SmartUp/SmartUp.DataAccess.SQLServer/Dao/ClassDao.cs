@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -40,7 +41,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
             finally
             {

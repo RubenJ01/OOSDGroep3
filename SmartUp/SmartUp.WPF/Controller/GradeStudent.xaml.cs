@@ -1,8 +1,11 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Controls;
+using SmartUp.Core.Constants;
+
 
 namespace SmartUp.UI
 {
@@ -11,8 +14,7 @@ namespace SmartUp.UI
         public GradeStudent()
         {
             InitializeComponent();
-            string studentID = "S000189";
-            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(studentID))
+            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(Constants.STUDENT_ID))
             {
                 AddGradeView(grade);
             }
@@ -20,7 +22,6 @@ namespace SmartUp.UI
         }
         public void AddGradeView(Grade model)
         {
-            Debug.WriteLine("addGradeView");
             Grid grid = new Grid();
             grid.Height = 120;
             ColumnDefinition colDef1 = new ColumnDefinition();

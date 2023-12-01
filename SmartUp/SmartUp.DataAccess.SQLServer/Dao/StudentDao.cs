@@ -2,6 +2,7 @@
 using SmartUp.Core.Util;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -66,7 +67,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
             finally
             {
@@ -101,10 +102,39 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
             return studentIds;
+        }
+
+        public int GetCreditsFromPByStudentID(string studentID)
+        {
+            int creditsFromP = 0;
+            String query = "SELECT totalCreditsFromP FROM student WHERE id = @StudentID;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@StudentID", studentID);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = Int32.Parse(reader["totalCreditsFromP"].ToString());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return creditsFromP;
         }
     }
 }
