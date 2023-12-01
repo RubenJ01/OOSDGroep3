@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -133,10 +134,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return courseNames;
         }
 
-        public void AddNewCourse(string name, int credits, string semester)
+        public void AddNewCourse(string name, int credits)
         {
             string query = "INSERT INTO course (name, credits) VALUES (@name, @credits)";
-            string query2 = "INSERT INTO semesterCourse (courseName) VALUES (@) JOIN semester ON semesterCourse.semesterAbbreviation=semester.abbreviation WHERE semester.name";
+            
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 connection.Open();
@@ -145,19 +146,47 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     try
                     {
-
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("name", name);
-                            command.Parameters.AddWithValue("credits", credits);
+                            command.Parameters.AddWithValue("@name", name);
+                            command.Parameters.AddWithValue("@credits", credits);
 
                             command.ExecuteNonQuery();
                         }
 
-                        using (SqlCommand command2 = new SqlCommand(query2, connection))
-                        {
+                        dbTrans.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        dbTrans.Rollback();
 
+                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                    }
+                }
+                
+                // close connection ??
+            }
+        }
+
+        public void AddCourseToSemester(string name, string semester)
+        {
+            string query = "INSERT INTO semesterCourse (semesterAbbreviation, courseName) VALUES (@semester, @name)";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                connection.Open();
+
+                using (SqlTransaction dbTrans = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@semester", semester);
+                            command.Parameters.AddWithValue("@name", name);
                         }
+
+                        dbTrans.Commit();
                     }
                     catch (Exception ex)
                     {
@@ -167,8 +196,36 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     }
                 }
 
-
+                // close connection ??
             }
+        }
+
+        public static string GetSemesterAbbreviation(string name) 
+        {
+            string abbreviation = "";
+            String query = "SELECT [abbreviation] FROM semester;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                               abbreviation = reader["abbreviation"].ToString();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return abbreviation;
         }
     }
     
