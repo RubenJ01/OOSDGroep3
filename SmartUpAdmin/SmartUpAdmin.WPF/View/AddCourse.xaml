@@ -20,23 +20,27 @@
 
         <Grid x:Name="formulier" Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Naam*:" FontSize="40" Grid.Column="0" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBox x:Name="NameField" Grid.Row="0" Grid.Column="1" Margin="60" FontSize="40"/>
-            <TextBlock Text="EC*:" FontSize="40" Grid.Column="0" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBox  x:Name="ECField" Grid.Row="1" Grid.Column="1" Margin="60" PreviewTextInput="NumberValidationTextBox" FontSize="40"/>
-            <TextBlock Text="Semester:" FontSize="40" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <ComboBox x:Name="Semesters" Grid.Row="2" Grid.Column="1" Margin="60" FontSize="30" HorizontalAlignment="Center" Width="850"/>
-            <Button Grid.Row="3" Grid.Column="1" Margin="60" Content="Toevoegen" FontSize="40" FontWeight="Bold" Click="AddSemesterButtonClick"/>
+            <TextBlock Text="Naam*:" FontSize="30" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBox x:Name="NameField" Grid.Row="1" Grid.Column="2" Margin="45" FontSize="30" VerticalContentAlignment="Bottom"/>
+            <TextBlock Text="EC*:" FontSize="30" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBox  x:Name="ECField" Grid.Row="2" Grid.Column="2" Margin="45" PreviewTextInput="NumberValidationTextBox" FontSize="30" VerticalContentAlignment="Bottom"/>
+            <TextBlock Text="Semester:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <ComboBox x:Name="Semesters" Grid.Row="3" Grid.Column="2" Margin="45" FontSize="20" HorizontalAlignment="Center" Width="400" VerticalContentAlignment="Bottom"/>
+            <Button Grid.Row="4" Grid.Column="2" Margin="40" Content="Toevoegen" FontSize="30" FontWeight="Bold" Click="AddSemesterButtonClick"/>
         </Grid>
     </Grid>
 </Page>
