@@ -38,7 +38,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     foreach (string courseName in selectedCourses)
                     {
                         int randomInt = random.Next((int)(1.0m / 0.1m), (int)(10.0m / 0.1m));
-                        decimal randomGrade = randomInt * 0.1m;;
+                        decimal randomGrade = randomInt * 0.1m; ;
                         DateTime startDate = new DateTime(2000, 1, 1);
                         DateTime endDate = new DateTime(2022, 12, 31);
                         int range = (endDate - startDate).Days;
@@ -76,7 +76,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public List<Grade> GetGradesByStudentId(string studentId)
         {
             List<Grade> grades = new List<Grade>();
-            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits " +
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
                            "FROM grade JOIN course ON course.name = grade.courseName " +
                            "WHERE grade.studentId = @StudentId";
 
@@ -97,8 +97,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 DateTime date = Convert.ToDateTime(reader["date"]);
                                 string courseName = reader["courseName"].ToString();
                                 int credits = Convert.ToInt32(reader["credits"]);
+                                int attempt = Int32.Parse(reader["attempt"].ToString());
 
-                                grades.Add(new Grade(grade, isDefinitive, date, courseName, credits));
+                                grades.Add(new Grade(grade, isDefinitive, date, courseName, credits, attempt));
                             }
                         }
                     }
@@ -110,6 +111,45 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
 
             return grades;
+        }
+
+        public Grade GetGradeByAttemptByCourseNameByStudentId(string studentId, string courseName, int attempt)
+        {
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
+                           "FROM grade JOIN course ON course.name = grade.courseName " +
+                           "WHERE grade.studentId = @StudentId AND grade.courseName = @CourseName AND grade.attempt = @Attempt";
+
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@StudentId", studentId);
+                        command.Parameters.AddWithValue("@CourseName", courseName);
+                        command.Parameters.AddWithValue("@Attempt", attempt);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                decimal grade = Convert.ToDecimal(reader["grade"]);
+                                bool isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                                DateTime date = Convert.ToDateTime(reader["date"]);
+                                string courseNameResult = reader["courseName"].ToString();
+                                int credits = Convert.ToInt32(reader["credits"]);
+                                int attemptResult = Int32.Parse(reader["attempt"].ToString());
+                                return new Grade(grade, isDefinitive, date, courseNameResult, credits, attemptResult);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return null;
         }
 
         public Dictionary<string, decimal> ReturnGradesAsDictionaryByStudentId(string studentId)
@@ -131,7 +171,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             {
                                 string courseName = reader["courseName"].ToString();
                                 decimal grade = Convert.ToDecimal(reader["grade"]);
-                                
+
                                 grades.Add(courseName, grade);
                             }
                         }
@@ -145,6 +185,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             return grades;
         }
+
+
 
     }
 }
