@@ -21,13 +21,13 @@ namespace SmartUp.UI
 {
     public partial class SbStudent : Page
     {
-        List<SbStudentModel> listSbStudents {  get; set; }
+        List<Student> SbStudents {  get; set; }
 
         public SbStudent()
         {
             InitializeComponent();
-            listSbStudents = StudentDao.GetInstance().GetNameStudentByMentor(Constants.DOCENT_ID);
-            SbStudentsNames.ItemsSource = listSbStudents;
+            SbStudents = StudentDao.GetInstance().GetNameStudentByMentor(Constants.DOCENT_ID);
+            SbStudentsNames.ItemsSource = SbStudents;
             SbStudentsNames.DisplayMemberPath = "FullName";
 
 
@@ -114,14 +114,12 @@ namespace SmartUp.UI
         {
             GradeSbStudentOverview.Children.Clear();
 
-            if (SbStudentsNames.SelectedItem != null && SbStudentsNames.SelectedItem is SbStudentModel selectedStudent)
+            if (SbStudentsNames.SelectedItem != null && SbStudentsNames.SelectedItem is Student selectedStudent)
             {
                 string selectedText = selectedStudent.StudentId;
-                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {selectedText}");
                 foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(selectedText))
                 {
                     AddGradeView(grade);
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: Test in methode");
                 }
                 TitleSbStudent.Text = "Cijfers van: " + selectedStudent.FullName;
             }

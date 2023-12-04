@@ -137,9 +137,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return creditsFromP;
         }
-        public List<SbStudentModel> GetNameStudentByMentor(string mentor)
+        public List<Student> GetNameStudentByMentor(string mentor)
         {
-            List<SbStudentModel> SbStudents = new List<SbStudentModel>();
+            List<Student> Students = new List<Student>();
             String query = "SELECT firstName, lastName, infix, id FROM student WHERE mentor = @Mentor;";
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -158,7 +158,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string infix = reader["infix"].ToString();
                                 string studentId = reader["id"].ToString();
 
-                                SbStudents.Add(new SbStudentModel(firstName, lastName, infix, studentId));
+                                Students.Add(new Student(firstName, lastName, infix, studentId));
                             }
                         }
                     }
@@ -169,7 +169,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
 
             }
-            return SbStudents;
+            return Students;
         }
 
     }

@@ -35,9 +35,6 @@ namespace SmartUp.UI
             stackpanelButtons.Children.Clear();
             AddButtonsDocent();
         }
-        private void ButtonToGradesTeacher_Click(object sender, RoutedEventArgs e)
-        {
-        }
         private void ButtonToGradesSb_Student_Click(object sender, RoutedEventArgs e)
         {
             ContentArea.Navigate(new Uri("./View/SbStudent.xaml", UriKind.Relative));
@@ -91,7 +88,7 @@ namespace SmartUp.UI
             GradeButton.Margin = new Thickness(0, 120, 0, 0);
             GradeButton.Background = Brushes.Transparent;
             GradeButton.BorderBrush = Brushes.Transparent;
-            GradeButton.Click += ButtonToGradesTeacher_Click;
+            //GradeButton.Click += ButtonToGradesTeacher_Click;
 
             Image ImgGrade = new Image();
             ImgGrade.Source = new BitmapImage(new Uri("pack://application:,,,/Img/StudentGrade.png"));

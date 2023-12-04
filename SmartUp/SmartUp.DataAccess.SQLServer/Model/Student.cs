@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartUp.DataAccess.SQLServer.Model
 {
-    public class SbStudentModel
+    public class Student
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -14,20 +14,25 @@ namespace SmartUp.DataAccess.SQLServer.Model
         public string FullName { get; set; }
         public string StudentId { get; set; }
 
-        public SbStudentModel(string firstName, string lastName, string infix, string studentId)
+        public Student(string firstName, string lastName, string infix, string studentId)
         {
             FirstName = firstName;
             LastName = lastName;
             Infix = infix;
             StudentId = studentId;
-            if (string.IsNullOrEmpty(infix))
+
+            StringBuilder fullNameBuilder = new StringBuilder();
+            fullNameBuilder.Append(firstName);
+            if (!string.IsNullOrEmpty(infix))
             {
-                FullName = firstName + " " + lastName;
+                fullNameBuilder.Append(" ");
+                fullNameBuilder.Append(infix);
             }
-            else
-            {
-                FullName = firstName + " " + infix + " " + lastName;
-            }
+            fullNameBuilder.Append(" ");
+            fullNameBuilder.Append(lastName);
+
+            FullName = fullNameBuilder.ToString();
+
         }
     }
 
