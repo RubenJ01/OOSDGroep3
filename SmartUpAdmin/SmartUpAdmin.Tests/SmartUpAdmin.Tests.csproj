@@ -22,4 +22,8 @@
     <ProjectReference Include="..\SmartUpAdmin.DataAccess.SQLServer\SmartUpAdmin.DataAccess.SQLServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataAccessAdmin.SQLServer\Dao\" />
+  </ItemGroup>
+
 </Project>

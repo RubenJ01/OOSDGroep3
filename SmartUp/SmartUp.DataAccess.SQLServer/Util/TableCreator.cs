@@ -113,7 +113,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 abbreviation varchar(10),
                 [description] TEXT NOT NULL,
                 requiredCreditsFromP int DEFAULT 0,
-                PRIMARY KEY(abbreviation)
+                PRIMARY KEY(name)
             );
         END;"
             );
@@ -123,10 +123,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterAvailability', 'U') IS NULL
         BEGIN
             CREATE TABLE semesterAvailability (
-                semesterAbbreviation varchar(10),
+                semesterName varchar(10),
                 availableInSemester int,
-                PRIMARY KEY(semesterAbbreviation, availableInSemester),
-                FOREIGN KEY (semesterAbbreviation) REFERENCES semester(abbreviation)
+                PRIMARY KEY(semesterName, availableInSemester),
+                FOREIGN KEY (semesterName) REFERENCES semester(name)
             );
         END;"
             );
@@ -136,10 +136,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterCourse', 'U') IS NULL
         BEGIN
             CREATE TABLE semesterCourse (
-                semesterAbbreviation varchar(10),
+                semesterName varchar(10),
                 courseName varchar(64),
-                PRIMARY KEY (semesterAbbreviation, courseName),
-                FOREIGN KEY (semesterAbbreviation) REFERENCES semester([abbreviation]),
+                PRIMARY KEY (semesterName, courseName),
+                FOREIGN KEY (semesterName) REFERENCES semester([name]),
                 FOREIGN KEY (courseName) REFERENCES course([name])
             );
         END;"
@@ -150,10 +150,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterCriteria', 'U') IS NULL
         BEGIN 
             CREATE TABLE semesterCriteria (
-                semesterAbbreviation varchar(10),
+                semesterName varchar(10),
                 courseName varchar(64),
-                PRIMARY KEY (semesterAbbreviation, courseName),
-                FOREIGN KEY (semesterAbbreviation) REFERENCES semester([abbreviation]),
+                PRIMARY KEY (semesterName, courseName),
+                FOREIGN KEY (semesterName) REFERENCES semester([name]),
                 FOREIGN KEY (courseName) REFERENCES course([name])
             );
         END;"
@@ -205,19 +205,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     }
                 }
             }
-                
+
         }
-            
+
         public static void FillTables()
         {
-            //CourseDao.GetInstance().FillTable();
-            //TeacherDao.GetInstance().FillTable();
-            //SemesterDao.GetInstance().FillTable();
-            //ClassDao.GetInstance().FillTable();
-            //StudentDao.GetInstance().FillTable();
-            //GradeDao.GetInstance().FillTable();
-            //SemesterCriteriaDao.GetInstance().FillTable();
-            //SemesterCourseDao.GetInstance().FillTable();
+            CourseDao.GetInstance().FillTable();
+            TeacherDao.GetInstance().FillTable();
+            SemesterDao.GetInstance().FillTable();
+            ClassDao.GetInstance().FillTable();
+            StudentDao.GetInstance().FillTable();
+            GradeDao.GetInstance().FillTable();
+            SemesterCriteriaDao.GetInstance().FillTable();
+            SemesterCourseDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)
@@ -232,7 +232,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
-                
+
             }
         }
     }

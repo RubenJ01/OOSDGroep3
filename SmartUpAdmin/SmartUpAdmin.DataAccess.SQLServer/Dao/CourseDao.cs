@@ -199,34 +199,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 // close connection ??
             }
         }
-
-        public static string GetSemesterAbbreviation(string name) 
-        {
-            string abbreviation = "";
-            String query = "SELECT [abbreviation] FROM semester;";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                               abbreviation = reader["abbreviation"].ToString();
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-            }
-            return abbreviation;
-        }
     }
     
 }
