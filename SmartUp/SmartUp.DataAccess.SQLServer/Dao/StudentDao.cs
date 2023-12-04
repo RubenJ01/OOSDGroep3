@@ -137,7 +137,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return creditsFromP;
         }
-        public List<Student> GetNameStudentByMentor(string mentor)
+        public List<Student> GetStudentNameByMentor(string mentor)
         {
             List<Student> Students = new List<Student>();
             String query = "SELECT firstName, lastName, infix, id FROM student WHERE mentor = @Mentor;";
