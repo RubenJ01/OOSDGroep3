@@ -10,8 +10,9 @@
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="YamlDotNet" Version="13.7.1" />
-    <None Remove="Img\GradeIcon.png" />
+    <None Remove="Img\GradeSberStudent.png" />
     <None Remove="Img\SemesterIcon.png" />
+    <None Remove="Img\StudentGrade.png" />
     <ProjectReference Include="..\SmartUp.Core\SmartUp.Core.csproj" />
     <ProjectReference Include="..\SmartUp.DataAccess.SQLServer\SmartUp.DataAccess.SQLServer.csproj" />
   </ItemGroup>
@@ -21,12 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Img\GradeIcon.png" />
+    <Resource Include="Img\GradeSberStudent.png" />
     <Resource Include="Img\SemesterIcon.png" />
+    <Resource Include="Img\StudentGrade.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controller\SbStudent.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

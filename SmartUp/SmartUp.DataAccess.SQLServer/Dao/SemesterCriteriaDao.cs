@@ -33,11 +33,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 List<String> semesterAbbreviations = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
                 List<String> courseNames = CourseDao.GetInstance().GetAllCourseNames();
 
-                for (int i = 0; i < 7; i++) // Choose 7 random semesters
+                for (int i = 0; i < 7; i++) 
                 {
                     string randomSemesterAbbreviation = semesterAbbreviations[random.Next(semesterAbbreviations.Count)];
 
-                    // Decide the number of random semester criteria to add (1 or 2)
                     int numberOfCriteria = random.Next(1, 3);
 
                     for (int j = 0; j < numberOfCriteria; j++)
