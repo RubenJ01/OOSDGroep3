@@ -141,62 +141,46 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 connection.Open();
-
-                using (SqlTransaction dbTrans = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
+                 try
+                 {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                     {
                             command.Parameters.AddWithValue("@name", name);
                             command.Parameters.AddWithValue("@credits", credits);
 
                             command.ExecuteNonQuery();
                         }
 
-                        dbTrans.Commit();
                     }
                     catch (Exception ex)
                     {
-                        dbTrans.Rollback();
-
                         Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                     }
-                }
                 
-                // close connection ??
             }
         }
 
         public void AddCourseToSemester(string name, string semester)
         {
-            string query = "INSERT INTO semesterCourse (semesterAbbreviation, courseName) VALUES (@semester, @name)";
+            string query = "INSERT INTO semesterCourse (semesterName, courseName) VALUES (@semester, @name)";
 
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
-                connection.Open();
-
-                using (SqlTransaction dbTrans = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@semester", semester);
-                            command.Parameters.AddWithValue("@name", name);
-                        }
-
-                        dbTrans.Commit();
+               connection.Open();
+                  try
+                  {
+                      using (SqlCommand command = new SqlCommand(query, connection))
+                      {
+                        command.Parameters.AddWithValue("@semester", semester);
+                        command.Parameters.AddWithValue("@name", name);
+                        command.ExecuteNonQuery();
+                      }  
                     }
                     catch (Exception ex)
                     {
-                        dbTrans.Rollback();
 
                         Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                     }
-                }
-
-                // close connection ??
             }
         }
     }

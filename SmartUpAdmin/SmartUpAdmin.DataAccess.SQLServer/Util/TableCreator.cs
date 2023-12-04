@@ -150,7 +150,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterCriteria', 'U') IS NULL
         BEGIN 
             CREATE TABLE semesterCriteria (
-                semesterName varchar(10),
+                semesterName varchar(64),
                 courseName varchar(64),
                 PRIMARY KEY (semesterName, courseName),
                 FOREIGN KEY (semesterName) REFERENCES semester([name]),

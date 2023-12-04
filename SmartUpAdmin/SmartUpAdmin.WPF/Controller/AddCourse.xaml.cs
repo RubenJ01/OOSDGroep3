@@ -1,6 +1,8 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,6 +36,20 @@ namespace SmartUp.WPF.View
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void AddSemesterButtonClick(object sender, EventArgs e)
+        {
+            string courseName = NameField.Text;
+            int ec = Int32.Parse(ECField.Text);
+            string semesterName = Semesters.Text;
+
+            CourseDao.GetInstance().AddNewCourse(courseName, ec);
+
+            if(semesterName.Length > 0)
+            {
+                CourseDao.GetInstance().AddCourseToSemester(courseName, semesterName);
+            }
         }
     }
 }
