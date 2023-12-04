@@ -11,9 +11,9 @@ namespace SmartUp.UI
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonToCourse(object sender, RoutedEventArgs e)
         {
-            ContentArea.Navigate(new Uri("./View/GradeStudent.xaml", UriKind.Relative));
+            ContentArea.Navigate(new Uri("./View/AddCourse.xaml", UriKind.Relative));
         }
 
         private void Button_Click1(object sender, RoutedEventArgs e)

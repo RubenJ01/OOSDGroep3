@@ -1,12 +1,42 @@
-﻿<Window x:Class="SmartUp.WPF.View.AddCourse"
+﻿<Page x:Class="SmartUp.WPF.View.AddCourse"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartUp.WPF.View"
         mc:Ignorable="d"
-        Title="AddCourse" Height="450" Width="800">
-    <Grid>
-        
+        Title="AddCourse"
+        d:DesignHeight="{x:Static SystemParameters.PrimaryScreenHeight}" d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}">
+    <Grid Background="#E2E2E2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Vak Toevoegen" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="833,0,0,0"/>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"/>
+
+        <Grid x:Name="formulier" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Naam*:" FontSize="40" Grid.Column="0" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="60" FontSize="40"/>
+            <TextBlock Text="EC*:" FontSize="40" Grid.Column="0" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="60" PreviewTextInput="NumberValidationTextBox" FontSize="40"/>
+            <TextBlock Text="Semester:" FontSize="40" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <ComboBox x:Name="Semesters" Grid.Row="2" Grid.Column="1" Margin="60" FontSize="30" HorizontalAlignment="Center" Width="850"/>
+            <Button Grid.Row="3" Grid.Column="1" Margin="60" Content="Toevoegen" FontSize="40" FontWeight="Bold" />
+        </Grid>
     </Grid>
-</Window>
+</Page>

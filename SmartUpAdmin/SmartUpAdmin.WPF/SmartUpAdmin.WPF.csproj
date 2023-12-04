@@ -27,4 +27,8 @@
 		<Folder Include="Model\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\SmartUpAdmin.DataAccess.SQLServer\SmartUpAdmin.DataAccess.SQLServer.csproj" />
+	</ItemGroup>
+
 </Project>
