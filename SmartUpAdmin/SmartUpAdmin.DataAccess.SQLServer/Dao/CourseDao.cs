@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -133,41 +134,53 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return courseNames;
         }
 
-        public void AddNewCourse(string name, int credits, string semester)
+        public void AddNewCourse(string name, int credits)
         {
             string query = "INSERT INTO course (name, credits) VALUES (@name, @credits)";
-            string query2 = "INSERT INTO semesterCourse (courseName) VALUES (@) JOIN semester ON semesterCourse.semesterAbbreviation=semester.abbreviation WHERE semester.name";
+            
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 connection.Open();
-
-                using (SqlTransaction dbTrans = connection.BeginTransaction())
-                {
-                    try
-                    {
-
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("name", name);
-                            command.Parameters.AddWithValue("credits", credits);
+                 try
+                 {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                     {
+                            command.Parameters.AddWithValue("@name", name);
+                            command.Parameters.AddWithValue("@credits", credits);
 
                             command.ExecuteNonQuery();
                         }
 
-                        using (SqlCommand command2 = new SqlCommand(query2, connection))
-                        {
-
-                        }
                     }
                     catch (Exception ex)
                     {
-                        dbTrans.Rollback();
+                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                    }
+                
+            }
+        }
+
+        public void AddCourseToSemester(string name, string semester)
+        {
+            string query = "INSERT INTO semesterCourse (semesterName, courseName) VALUES (@semester, @name)";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+               connection.Open();
+                  try
+                  {
+                      using (SqlCommand command = new SqlCommand(query, connection))
+                      {
+                        command.Parameters.AddWithValue("@semester", semester);
+                        command.Parameters.AddWithValue("@name", name);
+                        command.ExecuteNonQuery();
+                      }  
+                    }
+                    catch (Exception ex)
+                    {
 
                         Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                     }
-                }
-
-
             }
         }
     }

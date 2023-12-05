@@ -148,5 +148,34 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
+
+        public List<String> GetAllSemesterNames()
+        {
+            string query = "SELECT name FROM semester;";
+            List<string> names = new List<string>();
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string name = reader["name"].ToString();
+                                names.Add(name);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return names;
+        }
     }
 }
