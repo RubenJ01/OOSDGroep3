@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controller\GradeTeacher.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Controller\SbStudent.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

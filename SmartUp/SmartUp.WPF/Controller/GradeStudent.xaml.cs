@@ -50,7 +50,6 @@ namespace SmartUp.UI
                 }
             }
         }
-
         public void AddGradeView(Grade model)
         {
             Grid grid = new Grid();

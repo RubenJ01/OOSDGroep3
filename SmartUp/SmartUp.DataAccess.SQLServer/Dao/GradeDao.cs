@@ -76,7 +76,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public List<Grade> GetGradesByStudentId(string studentId)
         {
             List<Grade> grades = new List<Grade>();
-            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits " +
                            "FROM grade JOIN course ON course.name = grade.courseName " +
                            "WHERE grade.studentId = @StudentId";
 
@@ -100,6 +100,69 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 int attempt = Int32.Parse(reader["attempt"].ToString());
 
                                 grades.Add(new Grade(grade, isDefinitive, date, courseName, credits, attempt));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+
+            return grades;
+        }
+        public List<GradeTeacher> GetGradesByCourse(string CourseName)
+        {
+            List<GradeTeacher> grades = new List<GradeTeacher>();
+            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
+                "FROM student " +
+                "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
+                "JOIN course ON course.name = @CourseName " +
+                "UNION SELECT student.id, student.firstname, student.lastname, student.infix,  grade.grade,  Grade.isDefinitive, semesterCourse.courseName " +
+                "FROM student " +
+                "JOIN registrationSemester ON student.id = registrationSemester.studentId " +
+                "JOIN semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+                "LEFT JOIN grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
+                "WHERE semesterCourse.courseName = @CourseName AND grade.studentId IS NULL;";
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@CourseName", CourseName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string studentId = reader["id"].ToString();
+                                string firstName = reader["firstname"].ToString();
+                                string lastName = reader["lastname"].ToString();
+                                string infix = reader["infix"].ToString();
+                                string courseName = reader["courseName"].ToString();
+                                decimal? grade = null;
+                                bool? isDefinitive = null;
+                                bool hadGrade = false;
+                                if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
+                                {
+                                    grade = Convert.ToDecimal(reader["grade"]);
+                                    isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                                    hadGrade = true;
+                                }
+
+                                if (!hadGrade)
+                                {
+                                    grades.Add(new GradeTeacher(courseName, new Student(firstName, lastName, infix, studentId)));
+                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test {grade} {isDefinitive}");
+                                }
+                                else
+                                {
+                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
+                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive.GetValueOrDefault(), courseName, new Student(firstName, lastName, infix, studentId)));
+                                }
+
                             }
                         }
                     }
@@ -186,7 +249,68 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return grades;
         }
 
+        public List<GradeTeacher> GetGradesByClass(string ClassName)
+        {
+            List<GradeTeacher> grades = new List<GradeTeacher>();
+            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " + 
+                "FROM student " +
+                "JOIN grade ON student.id = grade.studentId " +
+                "WHERE student.class = @ClassName " +
+                "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
+                "FROM  student " +
+                "JOIN  registrationSemester ON student.id = registrationSemester.studentId " +
+                "JOIN  semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+                "LEFT JOIN  grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
+                "WHERE student.class = @ClassName AND grade.studentId IS NULL; ";
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ClassName", ClassName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string studentId = reader["id"].ToString();
+                                string firstName = reader["firstname"].ToString();
+                                string lastName = reader["lastname"].ToString();
+                                string infix = reader["infix"].ToString();
+                                string courseName = reader["courseName"].ToString();
+                                decimal? grade = null;
+                                bool? isDefinitive = null;
+                                bool hadGrade = false;
+                                if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
+                                {
+                                    grade = Convert.ToDecimal(reader["grade"]);
+                                    isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                                    hadGrade = true;
+                                }
 
+                                if (!hadGrade)
+                                {
+                                    grades.Add(new GradeTeacher(courseName, new Student(firstName, lastName, infix, studentId)));
+                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test {grade} {isDefinitive}");
+                                }
+                                else
+                                {
+                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
+                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive.GetValueOrDefault(), courseName, new Student(firstName, lastName, infix, studentId)));
+                                }
 
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+
+            return grades;
+        }
     }
 }
