@@ -44,12 +44,12 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     {
                         string randomCourseName = courseNames[random.Next(courseNames.Count)];
 
-                        string query = "INSERT INTO semesterCriteria (semesterAbbreviation, courseName) " +
-                            "VALUES (@SemesterAbbreviation, @CourseName)";
+                        string query = "INSERT INTO semesterCriteria (semesterName, courseName) " +
+                            "VALUES (@SemesterName, @CourseName)";
 
                         using (SqlCommand command = new SqlCommand(query, con))
                         {
-                            command.Parameters.AddWithValue("@SemesterAbbreviation", randomSemesterAbbreviation);
+                            command.Parameters.AddWithValue("@SemesterName", randomSemesterAbbreviation);
                             command.Parameters.AddWithValue("@CourseName", randomCourseName);
                             command.ExecuteNonQuery();
                         }
@@ -84,9 +84,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         {
                             while (reader.Read())
                             {
-                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string name = reader["semesterName"].ToString();
                                 string semesterCourse = reader["courseName"].ToString();
-                                semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
+                                semesters.Add(new SemesterCourse(name, semesterCourse));
                             }
                         }
                     }
@@ -101,7 +101,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         public List<SemesterCourse> GetSemesterCriteriaBySemester(Semester semester)
         {
-            string query = "SELECT * FROM semesterCriteria WHERE semesterAbbreviation = @semesterabbreviation";
+            string query = "SELECT * FROM semesterCriteria WHERE semesterName = @SemesterName";
             List<SemesterCourse> semesters = new List<SemesterCourse>();
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -110,14 +110,14 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@semesterabbreviation", semester.Abbreviation);
+                        command.Parameters.AddWithValue("@SemesterName", semester.Name);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string name = reader["semesterName"].ToString();
                                 string semesterCourse = reader["courseName"].ToString();
-                                semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
+                                semesters.Add(new SemesterCourse(name, semesterCourse));
                             }
                         }
                     }
