@@ -32,7 +32,7 @@ namespace SmartUp.WPF.View
         }
 
 
-        private void AddSemesterButtonClick(object sender, EventArgs e)
+        private void AddCourseButtonClick(object sender, EventArgs e)
         {
             if (VerifyInput())
             {
@@ -47,16 +47,16 @@ namespace SmartUp.WPF.View
                     CourseDao.GetInstance().AddCourseToSemester(courseName, semesterName);
                 }
 
-                NameField.Background = Brushes.White;
-                ECField.Background = Brushes.White;
             }
 
         }
 
         private bool VerifyInput()
         {
+            NameField.Background = Brushes.White;
+            ECField.Background = Brushes.White;
             bool valid = true;
-            if (courseDao.GetCourseByCourseName(NameField.Text) != null)
+            if (string.IsNullOrWhiteSpace(NameField.Text))
             {
                 valid = false;
                 NameField.Background = Brushes.Red;
