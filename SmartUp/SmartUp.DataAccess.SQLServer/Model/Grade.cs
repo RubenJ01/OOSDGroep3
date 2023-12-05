@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,6 @@ namespace SmartUp.DataAccess.SQLServer.Model
         public string CourseName { get; set; }
         public int Credits { get; set; }
         public int Attempt { get; set; }
-        public string? DisplayGrade {  get; set; }
 
         public Grade(decimal grade, bool isDefinitive, DateTime publishedOn, string courseName, int credits, int attempt)
         {
@@ -24,7 +24,11 @@ namespace SmartUp.DataAccess.SQLServer.Model
             CourseName = courseName;
             Credits = credits;
             Attempt = attempt;
-            DisplayGrade = $"Kans {attempt}: {grade}";
+        }
+
+        public override string ToString()
+        {
+            return $"Kans {Attempt}: {GradeNumber}";
         }
     }
 }
