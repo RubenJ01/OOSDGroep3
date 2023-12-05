@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
@@ -160,6 +161,37 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
+        public Course GetCourseByCourseName(string name)
+        {
+            string query = "SELECT * FROM course WHERE name = @name";
+            Course? course = null;
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@name", name);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string courseName = reader["name"].ToString();
+                                int credits = Int32.Parse(reader["credits"].ToString());
+                                course = new Course(courseName, credits);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return course;
+        }
+
         public void AddCourseToSemester(string name, string semester)
         {
             string query = "INSERT INTO semesterCourse (semesterName, courseName) VALUES (@semester, @name)";
@@ -184,5 +216,4 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
     }
-    
 }

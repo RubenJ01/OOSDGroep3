@@ -1,25 +1,18 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SmartUp.WPF.View
 {
     public partial class AddCourse : Page
     {
+
+        private static CourseDao courseDao = CourseDao.GetInstance();
+
         public AddCourse()
         {
             InitializeComponent();
@@ -38,18 +31,42 @@ namespace SmartUp.WPF.View
             e.Handled = regex.IsMatch(e.Text);
         }
 
+
         private void AddSemesterButtonClick(object sender, EventArgs e)
         {
-            string courseName = NameField.Text;
-            int ec = Int32.Parse(ECField.Text);
-            string semesterName = Semesters.Text;
-
-            CourseDao.GetInstance().AddNewCourse(courseName, ec);
-
-            if(semesterName.Length > 0)
+            if (VerifyInput())
             {
-                CourseDao.GetInstance().AddCourseToSemester(courseName, semesterName);
+                string courseName = NameField.Text;
+                int ec = Int32.Parse(ECField.Text);
+                string semesterName = Semesters.Text;
+
+                CourseDao.GetInstance().AddNewCourse(courseName, ec);
+
+                if (semesterName.Length > 0)
+                {
+                    CourseDao.GetInstance().AddCourseToSemester(courseName, semesterName);
+                }
+
+                NameField.Background = Brushes.White;
+                ECField.Background = Brushes.White;
             }
+
+        }
+
+        private bool VerifyInput()
+        {
+            bool valid = true;
+            if (courseDao.GetCourseByCourseName(NameField.Text) != null)
+            {
+                valid = false;
+                NameField.Background = Brushes.Red;
+            }
+            if (ECField.Text.Length == 0)
+            {
+                valid = false;
+                ECField.Background = Brushes.Red;
+            }
+            return valid;
         }
     }
 }
