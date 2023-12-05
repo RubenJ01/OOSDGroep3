@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.Core.Util;
+using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -136,5 +137,40 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return creditsFromP;
         }
+        public List<Student> GetStudentNameByMentor(string mentor)
+        {
+            List<Student> Students = new List<Student>();
+            String query = "SELECT firstName, lastName, infix, id FROM student WHERE mentor = @Mentor;";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Mentor", mentor);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string firstName = reader["firstName"].ToString();
+                                string lastName = reader["lastName"].ToString();
+                                string infix = reader["infix"].ToString();
+                                string studentId = reader["id"].ToString();
+
+                                Students.Add(new Student(firstName, lastName, infix, studentId));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+
+            }
+            return Students;
+        }
+
     }
 }
