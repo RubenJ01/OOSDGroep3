@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -138,26 +136,26 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public void AddNewCourse(string name, int credits)
         {
             string query = "INSERT INTO course (name, credits) VALUES (@name, @credits)";
-            
+
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 connection.Open();
-                 try
-                 {
+                try
+                {
                     using (SqlCommand command = new SqlCommand(query, connection))
-                     {
-                            command.Parameters.AddWithValue("@name", name);
-                            command.Parameters.AddWithValue("@credits", credits);
-
-                            command.ExecuteNonQuery();
-                        }
-
-                    }
-                    catch (Exception ex)
                     {
-                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                        command.Parameters.AddWithValue("@name", name);
+                        command.Parameters.AddWithValue("@credits", credits);
+
+                        command.ExecuteNonQuery();
                     }
-                
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+
             }
         }
 
@@ -198,21 +196,21 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
-               connection.Open();
-                  try
-                  {
-                      using (SqlCommand command = new SqlCommand(query, connection))
-                      {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
                         command.Parameters.AddWithValue("@semester", semester);
                         command.Parameters.AddWithValue("@name", name);
                         command.ExecuteNonQuery();
-                      }  
                     }
-                    catch (Exception ex)
-                    {
+                }
+                catch (Exception ex)
+                {
 
-                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                    }
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
             }
         }
     }
