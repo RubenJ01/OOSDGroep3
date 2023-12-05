@@ -18,13 +18,13 @@
         <TextBlock Text="Vak Toevoegen" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="833,0,0,0"/>
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"/>
 
-        <Grid x:Name="formulier" Grid.Row="1">
+        <Grid x:Name="formulier" Grid.Row="1" Margin="3,0,-3,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="25*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -38,8 +38,8 @@
             <TextBox x:Name="NameField" Grid.Row="1" Grid.Column="2" Margin="45" FontSize="30" VerticalContentAlignment="Bottom"/>
             <TextBlock Text="EC*:" FontSize="30" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
             <TextBox  x:Name="ECField" Grid.Row="2" Grid.Column="2" Margin="45" PreviewTextInput="NumberValidationTextBox" FontSize="30" VerticalContentAlignment="Bottom"/>
-            <TextBlock Text="Semester:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <ComboBox x:Name="Semesters" Grid.Row="3" Grid.Column="2" Margin="45" FontSize="20" HorizontalAlignment="Center" Width="400" VerticalContentAlignment="Bottom"/>
+            <TextBlock Text="Semester:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 30, 0"/>
+            <ComboBox x:Name="Semesters" Grid.Row="3" Grid.Column="2" Margin="45" FontSize="20" HorizontalAlignment="Center" Width="400" HorizontalContentAlignment="Center"/>
             <Button Grid.Row="4" Grid.Column="2" Margin="40" Content="Toevoegen" FontSize="30" FontWeight="Bold" Click="AddSemesterButtonClick"/>
         </Grid>
     </Grid>
