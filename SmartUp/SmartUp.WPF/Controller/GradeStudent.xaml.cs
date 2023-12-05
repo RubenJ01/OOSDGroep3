@@ -12,11 +12,12 @@ namespace SmartUp.UI
 {
     public partial class GradeStudent : Page
     {
+        private static GradeDao gradeDao = GradeDao.GetInstance();
         public GradeStudent()
         {
             InitializeComponent();
             Dictionary<string, int> gradesAttempts = new Dictionary<string, int>();
-            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(Constants.STUDENT_ID))
+            foreach (Grade grade in gradeDao.GetGradesByStudentId(Constants.STUDENT_ID))
             {
                 if (!gradesAttempts.ContainsKey(grade.CourseName))
                 {
@@ -32,18 +33,18 @@ namespace SmartUp.UI
             {
                 if (grade.Value == 1)
                 {
-                    Grade gradeFirstAttempt = GradeDao.GetInstance().GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value);
+                    Grade gradeFirstAttempt = gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value);
                     AddGradeView(gradeFirstAttempt);
                 }
                 else
                 {
                     List<Grade> gradeAllAttempts = new List<Grade>
                     {
-                        GradeDao.GetInstance().GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value)
+                        gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value)
                     };
                     for (int i = 1; i <= grade.Value; i++)
                     {
-                        gradeAllAttempts.Add(GradeDao.GetInstance().GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, i));
+                        gradeAllAttempts.Add(gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, i));
                     }
                     AddGradeView(gradeAllAttempts);
                 }
@@ -186,11 +187,10 @@ namespace SmartUp.UI
             dropdown.IsEditable = false;
             dropdown.IsReadOnly = true;
             dropdown.HorizontalContentAlignment = HorizontalAlignment.Center;
-            model[0].DisplayGrade = $"    { model[0].GradeNumber}";
             model.Reverse();
             foreach (Grade grade in model)
             {
-                dropdown.Items.Add($"{grade.DisplayGrade}");
+                dropdown.Items.Add($"{grade}");
             };
 
             dropdown.DropDownOpened += (sender, e) =>
@@ -200,7 +200,7 @@ namespace SmartUp.UI
 
             dropdown.DropDownClosed += (sender, e) =>
             {
-                dropdown.Items.Insert(model.Count - 1, model[model.Count - 1].DisplayGrade);
+                dropdown.Items.Insert(model.Count - 1, model[model.Count - 1]);
                 dropdown.SelectedIndex = model.Count - 1;
             };
 
