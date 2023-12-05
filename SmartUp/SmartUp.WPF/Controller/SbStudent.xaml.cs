@@ -26,13 +26,13 @@ namespace SmartUp.UI
         public SbStudent()
         {
             InitializeComponent();
-            SbStudents = StudentDao.GetInstance().GetNameStudentByMentor(Constants.DOCENT_ID);
+            SbStudents = StudentDao.GetInstance().GetStudentNameByMentor((Constants.DOCENT_ID));
             SbStudentsNames.ItemsSource = SbStudents;
             SbStudentsNames.DisplayMemberPath = "FullName";
 
 
         }
-        public void AddGradeView(Grade model)
+        public void AddGradeView(DataAccess.SQLServer.Model.GradeStudent model)
         {
             Grid grid = new Grid();
             grid.Height = 120;
@@ -61,7 +61,7 @@ namespace SmartUp.UI
             Grid.SetColumn(Course, 0);
 
             TextBlock isDefinitive = new TextBlock();
-            if (model.IsDefinitive)
+            if (model.IsDefinitive.GetValueOrDefault())
             {
 
                 isDefinitive.Text = "Definitief";
@@ -117,7 +117,7 @@ namespace SmartUp.UI
             if (SbStudentsNames.SelectedItem != null && SbStudentsNames.SelectedItem is Student selectedStudent)
             {
                 string selectedText = selectedStudent.StudentId;
-                foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(selectedText))
+                foreach (DataAccess.SQLServer.Model.GradeStudent grade in GradeDao.GetInstance().GetGradesByStudentId(selectedText))
                 {
                     AddGradeView(grade);
                 }

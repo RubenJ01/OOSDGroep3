@@ -14,13 +14,13 @@ namespace SmartUp.UI
         public GradeStudent()
         {
             InitializeComponent();
-            foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(Constants.STUDENT_ID))
+            foreach (DataAccess.SQLServer.Model.GradeStudent grade in GradeDao.GetInstance().GetGradesByStudentId(Constants.STUDENT_ID))
             {
                 AddGradeView(grade);
             }
           
         }
-        public void AddGradeView(Grade model)
+        public void AddGradeView(DataAccess.SQLServer.Model.GradeStudent model)
         {
             Grid grid = new Grid();
             grid.Height = 120;
@@ -49,7 +49,7 @@ namespace SmartUp.UI
             Grid.SetColumn(Course, 0);
 
             TextBlock isDefinitive = new TextBlock();
-            if (model.IsDefinitive)
+            if (model.IsDefinitive.GetValueOrDefault())
             {
 
                 isDefinitive.Text = "Definitief";
