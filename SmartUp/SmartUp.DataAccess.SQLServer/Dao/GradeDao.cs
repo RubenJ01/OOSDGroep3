@@ -122,7 +122,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "UNION SELECT student.id, student.firstname, student.lastname, student.infix,  grade.grade,  Grade.isDefinitive, semesterCourse.courseName " +
                 "FROM student " +
                 "JOIN registrationSemester ON student.id = registrationSemester.studentId " +
-                "JOIN semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+                "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
                 "LEFT JOIN grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
                 "WHERE semesterCourse.courseName = @CourseName AND grade.studentId IS NULL;";
             using (SqlConnection connection = DatabaseConnection.GetConnection())
@@ -259,7 +259,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
                 "FROM  student " +
                 "JOIN  registrationSemester ON student.id = registrationSemester.studentId " +
-                "JOIN  semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+                "JOIN  semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
                 "LEFT JOIN  grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
                 "WHERE student.class = @ClassName AND grade.studentId IS NULL; ";
             using (SqlConnection connection = DatabaseConnection.GetConnection())

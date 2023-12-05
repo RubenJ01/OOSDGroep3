@@ -169,7 +169,7 @@ namespace SmartUp.UI
 
             string selectedText = CoursesCombobox.SelectedItem.ToString();
             setLayoutDataGrid();
-            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse("Advanced Web Technologies");
+            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
 
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
