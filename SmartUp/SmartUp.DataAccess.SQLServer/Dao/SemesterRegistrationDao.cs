@@ -51,19 +51,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return registrationSemesters;
         }
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string abbreviation)
+        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName)
         {
             using SqlConnection con = DatabaseConnection.GetConnection();
             try
             {
                 con.Open();
 
-                string query = "INSERT INTO registrationSemester (studentId, abbreviation) " +
-                "VALUES (@StudentId, @Abbreviation)";
+                string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
+                "VALUES (@StudentId, @SemesterName)";
                         using (SqlCommand command = new SqlCommand(query, con))
                         {
                             command.Parameters.AddWithValue("@StudentId", studentId);
-                            command.Parameters.AddWithValue("@Abbreviation", abbreviation);
+                            command.Parameters.AddWithValue("@SemesterName", semesterName);
                             command.ExecuteNonQuery();
                         }
             }

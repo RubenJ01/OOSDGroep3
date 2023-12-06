@@ -138,7 +138,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         String query = "SELECT semesterCourse.courseName " +
         "FROM student " +
         "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
-        "JOIN semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+        "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
         "WHERE student.class = @Classname " +
         "UNION SELECT DISTINCT grade.courseName " +
         "FROM student " +

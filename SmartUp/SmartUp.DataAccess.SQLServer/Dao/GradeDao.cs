@@ -144,7 +144,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string infix = reader["infix"].ToString();
                                 string courseName = reader["courseName"].ToString();
                                 decimal? grade = null;
-<<<<<<< HEAD
                                 string? isDefinitive = null;
                                 bool hadGrade = false ;
                                 if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
@@ -159,15 +158,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                         isDefinitive = "Definitief";
                                     }
                                     hadGrade = true ;
-=======
-                                bool? isDefinitive = null;
-                                bool hadGrade = false;
-                                if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
-                                {
-                                    grade = Convert.ToDecimal(reader["grade"]);
-                                    isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
-                                    hadGrade = true;
->>>>>>> a042f41ffc1b7e8c43daf2a73aaebd8114cd0c88
                                 }
 
                                 if (!hadGrade)
