@@ -203,5 +203,37 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
         }
+
+        public Semester GetSemesterByName(string name)
+        {
+            string query = "SELECT * FROM semester WHERE name = @name";
+            Semester semester = null;
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@name", name);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string abbreviation = reader["abbreviation"].ToString();
+                                string description = reader["description"].ToString();
+                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                                semester = new Semester(name, abbreviation, description, requiredCreditsFromP);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return semester;
+        }
     }
 }
