@@ -195,10 +195,8 @@ namespace SmartUp.UI
         }
         private void GradesStudentGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test1");
             if (e.EditAction == DataGridEditAction.Commit && e.Column.DisplayIndex == 3)
             {
-                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test2");
                 TextBox textBox = e.EditingElement as TextBox;
                 if (textBox != null)
                 {
@@ -206,28 +204,12 @@ namespace SmartUp.UI
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test2.6");
                     Debug.WriteLine($"Type of e.Row.Item: {e.Row.Item.GetType().FullName}");
                     if (e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
-                        {
-                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test3");
-                        string studentId = gradeTeacher.StudentId;
-                        string course = gradeTeacher.Vak;
-                        try
-                        {
-                            decimal.TryParse(newGradeText, out decimal newGrade);
-                            if (IsValid(newGrade))
-                            {
-                                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {newGrade}");
-                                GradeDao.GetInstance().UpdateGradeFirsTry(studentId, course, newGrade);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
+                    {
+                        UpdateGrade(gradeTeacher.StudentId, gradeTeacher.Vak, newGradeText);
                     }
                 }
 
             }
-            Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test5");
         }
 
         public void setLayoutDataGrid()
@@ -247,6 +229,22 @@ namespace SmartUp.UI
         {
             if(grade > 0 && grade <= 10) return true;
             return false;
+        }
+
+        public void UpdateGrade(string studentId, string course, string newGradeText)
+        {
+            try
+            {
+                decimal.TryParse(newGradeText, out decimal newGrade);
+                if (IsValid(newGrade))
+                {
+                    GradeDao.GetInstance().UpdateGradeFirsTry(studentId, course, newGrade);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
         }
 
     }

@@ -22,7 +22,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return instance;
         }
         
-<<<<<<< HEAD
+
         public List<SemesterRegistration> GetAllSemesterRegistration()
         {
             string query = "SELECT * FROM registrationSemester";
@@ -52,11 +52,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return registrationSemesters;
         }
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName)
-=======
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string name)
->>>>>>> 09268c2d2d1bbdaef04a67d38457133b1fa703ad
-        {
+        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName) { 
+
             using SqlConnection con = DatabaseConnection.GetConnection();
             try
             {
@@ -67,11 +64,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         using (SqlCommand command = new SqlCommand(query, con))
                         {
                             command.Parameters.AddWithValue("@StudentId", studentId);
-<<<<<<< HEAD
                             command.Parameters.AddWithValue("@SemesterName", semesterName);
-=======
-                            command.Parameters.AddWithValue("@SemesterName", name);
->>>>>>> 09268c2d2d1bbdaef04a67d38457133b1fa703ad
                             command.ExecuteNonQuery();
                         }
             }
