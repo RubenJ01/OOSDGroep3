@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+		<PackageReference Include="YamlDotNet" Version="13.7.1" />
+		<None Remove="Img\CreateCourse.png" />
+		<None Remove="Img\CreateSemester.png" />
+		<None Remove="Img\GradeIcon.png" />
+		<None Remove="Img\SemesterIcon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Img\CreateCourse.png" />
+		<Resource Include="Img\CreateSemester.png" />
+		<Resource Include="Img\GradeIcon.png" />
+		<Resource Include="Img\SemesterIcon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Model\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SmartUpAdmin.DataAccess.SQLServer\SmartUpAdmin.DataAccess.SQLServer.csproj" />
+	</ItemGroup>
+
+</Project>

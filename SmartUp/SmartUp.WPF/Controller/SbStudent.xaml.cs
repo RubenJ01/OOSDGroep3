@@ -1,21 +1,9 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using SmartUp.Core.Constants;
-using System.Xml.Linq;
-using System.Diagnostics;
 
 namespace SmartUp.UI
 {
@@ -26,13 +14,11 @@ namespace SmartUp.UI
         public SbStudent()
         {
             InitializeComponent();
-            SbStudents = StudentDao.GetInstance().GetStudentNameByMentor((Constants.DOCENT_ID));
+            SbStudents = StudentDao.GetInstance().GetStudentNameByMentor(Constants.DOCENT_ID);
             SbStudentsNames.ItemsSource = SbStudents;
             SbStudentsNames.DisplayMemberPath = "FullName";
-
-
         }
-        public void AddGradeView(DataAccess.SQLServer.Model.GradeStudent model)
+        public void AddGradeView(Grade model)
         {
             Grid grid = new Grid();
             grid.Height = 120;
@@ -61,7 +47,7 @@ namespace SmartUp.UI
             Grid.SetColumn(Course, 0);
 
             TextBlock isDefinitive = new TextBlock();
-            if (model.IsDefinitive.GetValueOrDefault())
+            if (model.IsDefinitive)
             {
 
                 isDefinitive.Text = "Definitief";
@@ -117,7 +103,7 @@ namespace SmartUp.UI
             if (SbStudentsNames.SelectedItem != null && SbStudentsNames.SelectedItem is Student selectedStudent)
             {
                 string selectedText = selectedStudent.StudentId;
-                foreach (DataAccess.SQLServer.Model.GradeStudent grade in GradeDao.GetInstance().GetGradesByStudentId(selectedText))
+                foreach (Grade grade in GradeDao.GetInstance().GetGradesByStudentId(selectedText))
                 {
                     AddGradeView(grade);
                 }

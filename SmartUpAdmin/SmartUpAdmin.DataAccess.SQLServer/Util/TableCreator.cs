@@ -123,7 +123,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterAvailability', 'U') IS NULL
         BEGIN
             CREATE TABLE semesterAvailability (
-                semesterName varchar(10),
+                semesterName varchar(64),
                 availableInSemester int,
                 PRIMARY KEY(semesterName, availableInSemester),
                 FOREIGN KEY (semesterName) REFERENCES semester(name)
@@ -136,7 +136,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterCourse', 'U') IS NULL
         BEGIN
             CREATE TABLE semesterCourse (
-                semesterName varchar(10),
+                semesterName varchar(64),
                 courseName varchar(64),
                 PRIMARY KEY (semesterName, courseName),
                 FOREIGN KEY (semesterName) REFERENCES semester([name]),
@@ -150,7 +150,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         IF OBJECT_ID('semesterCriteria', 'U') IS NULL
         BEGIN 
             CREATE TABLE semesterCriteria (
-                semesterName varchar(10),
+                semesterName varchar(64),
                 courseName varchar(64),
                 PRIMARY KEY (semesterName, courseName),
                 FOREIGN KEY (semesterName) REFERENCES semester([name]),
@@ -175,7 +175,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         BEGIN
             CREATE TABLE registrationSemester (
                 studentId varchar(32),
-                abbreviation varchar(10),
+                semesterName varchar(64),
                 PRIMARY KEY(studentId)
             );
         END;"
@@ -205,19 +205,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     }
                 }
             }
-
+                
         }
-
+            
         public static void FillTables()
         {
-            //CourseDao.GetInstance().FillTable();
-            //TeacherDao.GetInstance().FillTable();
-            //SemesterDao.GetInstance().FillTable();
-            //ClassDao.GetInstance().FillTable();
-            //StudentDao.GetInstance().FillTable();
-            //GradeDao.GetInstance().FillTable();
-            //SemesterCriteriaDao.GetInstance().FillTable();
-            //SemesterCourseDao.GetInstance().FillTable();
+            CourseDao.GetInstance().FillTable();
+            TeacherDao.GetInstance().FillTable();
+            SemesterDao.GetInstance().FillTable();
+            ClassDao.GetInstance().FillTable();
+            StudentDao.GetInstance().FillTable();
+            GradeDao.GetInstance().FillTable();
+            SemesterCriteriaDao.GetInstance().FillTable();
+            SemesterCourseDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)
@@ -232,7 +232,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
-
+                
             }
         }
     }
