@@ -190,7 +190,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
                 "JOIN course ON course.name = @CourseName " +
-                "WHERE student.class = @ClassName" +
+                "WHERE student.class = @ClassName " +
                 "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
                 "FROM student " +
                 "JOIN registrationSemester ON student.id = registrationSemester.studentId " + 

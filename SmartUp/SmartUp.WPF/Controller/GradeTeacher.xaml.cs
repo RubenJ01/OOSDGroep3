@@ -166,7 +166,15 @@ namespace SmartUp.UI
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CoursesCombobox.SelectedItem != null)
+            if (ClassesCombobox.SelectedIndex > -1)
+            {
+                string selectedText = CoursesCombobox.SelectedItem.ToString();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(selectedText, ClassesCombobox.SelectedItem.ToString());
+                setLayoutDataGrid();
+                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
+                ClassesCombobox.ItemsSource = Classes;
+            }
+            else
             {
                 string selectedText = CoursesCombobox.SelectedItem.ToString();
                 GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
@@ -174,11 +182,18 @@ namespace SmartUp.UI
                 List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
                 ClassesCombobox.ItemsSource = Classes;
             }
-
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ClassesCombobox.SelectedItem != null)
+            if (CoursesCombobox.SelectedIndex > -1)
+            {
+                string selectedText = ClassesCombobox.SelectedItem.ToString();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(CoursesCombobox.SelectedItem.ToString(), selectedText);
+                setLayoutDataGrid();
+                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedText);
+                CoursesCombobox.ItemsSource = Courses;
+            }
+            else
             {
                 string selectedText = ClassesCombobox.SelectedItem.ToString();
                 GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
@@ -189,20 +204,8 @@ namespace SmartUp.UI
         }
         public void setLayoutDataGrid()
         {
-            GradesStudentGrid.FontSize = 24;
-            GradesStudentGrid.Columns[0].Width = 293;
-            GradesStudentGrid.Columns[1].Width = 293;
-            GradesStudentGrid.Columns[2].Width = 475;
-            GradesStudentGrid.Columns[3].Width = 243;
-            GradesStudentGrid.Columns[4].Width = 268;
-
-
-
+            GradesStudentGrid.FontSize = 15;
+            GradesStudentGrid.ColumnWidth = 315;
         }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 92f14ccefd8a2dbf5ebc7355f381f04566d7103d
     }
 }

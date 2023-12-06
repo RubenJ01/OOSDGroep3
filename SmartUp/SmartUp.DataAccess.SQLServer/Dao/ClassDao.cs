@@ -67,10 +67,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return classNames;
         }
-        public List<String> GetClassNameByCourse(string courseName)
+        public List<string> GetClassNameByCourse(string courseName)
         {
-            List<String> classNames = new List<string>();
-            String query = "SELECT student.class " +
+            List<string> classNames = new List<string>();
+            string query = "SELECT student.class " +
                 "FROM student " +
                 "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
                 "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
