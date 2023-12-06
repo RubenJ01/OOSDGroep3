@@ -1,8 +1,10 @@
-﻿using SmartUp.DataAccess.SQLServer.Dao;
+﻿using Microsoft.Identity.Client;
+using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.UI;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -16,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
+
 
 namespace SmartUp.UI
 {
@@ -189,6 +193,43 @@ namespace SmartUp.UI
 
 
         }
+        private void GradesStudentGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test1");
+            if (e.EditAction == DataGridEditAction.Commit && e.Column.DisplayIndex == 3)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test2");
+                TextBox textBox = e.EditingElement as TextBox;
+                if (textBox != null)
+                {
+                    string newGradeText = textBox.Text;
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test2.6");
+                    Debug.WriteLine($"Type of e.Row.Item: {e.Row.Item.GetType().FullName}");
+                    if (e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
+                        {
+                        Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test3");
+                        string studentId = gradeTeacher.StudentId;
+                        string course = gradeTeacher.Vak;
+                        try
+                        {
+                            decimal.TryParse(newGradeText, out decimal newGrade);
+                            if (IsValid(newGrade))
+                            {
+                                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {newGrade}");
+                                GradeDao.GetInstance().UpdateGradeFirsTry(studentId, course, newGrade);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+
+            }
+            Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test5");
+        }
+
         public void setLayoutDataGrid()
         {
             GradesStudentGrid.FontSize = 24;
@@ -202,6 +243,11 @@ namespace SmartUp.UI
 
         }
 
+        public bool IsValid(Decimal grade)
+        {
+            if(grade > 0 && grade <= 10) return true;
+            return false;
+        }
 
     }
 }
