@@ -22,48 +22,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return instance;
         }
         
-        public List<SemesterRegistration> GetAllSemesterRegistration()
-        {
-            string query = "SELECT * FROM registrationSemester";
-            List<SemesterRegistration> registrationSemesters = new List<SemesterRegistration>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string studentId = reader["studentId"].ToString();
-                                string abbreviation = reader["abbreviation"].ToString();
-                                registrationSemesters.Add(new SemesterRegistration(abbreviation, studentId));
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-            }
-            return registrationSemesters;
-        }
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string abbreviation)
+        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string name)
         {
             using SqlConnection con = DatabaseConnection.GetConnection();
             try
             {
                 con.Open();
 
-                string query = "INSERT INTO registrationSemester (studentId, abbreviation) " +
-                "VALUES (@StudentId, @Abbreviation)";
+                string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
+                "VALUES (@StudentId, @SemesterName)";
                         using (SqlCommand command = new SqlCommand(query, con))
                         {
                             command.Parameters.AddWithValue("@StudentId", studentId);
-                            command.Parameters.AddWithValue("@Abbreviation", abbreviation);
+                            command.Parameters.AddWithValue("@SemesterName", name);
                             command.ExecuteNonQuery();
                         }
             }
@@ -104,7 +75,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         public bool IsEnrolledForSemesterByStudentId(string studentID, Semester semester)
         {
-            string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid AND abbreviation = @semesterAbbreviation";
+            string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid AND semesterName = @SemesterName";
             bool isEnrolled = false;
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -114,7 +85,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@studentid", studentID);
-                        command.Parameters.AddWithValue("@semesterAbbreviation", semester.Abbreviation);
+                        command.Parameters.AddWithValue("@SemesterName", semester.Name);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())

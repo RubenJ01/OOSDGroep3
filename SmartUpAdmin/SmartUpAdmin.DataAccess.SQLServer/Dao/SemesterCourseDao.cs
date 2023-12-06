@@ -130,9 +130,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
         
-        public List<string> GetSemesterCoursesBySemesterAbbreviation(string semesterAbbreviation)
+        public List<string> GetSemesterCoursesBySemesterName(string semesterName)
         {
-            string query = "SELECT courseName FROM semesterCourse WHERE semesterAbbreviation = @SemesterAbbreviation";
+            string query = "SELECT courseName FROM semesterCourse WHERE semesterName = @SemesterName";
             List<string> semestersCourses = new List<string>();
             using(SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -141,7 +141,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@SemesterAbbreviation", semesterAbbreviation);
+                        command.Parameters.AddWithValue("@SemesterName", semesterName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -160,6 +160,27 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semestersCourses;
         }
 
-
+        public void AddSemesterCourse(SemesterCourse semesterCourse)
+        {
+            string query = "INSERT INTO semesterCourse (semesterName, courseName) " +
+                "VALUES(@SemesterName, @CourseName)";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@SemesterName", semesterCourse.SemesterName);
+                        command.Parameters.AddWithValue("@CourseName", semesterCourse.CourseName);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+        }
     }
 }

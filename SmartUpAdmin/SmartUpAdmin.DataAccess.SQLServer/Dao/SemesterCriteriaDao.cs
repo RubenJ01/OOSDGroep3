@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
+using SmartUpAdmin.DataAccess.SQLServer.Model;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -129,5 +130,28 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
+
+        public void AddSemesterCriteria(SemesterCriteria semesterCriteria)
+        {
+            string query = "INSERT INTO semesterCriteria (semesterName, courseName) " +
+                "VALUES (@SemesterName, @CourseName)";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@SemesterName", semesterCriteria.SemesterName);
+                        command.Parameters.AddWithValue("@CourseName", semesterCriteria.CourseName);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+        }   
     }
 }
