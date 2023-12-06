@@ -166,25 +166,34 @@ namespace SmartUp.UI
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ClassesCombobox.SelectedIndex > -1)
+            {
 
-            string selectedText = CoursesCombobox.SelectedItem.ToString();
-            setLayoutDataGrid();
-            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
-
+            }
+            else
+            {
+                string selectedText = CoursesCombobox.SelectedItem.ToString();
+                setLayoutDataGrid();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
+            }
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ClassesCombobox.SelectedIndex > -1)
+            {
 
-            string selectedText = ClassesCombobox.SelectedItem.ToString();
-            setLayoutDataGrid();
-            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
-
+            }
+            else
+            {
+                string selectedText = ClassesCombobox.SelectedItem.ToString();
+                setLayoutDataGrid();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
+            }
         }
         public void setLayoutDataGrid()
         {
             GradesStudentGrid.FontSize = 15;
             GradesStudentGrid.ColumnWidth = 315;
         }
-
     }
 }
