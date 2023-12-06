@@ -14,14 +14,14 @@ namespace SmartUp.DataAccess.SQLServer.Model
         public string Naam { get; set; }
         public string Vak { get; set; }
         public decimal? Cijfer { get; set; }
-        public bool? IsDefinitief { get; set; }
+        public string? Status { get; set; }
 
 
 
-        public GradeTeacher(decimal grade, bool isDefinitive, string courseName, Student student)
+        public GradeTeacher(decimal grade, string status, string courseName, Student student)
         {
             Cijfer = grade;
-            IsDefinitief = isDefinitive;
+            Status = status;
             Vak = courseName;
             StudentId = student.StudentId;
             Naam = student.FullName;
@@ -29,7 +29,7 @@ namespace SmartUp.DataAccess.SQLServer.Model
         public GradeTeacher(string courseName, Student student)
         {
             Cijfer = null;
-            IsDefinitief = null;
+            Status = null;
             Vak = courseName;
             StudentId = student.StudentId;
             Naam = student.FullName;

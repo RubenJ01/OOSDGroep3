@@ -132,6 +132,43 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return courseNames;
         }
+        public List<String> GetCoursNameByClass(string className)
+        {
+            List<String> courseNames = new List<string>();
+        String query = "SELECT semesterCourse.courseName " +
+        "FROM student " +
+        "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
+        "JOIN semesterCourse ON registrationSemester.abbreviation = semesterCourse.semesterAbbreviation " +
+        "WHERE student.class = @Classname " +
+        "UNION SELECT DISTINCT grade.courseName " +
+        "FROM student " +
+        "JOIN grade ON grade.studentId = student.id " +
+        "WHERE student.class = @ClassName; ";
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ClassName", className);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string courseName = reader["courseName"].ToString();
+                                courseNames.Add(courseName);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            return courseNames;
+        }
     }
     
 }

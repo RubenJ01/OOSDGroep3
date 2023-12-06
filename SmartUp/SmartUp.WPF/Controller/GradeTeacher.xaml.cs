@@ -166,25 +166,42 @@ namespace SmartUp.UI
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            string selectedText = CoursesCombobox.SelectedItem.ToString();
-            setLayoutDataGrid();
-            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
+            if (CoursesCombobox.SelectedItem != null)
+            {
+                string selectedText = CoursesCombobox.SelectedItem.ToString();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
+                setLayoutDataGrid();
+                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
+                ClassesCombobox.ItemsSource = Classes;
+            }
 
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ClassesCombobox.SelectedItem != null)
+            {
+                string selectedText = ClassesCombobox.SelectedItem.ToString();
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
+                setLayoutDataGrid();
+                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedText);
+                CoursesCombobox.ItemsSource = Courses;
+            }
 
-            string selectedText = ClassesCombobox.SelectedItem.ToString();
-            setLayoutDataGrid();
-            GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
 
         }
         public void setLayoutDataGrid()
         {
-            GradesStudentGrid.FontSize = 15;
-            GradesStudentGrid.ColumnWidth = 315;
+            GradesStudentGrid.FontSize = 24;
+            GradesStudentGrid.Columns[0].Width = 293;
+            GradesStudentGrid.Columns[1].Width = 293;
+            GradesStudentGrid.Columns[2].Width = 475;
+            GradesStudentGrid.Columns[3].Width = 243;
+            GradesStudentGrid.Columns[4].Width = 268;
+
+
+
         }
+
 
     }
 }
