@@ -162,12 +162,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 09268c2d2d1bbdaef04a67d38457133b1fa703ad
         public List<string> GetSemesterCoursesBySemesterName(string semesterName)
         {
             string query = "SELECT courseName FROM semesterCourse WHERE semesterName = @SemesterName";
             List<string> semestersCourses = new List<string>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {

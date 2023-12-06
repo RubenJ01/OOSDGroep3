@@ -2,7 +2,6 @@
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -51,6 +50,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return registrationSemesters;
         }
+
         public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string abbreviation)
         {
             using SqlConnection con = DatabaseConnection.GetConnection();
