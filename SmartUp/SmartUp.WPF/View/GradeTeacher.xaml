@@ -14,8 +14,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Vak:" FontSize="20" FontWeight="Bold" Margin="20,43,0,0"  VerticalAlignment="Top" HorizontalAlignment="left"/>
@@ -23,12 +23,8 @@
             <TextBlock Grid.Row="0" Text="Klas:" FontSize="20" FontWeight="Bold" Margin="400,43,0,0"  VerticalAlignment="Top" HorizontalAlignment="left"/>
             <ComboBox x:Name="ClassesCombobox" Grid.Row="0" HorizontalAlignment="Left" Margin="450,37,0,0" VerticalAlignment="Top" Width="200" Height="40" SelectionChanged="Class_SelectionChanged"/>
             <Border Grid.Row="1" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"  Margin="0,10,0,0"/>
-
+            <TextBlock Grid.Row="1" Text="Cijfers invoeren" FontSize="27" FontWeight="Bold" Margin="20,10,0,0"  VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <DataGrid x:Name="GradesStudentGrid" Grid.Row ="2" Height="800" HorizontalAlignment="Left" Margin="12,21,0,0" VerticalAlignment="Top" Width="1600" />
-
-            <!--<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                <StackPanel Grid.Row="2" x:Name="GradesStudentOverview" />
-            </ScrollViewer>-->
 
         </Grid>
     </Grid>

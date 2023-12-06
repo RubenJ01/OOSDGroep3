@@ -166,34 +166,43 @@ namespace SmartUp.UI
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ClassesCombobox.SelectedIndex > -1)
-            {
-
-            }
-            else
+            if (CoursesCombobox.SelectedItem != null)
             {
                 string selectedText = CoursesCombobox.SelectedItem.ToString();
-                setLayoutDataGrid();
                 GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
+                setLayoutDataGrid();
+                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
+                ClassesCombobox.ItemsSource = Classes;
             }
+
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ClassesCombobox.SelectedIndex > -1)
-            {
-
-            }
-            else
+            if (ClassesCombobox.SelectedItem != null)
             {
                 string selectedText = ClassesCombobox.SelectedItem.ToString();
-                setLayoutDataGrid();
                 GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
+                setLayoutDataGrid();
+                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedText);
+                CoursesCombobox.ItemsSource = Courses;
             }
         }
         public void setLayoutDataGrid()
         {
-            GradesStudentGrid.FontSize = 15;
-            GradesStudentGrid.ColumnWidth = 315;
+            GradesStudentGrid.FontSize = 24;
+            GradesStudentGrid.Columns[0].Width = 293;
+            GradesStudentGrid.Columns[1].Width = 293;
+            GradesStudentGrid.Columns[2].Width = 475;
+            GradesStudentGrid.Columns[3].Width = 243;
+            GradesStudentGrid.Columns[4].Width = 268;
+
+
+
         }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 92f14ccefd8a2dbf5ebc7355f381f04566d7103d
     }
 }

@@ -101,7 +101,7 @@ namespace SmartUp.UI
             stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
 
             List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
-            List<string> CoursesInSemster = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterAbbreviation(semester.Abbreviation);
+            List<string> CoursesInSemster = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(semester.Name);
 
             if (CriteriaCourses.Count > 0)
             {
@@ -148,7 +148,7 @@ namespace SmartUp.UI
         {
             if (SelectedSemester.Abbreviation != null)
             {
-                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Abbreviation);
+                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Name);
                 UnsubscribeButton.IsEnabled = true;
                 EnrollButton.IsEnabled = false;
             }

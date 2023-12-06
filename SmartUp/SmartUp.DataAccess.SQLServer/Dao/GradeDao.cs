@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
+using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
 
@@ -143,13 +144,20 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string infix = reader["infix"].ToString();
                                 string courseName = reader["courseName"].ToString();
                                 decimal? grade = null;
-                                bool? isDefinitive = null;
-                                bool hadGrade = false;
+                                string? isDefinitive = null;
+                                bool hadGrade = false ;
                                 if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
                                 {
                                     grade = Convert.ToDecimal(reader["grade"]);
-                                    isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
-                                    hadGrade = true;
+                                    if(Convert.ToBoolean(reader["isDefinitive"]) == false)
+                                    {
+                                        isDefinitive = "Voorlopig";
+                                    }
+                                    else
+                                    {
+                                        isDefinitive = "Definitief";
+                                    }
+                                    hadGrade = true ;
                                 }
 
                                 if (!hadGrade)
@@ -160,7 +168,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 else
                                 {
                                     Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
-                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive.GetValueOrDefault(), courseName, new Student(firstName, lastName, infix, studentId)));
+                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive, courseName, new Student(firstName, lastName, infix, studentId)));
                                 }
 
                             }
@@ -280,12 +288,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string infix = reader["infix"].ToString();
                                 string courseName = reader["courseName"].ToString();
                                 decimal? grade = null;
-                                bool? isDefinitive = null;
+                                string? isDefinitive = null;
                                 bool hadGrade = false;
                                 if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
                                 {
                                     grade = Convert.ToDecimal(reader["grade"]);
-                                    isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                                    if (Convert.ToBoolean(reader["isDefinitive"]) == false)
+                                    {
+                                        isDefinitive = "Voorlopig";
+                                    }
+                                    else
+                                    {
+                                        isDefinitive = "Definitief";
+                                    }
                                     hadGrade = true;
                                 }
 
@@ -297,7 +312,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 else
                                 {
                                     Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
-                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive.GetValueOrDefault(), courseName, new Student(firstName, lastName, infix, studentId)));
+                                    grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive, courseName, new Student(firstName, lastName, infix, studentId)));
                                 }
 
                             }

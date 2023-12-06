@@ -1,8 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
+using Renci.SshNet.Security;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -81,16 +84,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             };
                 List<string> itSemester = new List<string>
                 {
-                    "ITP",
-                    "DSA",
-                    "OOP",
-                    "DBMS",
-                    "WDD",
-                    "SEP",
-                    "NS",
-                    "AIML",
-                    "CCT",
-                    "CPFA"
+                    "Artificial Intelligence and Machine Learning", 
+                    "Capstone Project and Final Assessment",
+                    "Cloud Computing Technologies" , 
+                    "Data Structures and Algorithms ", 
+                    "Database Management Systems ",
+                    "Introduction to Programming", 
+                    "Networking and Security",
+                    "Object-Oriented Programming",
+                    "Software Engineering Principles",
+                    "Web Development and Design"
                 };
                 int JumpToSemester = 0;
                 for(int i = 0; i < (itCourses.Count -1) ; i++)
@@ -99,7 +102,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
                     string CourseName = itCourses[i];
                     Debug.WriteLine(CourseName);
-                    string insertQuery = "INSERT INTO semesterCourse (semesterAbbreviation, courseName) " +
+                    string insertQuery = "INSERT INTO semesterCourse (semesterName, courseName) " +
     "VALUES(@semester, @course)";
                     using (SqlCommand command = new SqlCommand(insertQuery, con))
                     {
@@ -145,7 +148,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         {
                             while (reader.Read())
                             {
-                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string abbreviation = reader["semesterName"].ToString();
                                 string semesterCourse = reader["courseName"].ToString();
                                 semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
                             }
@@ -160,9 +163,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semesters;
         }
         
-        public List<string> GetSemesterCoursesBySemesterAbbreviation(string semesterAbbreviation)
+        public List<string> GetSemesterCoursesBySemesterName(string semesterName)
         {
-            string query = "SELECT courseName FROM semesterCourse WHERE semesterAbbreviation = @SemesterAbbreviation";
+            string query = "SELECT courseName FROM semesterCourse WHERE semesterName = @SemesterName";
             List<string> semestersCourses = new List<string>();
             using(SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -171,7 +174,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@SemesterAbbreviation", semesterAbbreviation);
+                        command.Parameters.AddWithValue("@SemesterName", semesterName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
