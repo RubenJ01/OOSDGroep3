@@ -146,7 +146,7 @@ namespace SmartUp.UI
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
         {
-            if (SelectedSemester.Abbreviation != null)
+            if (SelectedSemester.Name != null)
             {
                 SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Name);
                 UnsubscribeButton.IsEnabled = true;
