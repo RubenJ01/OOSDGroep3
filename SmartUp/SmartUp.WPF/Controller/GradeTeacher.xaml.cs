@@ -204,8 +204,12 @@ namespace SmartUp.UI
         }
         public void setLayoutDataGrid()
         {
-            GradesStudentGrid.FontSize = 15;
-            GradesStudentGrid.ColumnWidth = 315;
+            GradesStudentGrid.FontSize = 24;
+            GradesStudentGrid.Columns[0].Width = 293;
+            GradesStudentGrid.Columns[1].Width = 293;
+            GradesStudentGrid.Columns[2].Width = 475;
+            GradesStudentGrid.Columns[3].Width = 243;
+            GradesStudentGrid.Columns[4].Width = 268;
         }
     }
 }
