@@ -16,6 +16,7 @@ namespace SmartUp.UI
     public partial class GradeTeacher : Page
     {
         private Brush originalBackgroundColor = null;
+        public event EventHandler<EventArgs> NavigateToPageRequested;
         public GradeTeacher()
         {
             InitializeComponent();
@@ -208,6 +209,13 @@ namespace SmartUp.UI
         private bool IsDigitKey(Key key)
         {
             return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9);
+        }
+
+        private void ButtonToGradesAddGrade(object sender, RoutedEventArgs e)
+        {
+            // Moet nog veranderd worden met nieuwe implementatie
+            Debug.WriteLine("Test");
+            NavigateToPageRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }
