@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 
@@ -90,6 +92,7 @@ namespace SmartUp.UI
             GradesStudentGrid.Columns[2].Width = 475;
             GradesStudentGrid.Columns[2].IsReadOnly = true;
             GradesStudentGrid.Columns[3].Width = 243;
+            GradesStudentGrid.Columns[3].CellStyle = GetDoubleCellStyle();
             GradesStudentGrid.Columns[4].Width = 268;
             GradesStudentGrid.Columns[4].IsReadOnly = true;
         }
@@ -115,10 +118,12 @@ namespace SmartUp.UI
         {
             try
             {
-                decimal.TryParse(newGradeText, out decimal newGrade);
+                decimal newGrade;
+                decimal.TryParse(newGradeText, NumberStyles.Number, CultureInfo.InvariantCulture, out newGrade);
+                Debug.WriteLine(newGrade);
                 if (IsValid(newGrade, e))
                 {
-                    GradeDao.GetInstance().UpdateGradeFirsTry(studentId, course, newGrade);
+                    GradeDao.GetInstance().UpdateGrade(studentId, course, newGrade);
                 }
             }
             catch (Exception ex)
@@ -170,6 +175,39 @@ namespace SmartUp.UI
             }
 
             return null;
+        }
+
+        private Style GetDoubleCellStyle()
+        {
+            var style = new Style(typeof(DataGridCell));
+            style.Setters.Add(new EventSetter(UIElement.PreviewKeyDownEvent, new KeyEventHandler(PreviewKeyDownHandler)));
+            return style;
+        }
+
+        private void PreviewKeyDownHandler(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = e.OriginalSource as TextBox;
+
+            if (textBox != null)
+            {
+                if (e.Key == Key.OemPeriod || e.Key == Key.Decimal)
+                {
+                    // Allow decimal point if not already present
+                    if (textBox.Text.Contains("."))
+                    {
+                        e.Handled = true;
+                    }
+                }
+                else if (!IsDigitKey(e.Key) && e.Key != Key.Back && e.Key != Key.Enter)
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private bool IsDigitKey(Key key)
+        {
+            return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9);
         }
     }
 }
