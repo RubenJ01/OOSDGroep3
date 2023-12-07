@@ -1,25 +1,11 @@
-﻿using Microsoft.Identity.Client;
-using SmartUp.DataAccess.SQLServer.Dao;
-using SmartUp.DataAccess.SQLServer.Model;
-using SmartUp.UI;
+﻿using SmartUp.DataAccess.SQLServer.Dao;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 
 
 namespace SmartUp.UI
@@ -98,10 +84,14 @@ namespace SmartUp.UI
         {
             GradesStudentGrid.FontSize = 24;
             GradesStudentGrid.Columns[0].Width = 293;
+            GradesStudentGrid.Columns[0].IsReadOnly = true;
             GradesStudentGrid.Columns[1].Width = 293;
+            GradesStudentGrid.Columns[1].IsReadOnly = true;
             GradesStudentGrid.Columns[2].Width = 475;
+            GradesStudentGrid.Columns[2].IsReadOnly = true;
             GradesStudentGrid.Columns[3].Width = 243;
             GradesStudentGrid.Columns[4].Width = 268;
+            GradesStudentGrid.Columns[4].IsReadOnly = true;
         }
         public bool IsValid(Decimal grade, DataGridCellEditEndingEventArgs e)
         {
@@ -114,8 +104,8 @@ namespace SmartUp.UI
 
             if (grade > 0 && grade <= 10)
             {
-                cell.Background = originalBackgroundColor;
-                return true;
+               cell.Background = originalBackgroundColor;
+               return true;
             }
             cell.Background = Brushes.Red;
             return false;
