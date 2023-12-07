@@ -188,7 +188,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
                 "JOIN course ON course.name = @CourseName " +
-                "WHERE student.class = @ClassName" +
+                "WHERE student.class = @ClassName " +
                 "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
                 "FROM student " +
                 "JOIN registrationSemester ON student.id = registrationSemester.studentId " + 
@@ -395,10 +395,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             return grades;
         }
-        public void UpdateGradeFirsTry(string studentId, string course, decimal grade)
+        public void UpdateGrade(string studentId, string course, decimal grade)
         {
-            string query = "INSERT INTO grade (studentId, courseName, attempt, grade, isDefinitive, date) " +
-                "VALUES (@studentId, @Course, 1, @grade, 0 , CURRENT_TIMESTAMP);";
+            string query = "MERGE INTO grade AS target " +
+                  "USING (SELECT @studentId AS StudentID, @Course AS CourseName) AS source " +
+                  "ON target.studentId = source.StudentID AND target.courseName = source.CourseName " +
+                  "WHEN MATCHED THEN " +
+                  "    UPDATE SET target.grade = @grade, target.date = CURRENT_TIMESTAMP " +
+                  "WHEN NOT MATCHED THEN " +
+                  "    INSERT (studentId, courseName, attempt, grade, isDefinitive, date) " +
+                  "    VALUES (@studentId, @Course, 1, @grade, 0, CURRENT_TIMESTAMP);";
+
 
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
