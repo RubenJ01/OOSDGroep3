@@ -1,0 +1,53 @@
+﻿<Page x:Class="SmartUp.UI.InsertGrade"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartUp.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="{x:Static SystemParameters.PrimaryScreenHeight}" d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}"
+      Title="InsertGrade">
+
+    <Grid Background="#E2E2E2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Invoeren cijfer" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"/>
+
+        <Grid x:Name="forms" Grid.Row="1" Margin="3,0,-3,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Studentnr:" FontSize="30" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Vak:" FontSize="30" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock Text="Poging:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Cijfer:" FontSize="30" Grid.Column="1" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBox x:Name="StudentnrField" Grid.Row="1" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center" />
+            <ComboBox x:Name="CoursesCombobox" Grid.Row="2" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Bottom" Height="50"/>
+            <TextBox x:Name="AttemptField" Grid.Row="3" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="GradeField" Grid.Row="4" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
+            <Button x:Name="InsertButton" Grid.Row="7" Grid.Column="4" Margin="20" FontSize="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Toevoegen" Click="InsertButtonClick"/>
+        </Grid>
+    </Grid>
+</Page>

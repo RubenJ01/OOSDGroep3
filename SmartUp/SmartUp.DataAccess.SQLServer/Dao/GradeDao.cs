@@ -77,9 +77,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public List<Grade> GetGradesByStudentId(string studentId)
         {
             List<Grade> grades = new List<Grade>();
-            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits " +
-                           "FROM grade JOIN course ON course.name = grade.courseName " +
-                           "WHERE grade.studentId = @StudentId";
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
+               "FROM grade JOIN course ON course.name = grade.courseName " +
+               "WHERE grade.studentId = @StudentId";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
