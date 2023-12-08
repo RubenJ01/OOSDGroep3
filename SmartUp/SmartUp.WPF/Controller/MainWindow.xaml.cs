@@ -12,12 +12,10 @@ namespace SmartUp.UI
 {
     public partial class MainWindow : Window
     {
-        private GradeTeacher GradeTeacherPage = new GradeTeacher();
         public MainWindow()
         {
             InitializeComponent();
             AddButtonsStudent();
-            GradeTeacherPage.ChangeContent += Page_ChangeContent;
         }
 
 
@@ -51,7 +49,7 @@ namespace SmartUp.UI
         }
         private void ButtonToGradesTeacher_Click(object sender, RoutedEventArgs e)
         {
-            ContentArea.Navigate(GradeTeacherPage);
+            ContentArea.Navigate(new Uri("./View/GradeTeacher.xaml", UriKind.Relative));
         }
 
         public void AddButtonsStudent()
@@ -139,11 +137,6 @@ namespace SmartUp.UI
             stackpanelButtons.Children.Add(GradeButton);
             stackpanelButtons.Children.Add(Sb_StudentButton);
             stackpanelButtons.Children.Add(ButtonToStudent);
-        }
-
-        private void Page_ChangeContent(object sender, EventArgs e)
-        {
-            ContentArea.Navigate(new Uri("/View/InsertGrade.xaml", UriKind.Relative));
         }
     }
 }

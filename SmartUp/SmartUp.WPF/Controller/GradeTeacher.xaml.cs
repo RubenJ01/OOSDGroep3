@@ -16,6 +16,9 @@ namespace SmartUp.UI
     public partial class GradeTeacher : Page
     {
         private Brush originalBackgroundColor = null;
+        private string selectedCourse;
+        private string selectedClass;
+        
         public GradeTeacher()
         {
             InitializeComponent();
@@ -23,62 +26,40 @@ namespace SmartUp.UI
             CoursesCombobox.ItemsSource = Courses;
             List<string> Classes = ClassDao.GetInstance().GetClassNames();
             ClassesCombobox.ItemsSource = Classes;
+            MakeDefinitiveButton.IsEnabled = false;
         }
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ClassesCombobox.SelectedIndex > -1)
-            {
-                string selectedText = CoursesCombobox.SelectedItem.ToString();
-                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(selectedText, ClassesCombobox.SelectedItem.ToString());
-                setLayoutDataGrid();
-                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
-                ClassesCombobox.ItemsSource = Classes;
-            }
-            else
-            {
-                string selectedText = CoursesCombobox.SelectedItem.ToString();
-                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedText);
-                setLayoutDataGrid();
-                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedText);
-                ClassesCombobox.ItemsSource = Classes;
-            }
+            selectedCourse = CoursesCombobox.SelectedItem.ToString();
+            LoadTableCourse();
         }
         private void Class_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CoursesCombobox.SelectedIndex > -1)
-            {
-                string selectedText = ClassesCombobox.SelectedItem.ToString();
-                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(CoursesCombobox.SelectedItem.ToString(), selectedText);
-                setLayoutDataGrid();
-                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedText);
-                CoursesCombobox.ItemsSource = Courses;
-            }
-            else
-            {
-                string selectedText = ClassesCombobox.SelectedItem.ToString();
-                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedText);
-                setLayoutDataGrid();
-                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedText);
-                CoursesCombobox.ItemsSource = Courses;
-            }
+            selectedClass = ClassesCombobox.SelectedItem.ToString();
+            LoadTableClass();
         }
         private void GradesStudentGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == DataGridEditAction.Commit )
+            try
             {
-                TextBox textBox = e.EditingElement as TextBox;
-                if (textBox != null)
+                if (e.EditAction == DataGridEditAction.Commit)
                 {
-                    string newGradeText = textBox.Text;
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test2.6");
-                    Debug.WriteLine($"Type of e.Row.Item: {e.Row.Item.GetType().FullName}");
-                    if (e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
+                    TextBox textBox = e.EditingElement as TextBox;
+                    if (textBox != null)
                     {
-                        UpdateGrade(gradeTeacher.StudentId, gradeTeacher.Vak, newGradeText, e);
+                        string newGradeText = textBox.Text;
+                        if (e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
+                        {
+                            UpdateGrade(gradeTeacher.StudentId, gradeTeacher.Vak, newGradeText, e);
+                        }
                     }
                 }
+            }
 
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
             }
         }
 
@@ -95,7 +76,11 @@ namespace SmartUp.UI
             GradesStudentGrid.Columns[3].CellStyle = GetDoubleCellStyle();
             GradesStudentGrid.Columns[4].Width = 268;
             GradesStudentGrid.Columns[4].IsReadOnly = true;
+
+            GradesStudentGrid.LoadingRow += GradesStudentGrid_LoadingRow;
         }
+
+
         public bool IsValid(Decimal grade, DataGridCellEditEndingEventArgs e)
         {
             DataGridCell cell = GetCell(e.Row, e.Column);
@@ -107,7 +92,7 @@ namespace SmartUp.UI
 
             if (grade > 0 && grade <= 10)
             {
-               cell.Background = originalBackgroundColor;
+                cell.Background = originalBackgroundColor;
                return true;
             }
             cell.Background = Brushes.Red;
@@ -210,9 +195,83 @@ namespace SmartUp.UI
             return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9);
         }
 
-        private void MaakDefinitief(object sender, RoutedEventArgs e)
+        private void MakeDefinitive(object sender, RoutedEventArgs e)
         {
-            
+            if (ClassesCombobox.SelectedIndex > -1)
+            {
+                GradeDao.GetInstance().UpdateIsDefinitiveByCourseAndClass(selectedCourse, selectedClass);
+            }
+            else
+            {
+                GradeDao.GetInstance().UpdateIsDefinitiveByCourse(selectedCourse);
+            }
+        }
+
+        public void LoadTableCourse()
+        {
+            if (ClassesCombobox.SelectedIndex > -1)
+            {
+                GradesStudentGrid.ItemsSource = null;
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(selectedCourse, ClassesCombobox.SelectedItem.ToString());
+                setLayoutDataGrid();
+                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedCourse);
+                ClassesCombobox.ItemsSource = Classes;
+                MakeDefinitiveButton.IsEnabled = true;
+            }
+            else
+            {
+                GradesStudentGrid.ItemsSource = null;
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourse(selectedCourse);
+                setLayoutDataGrid();
+                List<string> Classes = ClassDao.GetInstance().GetClassNameByCourse(selectedCourse);
+                ClassesCombobox.ItemsSource = Classes;
+                MakeDefinitiveButton.IsEnabled = true;
+            }
+        }
+
+        public void LoadTableClass()
+        {
+            if (CoursesCombobox.SelectedIndex > -1)
+            {
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByCourseAndClass(CoursesCombobox.SelectedItem.ToString(), selectedClass);
+                setLayoutDataGrid();
+                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedClass);
+                CoursesCombobox.ItemsSource = Courses;
+            }
+            else
+            {
+                GradesStudentGrid.ItemsSource = GradeDao.GetInstance().GetGradesByClass(selectedClass);
+                setLayoutDataGrid();
+                List<string> Courses = CourseDao.GetInstance().GetCoursNameByClass(selectedClass);
+                CoursesCombobox.ItemsSource = Courses;
+            }
+        }
+        private void GradesStudentGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            for (int i = 0; i < GradesStudentGrid.Items.Count; i++)
+            {
+                DataAccess.SQLServer.Model.GradeTeacher item = (DataAccess.SQLServer.Model.GradeTeacher)GradesStudentGrid.Items[i];
+                if (item != null)
+                {
+                    bool isFifthColumnTrue = false;
+                    if (!(item.Status == "Definitief"))
+                    {
+                        isFifthColumnTrue = true;
+                    }
+
+                    // If the value in the 5th column is true, make the cell in the 4th column read-only
+                    if (isFifthColumnTrue)
+                    {
+                        DataGridColumn fourthColumn = GradesStudentGrid.Columns[3]; // Assuming 3 is the index of the 4th column
+                        DataGridCell cell = GetCell(e.Row, fourthColumn);
+                        if (cell != null)
+                        {
+                            cell.IsEnabled = false;
+                            Debug.WriteLine($"{e.Row.ToString} is gedisabled");
+                        }
+                    }
+                }
+            }
         }
     }
 }

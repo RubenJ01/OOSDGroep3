@@ -171,6 +171,5 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return Students;
         }
-
     }
 }

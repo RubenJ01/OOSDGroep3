@@ -375,11 +375,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 if (!hadGrade)
                                 {
                                     grades.Add(new GradeTeacher(courseName, new Student(firstName, lastName, infix, studentId)));
-                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test {grade} {isDefinitive}");
                                 }
                                 else
                                 {
-                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
                                     grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive, courseName, new Student(firstName, lastName, infix, studentId)));
                                 }
 
@@ -418,6 +416,63 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         command.Parameters.AddWithValue("@Course", course);
                         command.Parameters.AddWithValue("@grade", grade);
 
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+
+            }
+        }
+        public void UpdateIsDefinitiveByCourseAndClass(string course, string StudentClass)
+        {
+            string query = "UPDATE grade " +
+                "SET isDefinitive = 1 " +
+                "FROM grade " +
+                "JOIN student ON grade.studentId = student.id " +
+                "WHERE grade.courseName = @Course AND student.class = @Class;";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Course", course);
+                        command.Parameters.AddWithValue("@Class", StudentClass);
+
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+
+            }
+        }
+
+        public void UpdateIsDefinitiveByCourse(string course)
+        {
+            string query = "UPDATE grade " +
+                "SET isDefinitive = 0 " +
+                "WHERE grade.courseName = @Course";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Course", course);
 
                         command.ExecuteNonQuery();
                     }
