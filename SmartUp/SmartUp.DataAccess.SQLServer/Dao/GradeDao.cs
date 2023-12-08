@@ -109,7 +109,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
-
             return grades;
         }
 
