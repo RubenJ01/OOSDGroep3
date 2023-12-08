@@ -254,7 +254,7 @@ namespace SmartUp.UI
                 if (item != null)
                 {
                     bool isFifthColumnTrue = false;
-                    if (!(item.Status == "Definitief"))
+                    if (item.Status == "Definitief")
                     {
                         isFifthColumnTrue = true;
                     }
@@ -267,7 +267,7 @@ namespace SmartUp.UI
                         if (cell != null)
                         {
                             cell.IsEnabled = false;
-                            Debug.WriteLine($"{e.Row.ToString} is gedisabled");
+                            Debug.WriteLine($"{i} is gedisabled");
                         }
                     }
                 }
