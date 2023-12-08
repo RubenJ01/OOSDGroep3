@@ -16,7 +16,7 @@ namespace SmartUp.UI
     public partial class GradeTeacher : Page
     {
         private Brush originalBackgroundColor = null;
-        public event EventHandler<EventArgs> NavigateToPageRequested;
+        public event EventHandler ChangeContent;
         public GradeTeacher()
         {
             InitializeComponent();
@@ -24,6 +24,11 @@ namespace SmartUp.UI
             CoursesCombobox.ItemsSource = Courses;
             List<string> Classes = ClassDao.GetInstance().GetClassNames();
             ClassesCombobox.ItemsSource = Classes;
+        }
+
+        protected virtual void OnChangeContent(EventArgs e)
+        {
+            ChangeContent?.Invoke(this, e);
         }
 
         private void Course_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -213,9 +218,7 @@ namespace SmartUp.UI
 
         private void ButtonToGradesAddGrade(object sender, RoutedEventArgs e)
         {
-            // Moet nog veranderd worden met nieuwe implementatie
-            Debug.WriteLine("Test");
-            NavigateToPageRequested?.Invoke(this, EventArgs.Empty);
+            OnChangeContent(EventArgs.Empty);
         }
     }
 }

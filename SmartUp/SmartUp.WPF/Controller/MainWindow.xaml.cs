@@ -5,20 +5,25 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Diagnostics;
+using Azure;
+using Microsoft.Identity.Client;
 
 namespace SmartUp.UI
 {
     public partial class MainWindow : Window
     {
+        private GradeTeacher GradeTeacherPage = new GradeTeacher();
         public MainWindow()
         {
             InitializeComponent();
             AddButtonsStudent();
+            GradeTeacherPage.ChangeContent += Page_ChangeContent;
+        }
 
-            GradeTeacher page = new GradeTeacher();
-            page.NavigateToPageRequested += Page_NavigateToPageRequested;
 
-            ContentArea.Navigate(page);
+        public void SetContentArea(Uri uri)
+        {
+            ContentArea.Navigate(uri);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -46,7 +51,7 @@ namespace SmartUp.UI
         }
         private void ButtonToGradesTeacher_Click(object sender, RoutedEventArgs e)
         {
-            ContentArea.Navigate(new Uri("./View/GradeTeacher.xaml", UriKind.Relative));
+            ContentArea.Navigate(GradeTeacherPage);
         }
 
         public void AddButtonsStudent()
@@ -136,9 +141,8 @@ namespace SmartUp.UI
             stackpanelButtons.Children.Add(ButtonToStudent);
         }
 
-        private void Page_NavigateToPageRequested(object sender, EventArgs e)
+        private void Page_ChangeContent(object sender, EventArgs e)
         {
-            Debug.WriteLine("test2");
             ContentArea.Navigate(new Uri("/View/InsertGrade.xaml", UriKind.Relative));
         }
     }
