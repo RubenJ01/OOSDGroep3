@@ -17,6 +17,8 @@ namespace SmartUp.UI
 
             GradeTeacher page = new GradeTeacher();
             page.NavigateToPageRequested += Page_NavigateToPageRequested;
+
+            ContentArea.Navigate(page);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
