@@ -17,7 +17,6 @@ namespace SmartUp.UI
 
             GradeTeacher page = new GradeTeacher();
             page.NavigateToPageRequested += Page_NavigateToPageRequested;
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -137,8 +136,8 @@ namespace SmartUp.UI
 
         private void Page_NavigateToPageRequested(object sender, EventArgs e)
         {
-            // Handle the event by navigating ContentArea to the desired page
-            ContentArea.Navigate(new Uri("/View/SemesterStudent.xaml", UriKind.Relative));
+            Debug.WriteLine("test2");
+            ContentArea.Navigate(new Uri("/View/InsertGrade.xaml", UriKind.Relative));
         }
     }
 }
