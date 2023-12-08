@@ -26,7 +26,7 @@
             <Border Grid.Row="1" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"  Margin="0,10,0,0"/>
             <TextBlock Grid.Row="1" Text="Cijfers invoeren" FontSize="27" FontWeight="Bold" Margin="20,10,0,0"  VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <DataGrid x:Name="GradesStudentGrid" Margin="0, 30, 0, 0" CellEditEnding="GradesStudentGrid_CellEditEnding" Grid.Row ="2" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Top" />
-            <Button Grid.Row="3" HorizontalAlignment="Right" Margin="0, 0, 60, 0" Width="250" Click="ButtonToGradesAddGrade">Herkansing toevoegen</Button>
+            <Button Grid.Row="3" HorizontalAlignment="Right" Margin="0, 0, 60, 0" Width="250" Click="MaakDefinitief">Maak alle cijfers defintief</Button>
         </Grid>
     </Grid>
 </Page>
