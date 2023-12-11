@@ -1,6 +1,5 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
-using SmartUp.WPF.Controller;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
