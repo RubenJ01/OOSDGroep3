@@ -83,7 +83,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -113,6 +113,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return abbreviations;
         }
@@ -125,17 +129,21 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
+                            int nameIndex = reader.GetOrdinal("name");
+                            int abbreviationIndex = reader.GetOrdinal("abbreviation");
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            int requiredCreditsFromPIndex = reader.GetOrdinal("requiredCreditsFromP");
                             while (reader.Read())
                             {
-                                string name = reader["name"].ToString();
-                                string abbreviation = reader["abbreviation"].ToString();
-                                string description = reader["description"].ToString();
-                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                                string name = reader.GetString(nameIndex);
+                                string abbreviation = reader.GetString(abbreviationIndex);
+                                string description = reader.GetString(descriptionIndex);
+                                int requiredCreditsFromP = reader.GetInt32(requiredCreditsFromPIndex);
                                 semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
                             }
                         }
@@ -144,6 +152,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semesters;

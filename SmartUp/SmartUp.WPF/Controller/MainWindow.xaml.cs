@@ -1,10 +1,8 @@
-﻿using SmartUp.DataAccess.SQLServer.Model;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace SmartUp.UI
 {
@@ -14,6 +12,12 @@ namespace SmartUp.UI
         {
             InitializeComponent();
             AddButtonsStudent();
+        }
+
+
+        public void SetContentArea(Uri uri)
+        {
+            ContentArea.Navigate(uri);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -39,11 +43,15 @@ namespace SmartUp.UI
         {
             ContentArea.Navigate(new Uri("./View/SbStudent.xaml", UriKind.Relative));
         }
+        private void ButtonToGradesTeacher_Click(object sender, RoutedEventArgs e)
+        {
+            ContentArea.Navigate(new Uri("./View/GradeTeacher.xaml", UriKind.Relative));
+        }
 
         public void AddButtonsStudent()
         {
-            Button GradeButton  = new Button();
-            GradeButton.Margin = new Thickness(0,120,0,0);
+            Button GradeButton = new Button();
+            GradeButton.Margin = new Thickness(0, 120, 0, 0);
             GradeButton.Background = Brushes.Transparent;
             GradeButton.BorderBrush = Brushes.Transparent;
             GradeButton.Click += Button_Click;
@@ -88,7 +96,7 @@ namespace SmartUp.UI
             GradeButton.Margin = new Thickness(0, 120, 0, 0);
             GradeButton.Background = Brushes.Transparent;
             GradeButton.BorderBrush = Brushes.Transparent;
-            //GradeButton.Click += ButtonToGradesTeacher_Click;
+            GradeButton.Click += ButtonToGradesTeacher_Click;
 
             Image ImgGrade = new Image();
             ImgGrade.Source = new BitmapImage(new Uri("pack://application:,,,/Img/StudentGrade.png"));
@@ -126,6 +134,5 @@ namespace SmartUp.UI
             stackpanelButtons.Children.Add(Sb_StudentButton);
             stackpanelButtons.Children.Add(ButtonToStudent);
         }
-
-        }
+    }
 }

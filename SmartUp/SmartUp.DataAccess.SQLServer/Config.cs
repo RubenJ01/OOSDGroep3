@@ -3,18 +3,39 @@
     public class Config
     {
         private static Config? instance;
-        public string Server { get; set; }
-        public string Database { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
+        public bool UseServer { get; set; }
+
+        public string SshServer { get; set; }
+        public bool TrustServerCertificate { get; set; }
+        public string SshHost { get; set; }
+        public string SshUsername { get; set; }
+        public string SshPassword { get; set; }
+        public string MssqlHost { get; set; }
+        public string MssqlUsername { get; set; }
+        public string MssqlPassword { get; set; }
+        public int MssqlPort { get; set; }
+
+        public string LocalServer { get; set; }
+        public string LocalDatabase { get; set; }
+        public string LocalUser { get; set; }
+        public string LocalPassword { get; set; }
 
         private Config()
         {
             Dictionary<string, string> loadedConfig = LoadConfigurationFromFile(GetFilePath());
-            Server = loadedConfig["Server"];
-            Database = loadedConfig["Database"];
-            User = loadedConfig["User"];
-            Password = loadedConfig["Password"];
+            UseServer = bool.Parse(loadedConfig["UseServer"]);
+            SshServer = loadedConfig["SshServer"];
+            TrustServerCertificate = bool.Parse(loadedConfig["TrustServerCertificate"]);
+            SshHost = loadedConfig["SshHost"];
+            SshUsername = loadedConfig["SshUsername"];
+            SshPassword = loadedConfig["SshPassword"];
+            MssqlHost = loadedConfig["MssqlHost"];
+            MssqlUsername = loadedConfig["MssqlUsername"];
+            MssqlPassword = loadedConfig["MssqlPassword"];
+            MssqlPort = Int32.Parse(loadedConfig["MssqlPort"]);
+            LocalServer = loadedConfig["LocalServer"];
+            LocalDatabase = loadedConfig["LocalDatabase"];
+
         }
 
 
@@ -29,15 +50,13 @@
 
         private static string GetFilePath()
         {
-           string configFilePath = FindSolutionPath() + "/SmartUp.DataAccess.SQLServer/";
-           configFilePath = configFilePath.Replace("\\SmartUp.sln", "");
-           return Path.Combine(configFilePath, "databaseConfig.yaml");
+            string configFilePath = FindSolutionPath() + "/SmartUp.DataAccess.SQLServer/";
+            configFilePath = configFilePath.Replace("\\SmartUp.sln", "");
+            return Path.Combine(configFilePath, "databaseConfig.yaml");
         }
 
         private static string FindSolutionPath()
         {
-
-            // Start from the current directory and move upward to find the solution file
             string currentDirectory = Directory.GetCurrentDirectory();
 
             while (!string.IsNullOrEmpty(currentDirectory))
@@ -46,15 +65,12 @@
 
                 if (solutionFiles.Length > 0)
                 {
-                    // Found a solution file, return its path
                     return solutionFiles[0];
                 }
 
-                // Move up one directory
                 currentDirectory = Directory.GetParent(currentDirectory)?.FullName;
             }
 
-            // Solution file not found
             return null;
         }
 

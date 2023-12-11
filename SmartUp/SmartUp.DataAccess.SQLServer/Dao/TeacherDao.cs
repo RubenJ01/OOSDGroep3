@@ -1,10 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.Core.Util;
-using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -68,7 +65,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -81,7 +78,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -98,9 +95,13 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return mentorIds;
         }
-        
+
     }
 }
