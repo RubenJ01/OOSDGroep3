@@ -1,0 +1,32 @@
+﻿<Page x:Class="SmartUp.UI.GradeTeacher"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartUp.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="{x:Static SystemParameters.PrimaryScreenHeight}" d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}"
+      Title="GradeTeacher">
+
+    <Grid>
+        <Grid Background="#E2E2E2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Vak:" FontSize="20" FontWeight="Bold" Margin="20,43,0,0"  VerticalAlignment="Top" HorizontalAlignment="left"/>
+            <ComboBox x:Name="CoursesCombobox" Grid.Row="0" HorizontalAlignment="Left" Margin="65,37,0,0" VerticalAlignment="Top" Width="250" Height="40" SelectionChanged="Course_SelectionChanged"/>
+            <TextBlock Grid.Row="0" Text="Klas:" FontSize="20" FontWeight="Bold" Margin="400,43,0,0"  VerticalAlignment="Top" HorizontalAlignment="left"/>
+            <ComboBox x:Name="ClassesCombobox" Grid.Row="0" HorizontalAlignment="Left" Margin="450,37,0,0" VerticalAlignment="Top" Width="200" Height="40" SelectionChanged="Class_SelectionChanged"/>
+            <Border Grid.Row="1" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"  Margin="0,10,0,0"/>
+            <TextBlock Grid.Row="1" Text="Cijfers invoeren" FontSize="27" FontWeight="Bold" Margin="20,10,0,0"  VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <DataGrid x:Name="GradesStudentGrid" Margin="0, 30, 0, 0" CellEditEnding="GradesStudentGrid_CellEditEnding" Grid.Row ="2" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Top" />
+            <Button x:Name="MakeDefinitiveButton" Grid.Row="3" HorizontalAlignment="Right" Margin="0, 0, 60, 0" Width="250" Click="MakeDefinitive">Maak alle cijfers defintief</Button>
+        </Grid>
+    </Grid>
+</Page>

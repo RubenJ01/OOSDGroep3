@@ -1,15 +1,15 @@
-﻿using SmartUp.DataAccess.SQLServer.Dao;
+﻿using SmartUp.Core.Constants;
+using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using SmartUp.Core.Constants;
 
 namespace SmartUp.UI
 {
     public partial class SbStudent : Page
     {
-        List<Student> SbStudents {  get; set; }
+        List<Student> SbStudents { get; set; }
 
         public SbStudent()
         {

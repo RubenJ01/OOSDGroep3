@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Data.SqlClient;
 
 namespace SmartUp.Tests.DataAccess.SQLServer.Util
 {
