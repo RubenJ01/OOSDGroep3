@@ -1,12 +1,8 @@
-﻿using SmartUp.DataAccess.SQLServer.Model;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Diagnostics;
-using Azure;
-using Microsoft.Identity.Client;
+using System.Windows.Media.Imaging;
 
 namespace SmartUp.UI
 {
@@ -54,8 +50,8 @@ namespace SmartUp.UI
 
         public void AddButtonsStudent()
         {
-            Button GradeButton  = new Button();
-            GradeButton.Margin = new Thickness(0,120,0,0);
+            Button GradeButton = new Button();
+            GradeButton.Margin = new Thickness(0, 120, 0, 0);
             GradeButton.Background = Brushes.Transparent;
             GradeButton.BorderBrush = Brushes.Transparent;
             GradeButton.Click += Button_Click;

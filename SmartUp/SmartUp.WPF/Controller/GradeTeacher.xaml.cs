@@ -1,5 +1,4 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
-using SmartUp.DataAccess.SQLServer.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +7,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -149,12 +147,12 @@ namespace SmartUp.UI
         {
             DataGridCell cell = GetCell(e.Row, e.Column);
 
-            if(e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
+            if (e.Row.Item is SmartUp.DataAccess.SQLServer.Model.GradeTeacher gradeTeacher)
             {
-                if(gradeTeacher.Status == "Definitief") 
+                if (gradeTeacher.Status == "Definitief")
                 {
                     cell.Background = Brushes.Red;
-                    return false; 
+                    return false;
                 }
             }
 

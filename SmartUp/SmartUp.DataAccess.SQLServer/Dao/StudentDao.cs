@@ -2,7 +2,6 @@
 using SmartUp.Core.Util;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao

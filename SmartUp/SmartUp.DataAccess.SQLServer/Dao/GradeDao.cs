@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System;
 using System.Collections.ObjectModel;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -146,11 +144,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string courseName = reader["courseName"].ToString();
                                 decimal? grade = null;
                                 string? isDefinitive = null;
-                                bool hadGrade = false ;
+                                bool hadGrade = false;
                                 if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
                                 {
                                     grade = Convert.ToDecimal(reader["grade"]);
-                                    if(Convert.ToBoolean(reader["isDefinitive"]) == false)
+                                    if (Convert.ToBoolean(reader["isDefinitive"]) == false)
                                     {
                                         isDefinitive = "Voorlopig";
                                     }
@@ -158,7 +156,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                     {
                                         isDefinitive = "Definitief";
                                     }
-                                    hadGrade = true ;
+                                    hadGrade = true;
                                 }
 
                                 if (!hadGrade)
@@ -192,7 +190,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "WHERE student.class = @ClassName " +
                 "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
                 "FROM student " +
-                "JOIN registrationSemester ON student.id = registrationSemester.studentId " + 
+                "JOIN registrationSemester ON student.id = registrationSemester.studentId " +
                 "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
                 "LEFT JOIN grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
                 "WHERE semesterCourse.courseName = @CourseName AND student.class = @ClassName AND grade.studentId IS NULL;";
@@ -329,7 +327,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public ObservableCollection<GradeTeacher> GetGradesByClass(string ClassName)
         {
             ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
-            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " + 
+            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId " +
                 "WHERE student.class = @ClassName " +

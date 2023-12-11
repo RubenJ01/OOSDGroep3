@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -135,15 +134,15 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public List<String> GetCoursNameByClass(string className)
         {
             List<String> courseNames = new List<string>();
-        String query = "SELECT semesterCourse.courseName " +
-        "FROM student " +
-        "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
-        "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
-        "WHERE student.class = @Classname " +
-        "UNION SELECT DISTINCT grade.courseName " +
-        "FROM student " +
-        "JOIN grade ON grade.studentId = student.id " +
-        "WHERE student.class = @ClassName; ";
+            String query = "SELECT semesterCourse.courseName " +
+            "FROM student " +
+            "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
+            "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
+            "WHERE student.class = @Classname " +
+            "UNION SELECT DISTINCT grade.courseName " +
+            "FROM student " +
+            "JOIN grade ON grade.studentId = student.id " +
+            "WHERE student.class = @ClassName; ";
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
@@ -170,5 +169,5 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return courseNames;
         }
     }
-    
+
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Renci.SshNet;
-using System;
+﻿using Renci.SshNet;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer

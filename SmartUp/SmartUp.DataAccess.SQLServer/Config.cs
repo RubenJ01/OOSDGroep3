@@ -29,9 +29,9 @@
 
         private static string GetFilePath()
         {
-           string configFilePath = FindSolutionPath() + "/SmartUp.DataAccess.SQLServer/";
-           configFilePath = configFilePath.Replace("\\SmartUp.sln", "");
-           return Path.Combine(configFilePath, "databaseConfig.yaml");
+            string configFilePath = FindSolutionPath() + "/SmartUp.DataAccess.SQLServer/";
+            configFilePath = configFilePath.Replace("\\SmartUp.sln", "");
+            return Path.Combine(configFilePath, "databaseConfig.yaml");
         }
 
         private static string FindSolutionPath()

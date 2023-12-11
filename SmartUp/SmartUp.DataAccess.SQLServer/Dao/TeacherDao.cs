@@ -1,10 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.Core.Util;
-using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -101,6 +98,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return mentorIds;
         }
-        
+
     }
 }
