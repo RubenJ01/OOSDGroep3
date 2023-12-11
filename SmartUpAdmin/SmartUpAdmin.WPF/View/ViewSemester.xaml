@@ -50,7 +50,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="SemesterName"/>
-                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1" x:Name="SemesterDescription"></TextBlock>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="25" Grid.Row="1" x:Name="SemesterDescription"></TextBlock>
                 </Grid>
             </ScrollViewer>
         </Grid>

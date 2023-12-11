@@ -1,4 +1,6 @@
 ﻿using SmartUp.DataAccess.SQLServer.Dao;
+using SmartUpAdmin.WPF;
+using SmartUpAdmin.WPF.View;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -45,6 +47,7 @@ namespace SmartUp.WPF.View
                 if (semesterName.Length > 0)
                 {
                     CourseDao.GetInstance().AddCourseToSemester(courseName, semesterName);
+                    this.NavigationService.Navigate(new ViewCourse());
                 }
 
             }

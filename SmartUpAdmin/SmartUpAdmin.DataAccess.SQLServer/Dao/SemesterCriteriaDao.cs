@@ -65,7 +65,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -96,13 +96,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return semesters;
         }
 
         public List<SemesterCourse> GetSemesterCriteriaBySemester(Semester semester)
         {
-            string query = "SELECT * FROM semesterCriteria WHERE semesterAbbreviation = @semesterabbreviation";
+            string query = "SELECT * FROM semesterCriteria WHERE semesterName = @semesterName";
             List<SemesterCourse> semesters = new List<SemesterCourse>();
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
@@ -111,12 +115,12 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@semesterabbreviation", semester.Abbreviation);
+                        command.Parameters.AddWithValue("@semesterName", semester.Name);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                string abbreviation = reader["semesterAbbreviation"].ToString();
+                                string abbreviation = reader["semesterName"].ToString();
                                 string semesterCourse = reader["courseName"].ToString();
                                 semesters.Add(new SemesterCourse(abbreviation, semesterCourse));
                             }
@@ -126,6 +130,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semesters;
@@ -151,7 +159,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
-        }   
+        }
     }
 }

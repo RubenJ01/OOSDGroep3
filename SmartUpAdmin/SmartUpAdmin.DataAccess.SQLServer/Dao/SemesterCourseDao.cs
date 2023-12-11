@@ -2,7 +2,6 @@
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -125,16 +124,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
-        
+
         public List<string> GetSemesterCoursesBySemesterName(string semesterName)
         {
             string query = "SELECT courseName FROM semesterCourse WHERE semesterName = @SemesterName";
             List<string> semestersCourses = new List<string>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
@@ -155,6 +154,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semestersCourses;
@@ -179,6 +182,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
         }

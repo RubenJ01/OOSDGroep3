@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
@@ -29,10 +28,10 @@ namespace SmartUpAdmin.Core.NewFolder
         {
             bool isValid = true;
             PreviousText = TextField.Text;
-            if(string.IsNullOrEmpty(TextField.Text))
+            if (string.IsNullOrEmpty(TextField.Text))
             {
                 isValid = AddErrorMessage("Het veld mag niet leeg zijn.");
-            } 
+            }
             else
             {
                 isValid &= ValidateMinLength();

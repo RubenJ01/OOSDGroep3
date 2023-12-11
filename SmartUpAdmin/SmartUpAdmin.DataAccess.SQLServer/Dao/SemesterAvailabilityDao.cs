@@ -13,7 +13,8 @@ namespace SmartUpAdmin.DataAccess.SQLServer.Dao
         {
         }
 
-        public static SemesterAvailabilityDao GetInstance() {
+        public static SemesterAvailabilityDao GetInstance()
+        {
             if (instance == null)
             {
                 instance = new SemesterAvailabilityDao();
@@ -28,8 +29,8 @@ namespace SmartUpAdmin.DataAccess.SQLServer.Dao
             try
             {
                 con.Open();
-                
-                using(SqlCommand cmd = new SqlCommand(query, con))
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@semesterName", semesterAvailability.SemesterName);
                     cmd.Parameters.AddWithValue("@availableInSemester", semesterAvailability.AvailableInSemester);
@@ -40,6 +41,10 @@ namespace SmartUpAdmin.DataAccess.SQLServer.Dao
             {
                 Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message} {ex.Source.ToUpper()}");
             }
-        }   
+            finally
+            {
+                DatabaseConnection.CloseConnection(con);
+            }
+        }
     }
 }

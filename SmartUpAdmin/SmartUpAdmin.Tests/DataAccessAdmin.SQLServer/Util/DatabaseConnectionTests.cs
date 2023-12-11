@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using SmartUp.DataAccess.SQLServer.Util;
 
 namespace SmartUp.Tests.DataAccess.SQLServer.Util
 {
@@ -13,7 +12,7 @@ namespace SmartUp.Tests.DataAccess.SQLServer.Util
             SqlConnection con = DatabaseConnection.GetConnection();
             con.Open();
             Assert.That(con.State, Is.EqualTo(System.Data.ConnectionState.Open));
-            con.Close();
+            DatabaseConnection.CloseConnection(con);
         }
     }
 }

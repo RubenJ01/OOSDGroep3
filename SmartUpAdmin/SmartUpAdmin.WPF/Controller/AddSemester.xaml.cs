@@ -33,7 +33,7 @@ namespace SmartUpAdmin.WPF
         private void AddSemesterButtonClick(object sender, EventArgs e)
         {
             List<Field> fields = new List<Field>();
-            Field nameField = new Field(NameField, 5, 20, new Regex("[%$#@!]\r\n"));
+            Field nameField = new Field(NameField, 5, 64, new Regex("[%$#@!]\r\n"));
             Debug.WriteLine(nameField.GetText());
             nameField.AddErrorCheck(() => semesterDao.GetSemesterByName(NameField.Text) != null, "Een semester met deze naam bestaat al.");
             fields.Add(nameField);

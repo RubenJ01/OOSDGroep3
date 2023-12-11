@@ -19,11 +19,6 @@
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Bottom"/>
         <TextBlock Text="Vakken" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left"/>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5*"/>
@@ -39,19 +34,9 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <Button Content="Vak Toevoegen" Background="#b3b3b3" FontSize="30" Margin="20" Grid.Column="2" x:Name="AddCourse" Click="AddCourseButton" />
+                    <Button Content="Vak Toevoegen" Background="#b3b3b3" FontSize="25" Margin="80 40" Grid.Column="2" x:Name="AddCourse" Click="AddCourseButton" />
                 </Grid>
             </Grid>
-            <ScrollViewer Grid.Column="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="150"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="CourseName"/>
-                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1" x:Name="CourseDescription"></TextBlock>
-                </Grid>
-            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

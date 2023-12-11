@@ -28,8 +28,8 @@ namespace SmartUpAdmin.WPF.View
             card.CornerRadius = new CornerRadius(20, 20, 20, 20);
             card.Background = Brushes.Gray;
             card.Margin = new Thickness(5);
-            card.Width = 150;
-            card.Height = 80;
+            card.Width = 245;
+            card.Height = 120;
 
             Grid cardGrid = new Grid();
             RowDefinition rowDefinition0 = new RowDefinition();
@@ -39,30 +39,32 @@ namespace SmartUpAdmin.WPF.View
 
             TextBlock semesterName = new TextBlock();
             semesterName.Text = semester.Abbreviation;
-            semesterName.VerticalAlignment = VerticalAlignment.Center;
+            semesterName.VerticalAlignment = VerticalAlignment.Bottom;
             semesterName.HorizontalAlignment = HorizontalAlignment.Center;
-            semesterName.FontSize = 20;
+            semesterName.FontSize = 35;
             semesterName.FontWeight = FontWeights.Bold;
             semesterName.Foreground = Brushes.White;
             Grid.SetRow(semesterName, 0);
 
             Ellipse circle = new Ellipse();
-            circle.Height = 30;
-            circle.Width = 30;
+            circle.Height = 40;
+            circle.Width = 40;
             circle.Fill = Brushes.White;
             circle.HorizontalAlignment = HorizontalAlignment.Right;
-            circle.Margin = new Thickness(0, 0, 10, 0);
+            circle.VerticalAlignment = VerticalAlignment.Bottom;
+            circle.Margin = new Thickness(0, 0, 10, 10);
+            circle.ToolTip = semester.Name;
             Grid.SetRow(circle, 1);
 
             TextBlock informationI = new TextBlock();
-            informationI.Padding = new Thickness(0, 0, 22, 0);
-
+            informationI.Padding = new Thickness(0, 0, 26, 17);
             informationI.Text = "i";
             informationI.FontWeight = FontWeights.Bold;
             informationI.Foreground = Brushes.Black;
-            informationI.FontSize = 15;
+            informationI.FontSize = 20;
             informationI.HorizontalAlignment = HorizontalAlignment.Right;
-            informationI.VerticalAlignment = VerticalAlignment.Center;
+            informationI.VerticalAlignment = VerticalAlignment.Bottom;
+            informationI.ToolTip = semester.Name;
             Grid.SetRow(informationI, 1);
 
             cardGrid.Children.Add(circle);
@@ -103,7 +105,7 @@ namespace SmartUpAdmin.WPF.View
                     stringBuilder.Append($"  - {Course.CourseName}\n");
                 }
             }
-            if (CoursesInSemster != null)
+            if (CoursesInSemster.Count > 0)
             {
                 stringBuilder.Append($"\nVakken in dit semester:\n");
                 foreach (string courseName in CoursesInSemster)
