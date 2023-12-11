@@ -2,6 +2,7 @@
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 
@@ -113,9 +114,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             return grades;
         }
-        public List<GradeTeacher> GetGradesByCourse(string CourseName)
+        public ObservableCollection<GradeTeacher> GetGradesByCourse(string CourseName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
             string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
@@ -181,9 +182,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             return grades;
         }
-        public List<GradeTeacher> GetGradesByCourseAndClass(string CourseName, string ClassName)
+        public ObservableCollection<GradeTeacher> GetGradesByCourseAndClass(string CourseName, string ClassName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
             string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
@@ -325,9 +326,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return grades;
         }
 
-        public List<GradeTeacher> GetGradesByClass(string ClassName)
+        public ObservableCollection<GradeTeacher> GetGradesByClass(string ClassName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
             string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " + 
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId " +
