@@ -2,7 +2,6 @@
 {
     public class GradeTeacher
     {
-        //In Dutch, because of the propertynames are tablenames
         public string StudentId { get; set; }
         public string Naam { get; set; }
         public string Vak { get; set; }

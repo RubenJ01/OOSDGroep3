@@ -98,7 +98,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -127,6 +127,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return courseNames;
@@ -147,7 +151,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@ClassName", className);
@@ -164,6 +168,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return courseNames;

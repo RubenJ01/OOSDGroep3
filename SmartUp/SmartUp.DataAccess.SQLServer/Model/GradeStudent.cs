@@ -23,12 +23,12 @@
             GradeNumber = grade;
             IsDefinitive = isDefinitive;
             CourseName = courseName;
-            this.Student = student;
+            Student = student;
         }
         public GradeStudent(string courseName, Student student)
         {
             CourseName = courseName;
-            this.Student = student;
+            Student = student;
             IsDefinitive = null;
             GradeNumber = null;
         }

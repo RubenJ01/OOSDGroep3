@@ -23,7 +23,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public void FillTable()
         {
 
-            using SqlConnection con = DatabaseConnection.GetConnection();
+            using SqlConnection? con = DatabaseConnection.GetConnection();
             try
             {
                 con.Open();
@@ -31,7 +31,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 foreach (string className in classNames)
                 {
                     string insertQuery = "INSERT INTO class (name) VALUES (@name);";
-                    using (SqlCommand command = new SqlCommand(insertQuery, con))
+                    using (SqlCommand? command = new SqlCommand(insertQuery, con))
                     {
                         command.Parameters.AddWithValue("@name", className);
                         command.ExecuteNonQuery();
@@ -46,7 +46,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public List<String> GetClassNames()
         {
             List<String> semesters = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
-            Random random = new Random();
+            Random? random = new Random();
             List<String> classNames = new List<string>();
             foreach (string semester in semesters)
             {
@@ -83,11 +83,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+                    using (SqlCommand? command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@CourseName", courseName);
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader? reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -100,6 +100,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return classNames;

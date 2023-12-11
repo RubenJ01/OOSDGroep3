@@ -39,7 +39,7 @@
             <TextBlock Text="EC*:" FontSize="30" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" />
             <TextBox  x:Name="ECField" Grid.Row="2" Grid.Column="2" Margin="30" PreviewTextInput="NumberValidationTextBox" FontSize="20" Padding="10, 0, 0, 0" VerticalContentAlignment="Center"/>
             <TextBlock Text="Semester:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-            <ComboBox x:Name="Semesters" Grid.Row="3" Grid.Column="2" Margin="30" FontSize="20" HorizontalAlignment="Center" Width="350" VerticalContentAlignment="Center"/>
+            <ComboBox x:Name="Semesters" Grid.Row="3" Grid.Column="2" Margin="30" FontSize="20" HorizontalAlignment="Center" Width="480" VerticalContentAlignment="Center"/>
             <Button Grid.Row="4" Grid.Column="2" Margin="35" Content="Toevoegen" FontSize="25" FontWeight="Bold" Click="AddCourseButtonClick"/>
         </Grid>
     </Grid>

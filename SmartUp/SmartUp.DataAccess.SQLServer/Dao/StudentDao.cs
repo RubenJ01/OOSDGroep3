@@ -73,7 +73,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -104,6 +104,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return studentIds;
         }
@@ -116,7 +120,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@StudentID", studentID);
@@ -133,6 +137,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return creditsFromP;
         }
@@ -144,7 +152,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Mentor", mentor);
@@ -165,6 +173,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
 
             }

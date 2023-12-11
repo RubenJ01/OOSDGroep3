@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -23,7 +22,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         public void FillTable()
         {
-       
+
             using SqlConnection con = DatabaseConnection.GetConnection();
             try
             {
@@ -47,7 +46,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }

@@ -24,7 +24,7 @@
             <TextBlock Grid.Row="0" Text="Klas:" FontSize="20" FontWeight="Bold" Margin="400,43,0,0"  VerticalAlignment="Top" HorizontalAlignment="left"/>
             <ComboBox x:Name="ClassesCombobox" Grid.Row="0" HorizontalAlignment="Left" Margin="450,37,0,0" VerticalAlignment="Top" Width="200" Height="40" SelectionChanged="Class_SelectionChanged"/>
             <Border Grid.Row="1" BorderThickness="1" BorderBrush="#4e4e4e" VerticalAlignment="Bottom"  Margin="0,10,0,0"/>
-            <TextBlock Grid.Row="1" Text="Cijfers invoeren" FontSize="27" FontWeight="Bold" Margin="20,10,0,0"  VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Text="Cijfers invoeren" FontSize="45" FontWeight="Bold"  VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             <DataGrid x:Name="GradesStudentGrid" Margin="0, 30, 0, 0" CellEditEnding="GradesStudentGrid_CellEditEnding" Grid.Row ="2" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Top" />
             <Button x:Name="MakeDefinitiveButton" Grid.Row="3" HorizontalAlignment="Right" Margin="0, 0, 60, 0" Width="250" Click="MakeDefinitive">Maak alle cijfers defintief</Button>
         </Grid>

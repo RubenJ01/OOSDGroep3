@@ -42,6 +42,7 @@ namespace SmartUp.UI
             selectedClass = ClassesCombobox.SelectedItem.ToString();
             LoadTableClass();
         }
+
         private void GradesStudentGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
 

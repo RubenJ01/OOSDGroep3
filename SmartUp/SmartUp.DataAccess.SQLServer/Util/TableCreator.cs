@@ -182,7 +182,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         private static void CreateTableIfNotExists(string tableName, string query)
         {
-            using (SqlConnection con = DatabaseConnection.GetConnection())
+            using (SqlConnection? con = DatabaseConnection.GetConnection())
             {
                 try
                 {
@@ -199,7 +199,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     if (con.State != ConnectionState.Closed)
                     {
-                        con.Close();
+                        DatabaseConnection.CloseConnection(con);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)
         {
-            using (SqlCommand command = new SqlCommand(query, connection))
+            using (SqlCommand? command = new SqlCommand(query, connection))
             {
                 try
                 {

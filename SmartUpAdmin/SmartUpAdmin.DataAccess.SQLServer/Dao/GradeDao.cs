@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -38,7 +37,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     foreach (string courseName in selectedCourses)
                     {
                         int randomInt = random.Next((int)(1.0m / 0.1m), (int)(10.0m / 0.1m));
-                        decimal randomGrade = randomInt * 0.1m;;
+                        decimal randomGrade = randomInt * 0.1m; ;
                         DateTime startDate = new DateTime(2000, 1, 1);
                         DateTime endDate = new DateTime(2022, 12, 31);
                         int range = (endDate - startDate).Days;
@@ -68,7 +67,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -107,6 +106,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
 
             return grades;
@@ -131,7 +134,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             {
                                 string courseName = reader["courseName"].ToString();
                                 decimal grade = Convert.ToDecimal(reader["grade"]);
-                                
+
                                 grades.Add(courseName, grade);
                             }
                         }
@@ -140,6 +143,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
 

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
-using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -201,13 +199,13 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     if (con.State != ConnectionState.Closed)
                     {
-                        con.Close();
+                        DatabaseConnection.CloseConnection(con);
                     }
                 }
             }
-                
+
         }
-            
+
         public static void FillTables()
         {
             //CourseDao.GetInstance().FillTable();
@@ -232,7 +230,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
-                
+
             }
         }
     }

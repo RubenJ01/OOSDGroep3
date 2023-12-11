@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
@@ -9,32 +8,35 @@ namespace SmartUpAdmin.Core.NewFolder
     public class Field
     {
         private TextBox TextField;
+        private string PreviousText;
         private int MinLength;
         private int MaxLength;
-        private Regex AllowedCharacters;
+        private Regex BannedCharacters;
         private List<string> ErrorMessages = new List<string>();
         private Dictionary<Func<bool>, string> ErrorChecks = new Dictionary<Func<bool>, string>();
 
-        public Field(TextBox textField, int minLength, int maxLength, Regex allowedCharacters)
+        public Field(TextBox textField, int minLength, int maxLength, Regex bannedCharacters)
         {
             TextField = textField;
             MinLength = minLength;
             MaxLength = maxLength;
-            AllowedCharacters = allowedCharacters;
+            BannedCharacters = bannedCharacters;
             AddPreviewMouseDown();
         }
 
         public bool Validate()
         {
             bool isValid = true;
-            if(TextField.Text == "")
+            PreviousText = TextField.Text;
+            if (string.IsNullOrEmpty(TextField.Text))
             {
                 isValid = AddErrorMessage("Het veld mag niet leeg zijn.");
-            } else
+            }
+            else
             {
                 isValid &= ValidateMinLength();
                 isValid &= ValidateMaxLength();
-                isValid &= ValidateAllowedCharacters();
+                isValid &= ValidateBannedCharacters();
                 isValid &= ValidateErrorChecks();
             }
             return isValid;
@@ -43,7 +45,7 @@ namespace SmartUpAdmin.Core.NewFolder
         public bool ValidateMinLength()
         {
             bool isValid = true;
-            if (TextField.Text.Length < MinLength && MinLength > 0)
+            if (PreviousText.Length < MinLength)
             {
                 isValid = AddErrorMessage($"Het veld moet minstens {MinLength} karakter(s) bevatten.");
             }
@@ -53,17 +55,17 @@ namespace SmartUpAdmin.Core.NewFolder
         public bool ValidateMaxLength()
         {
             bool isValid = true;
-            if (TextField.Text.Length > MaxLength)
+            if (PreviousText.Length > MaxLength)
             {
                 isValid = AddErrorMessage($"Het veld mag maximaal {MaxLength} karakter(s) bevatten.");
             }
             return isValid;
         }
 
-        public bool ValidateAllowedCharacters()
+        public bool ValidateBannedCharacters()
         {
             bool isValid = true;
-            if (AllowedCharacters != null && !AllowedCharacters.IsMatch(TextField.Text))
+            if (BannedCharacters != null && BannedCharacters.IsMatch(PreviousText))
             {
                 isValid = AddErrorMessage("Het veld bevat ongeldige karakters.");
             }
