@@ -3,6 +3,7 @@ using SmartUp.DataAccess.SQLServer.Model;
 using SmartUpAdmin.Core.NewFolder;
 using SmartUpAdmin.DataAccess.SQLServer.Dao;
 using SmartUpAdmin.DataAccess.SQLServer.Model;
+using SmartUpAdmin.WPF.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,14 +33,15 @@ namespace SmartUpAdmin.WPF
         private void AddSemesterButtonClick(object sender, EventArgs e)
         {
             List<Field> fields = new List<Field>();
-            Field nameField = new Field(NameField, 5, 20, new Regex("^[a-zA-Z]+$"));
+            Field nameField = new Field(NameField, 5, 20, new Regex("[%$#@!]\r\n"));
+            Debug.WriteLine(nameField.GetText());
             nameField.AddErrorCheck(() => semesterDao.GetSemesterByName(NameField.Text) != null, "Een semester met deze naam bestaat al.");
             fields.Add(nameField);
-            Field afkortingField = new Field(AfkortingField, 2, 5, new Regex("^[a-zA-Z0-9.]+$"));
+            Field afkortingField = new Field(AfkortingField, 2, 5, new Regex("[%$#@!]\r\n"));
             fields.Add(afkortingField);
-            Field beschrijvingField = new Field(BeschrijvingField, 5, 100, null);
+            Field beschrijvingField = new Field(BeschrijvingField, 5, 500, null);
             fields.Add(beschrijvingField);
-            Field ecField = new Field(ECField, 1, 2, new Regex("^[0-9]+$"));
+            Field ecField = new Field(ECField, 1, 2, new Regex("\\D"));
             fields.Add(ecField);
             if (AllFieldsValid(fields))
             {
@@ -49,6 +51,7 @@ namespace SmartUpAdmin.WPF
                 List<SemesterCourse> semesterCourses = GetSemesterCourses(semesterName);
                 Semester semester = new Semester(semesterName, afkortingField.GetText(), beschrijvingField.GetText(), Int32.Parse(ecField.GetText()));
                 AddSemesterToDatabase(semester, semesterCriterias, semesterCourses, semesterAvailabilities);
+                this.NavigationService.Navigate(new ViewSemester());
             }
         }
 
@@ -141,7 +144,6 @@ namespace SmartUpAdmin.WPF
             }
             GeselecteerdeEC.Text = $"Geselecteerde EC: {totaleEc}";
         }
-
 
         private void ListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {

@@ -1,0 +1,57 @@
+﻿<Page x:Class="SmartUpAdmin.WPF.ViewCourse"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartUpAdmin.WPF"
+      mc:Ignorable="d" 
+      d:DesignHeight="{x:Static SystemParameters.PrimaryScreenHeight}"   
+      d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}" 
+      Title="ViewCourse">
+    <Grid Background="#E2E2E2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Bottom"/>
+        <TextBlock Text="Vakken" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0">
+                    <WrapPanel Orientation="Horizontal" x:Name="CourseWrap" />
+                </ScrollViewer>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                    <Button Content="Vak Toevoegen" Background="#b3b3b3" FontSize="30" Margin="20" Grid.Column="2" x:Name="AddCourse" Click="AddCourseButton" />
+                </Grid>
+            </Grid>
+            <ScrollViewer Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="CourseName"/>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="20" Grid.Row="1" x:Name="CourseDescription"></TextBlock>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>
