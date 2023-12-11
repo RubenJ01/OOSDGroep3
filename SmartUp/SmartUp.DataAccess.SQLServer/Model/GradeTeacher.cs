@@ -26,5 +26,10 @@
             StudentId = student.StudentId;
             Naam = student.FullName;
         }
+
+        public override string ToString()
+        {
+            return $"{Cijfer}, {Status}, {Vak}, {StudentId}, {Naam}";
+        }
     }
 }
