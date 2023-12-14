@@ -160,37 +160,27 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
-        public List<Semester> GetAllSemestersWithRegistration(string studentId)
+        public List<Semester> GetAllSemestersWithRegistration(SqlConnection connection, string studentId)
         {
             string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
             "FROM semester " +
             "JOIN registrationSemester ON registrationSemester.semesterName = semester.name " +
             "WHERE registrationSemester.studentId = @studentId;";
             List<Semester> semesters = new List<Semester>();
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            connection.Open();
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@studentId", studentId);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@studentId", studentId);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string name = reader["name"].ToString();
-                                string abbreviation = reader["abbreviation"].ToString();
-                                string description = reader["description"].ToString();
-                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                                semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
-                            }
-                        }
+                    string name = reader["name"].ToString();
+                    string abbreviation = reader["abbreviation"].ToString();
+                    string description = reader["description"].ToString();
+                    int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                    semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
             }
             return semesters;

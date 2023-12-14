@@ -28,7 +28,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 con.Open();
                 int studentCounter = 1;
-                while (studentCounter < 416)
+                int totalStudents = 416;
+                while (studentCounter < totalStudents)
                 {
                     string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
                      "VALUES (@Id, @semesterName1); " +

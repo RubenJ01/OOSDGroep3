@@ -1,13 +1,17 @@
 ﻿using SmartUp.Core.Constants;
 using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
+using SmartUp.DataAccess.SQLServer.Util;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Microsoft.Data.SqlClient;
 
 namespace SmartUp.UI
 {
@@ -26,10 +30,7 @@ namespace SmartUp.UI
                     AddSemesterBlock(semester);
                 }
             }
-            foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(Constants.STUDENT_ID))
-            {
-                AddSemesterFollowedBlock(semester);
-            }
+            LoadDatafollowedSemester();
         }
 
         public void AddSemesterBlock(Semester semester)
@@ -232,6 +233,28 @@ namespace SmartUp.UI
                 }
             }
             return true;
+        }
+        private void LoadDatafollowedSemester()
+        {
+            using (SqlConnection con = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(con, Constants.STUDENT_ID))
+                    {
+                        AddSemesterFollowedBlock(semester);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(con);
+                }
+            }
         }
     }
 }
