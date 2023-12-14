@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public static string STUDENT_ID = "S000002";
-        public static string DOCENT_ID = "T000004";
+        public static string STUDENT_ID = "S000001";
+        public static string DOCENT_ID = "T000011";
     }
 }

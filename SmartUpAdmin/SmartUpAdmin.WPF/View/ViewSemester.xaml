@@ -9,7 +9,7 @@
       d:DesignWidth="{x:Static SystemParameters.PrimaryScreenWidth}"  
       Title="ViewSemester">
 
-    <Grid Background="#E2E2E2">
+    <Grid Background="#E2E2E2" x:Name="FullGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Bottom"/>
         <TextBlock Text="Semesters" FontSize="40" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="ContentGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
@@ -40,17 +40,39 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <Button Content="Semester Aanmaken" Background="#b3b3b3" FontSize="30" Margin="20" Grid.Column="2" x:Name="AddSemesterButton" Click="AddSemester" />
+                    <Button Content="Semester Aanmaken" Background="#b3b3b3" FontSize="25" Margin="20" Grid.Column="2" x:Name="AddSemesterButton" Click="AddSemester" />
                 </Grid>
             </Grid>
-            <ScrollViewer Grid.Column="1">
-                <Grid>
+            <ScrollViewer Grid.Column="1" x:Name="Scroll">
+                <Grid x:Name="InformationSemester">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="150"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="SemesterName"/>
-                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="25" Grid.Row="1" x:Name="SemesterDescription"></TextBlock>
+                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="25" Grid.Row="1" x:Name="SemesterDescription"/>
+                    <Grid x:Name="AddSemesterCourseForm" Grid.Row="1" Visibility="Hidden">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Naam:" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Margin="0, 0, 20, 0"/>
+                        <TextBox x:Name="CourseName" FontSize="25" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="10, 40" Padding="10, 0, 0, 0" VerticalContentAlignment="Center"/>
+                        <TextBlock Text="EC:" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Margin="0, 0, 20, 0"/>
+                        <TextBox x:Name="CourseEC" FontSize="25" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10, 40" Padding="10, 0, 0, 0" VerticalContentAlignment="Center"/>
+                        <Button x:Name="Annuleren" Content="Annuleren" FontSize="25" Grid.Row="3" Background="#b3b3b3" Margin="20" Grid.Column="1" Grid.ColumnSpan="2" Click="CancelClick"/>
+                        <Button x:Name="Opslaan" Content="Opslaan" FontSize="25" Grid.Row="3" Background="#b3b3b3" Margin="20" Grid.Column="3" Grid.ColumnSpan="2" Click="SaveClick"/>
+                    </Grid>
+                    <Button Grid.Row="1" Content="Vak toevoegen" Height="40" FontSize="20" Width="140" Background="#b3b3b3" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="AddSemesterCourse" Visibility="Hidden"/>
                 </Grid>
             </ScrollViewer>
         </Grid>

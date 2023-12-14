@@ -28,7 +28,7 @@ namespace SmartUpAdmin.Core.NewFolder
         {
             bool isValid = true;
             PreviousText = TextField.Text;
-            if (string.IsNullOrEmpty(TextField.Text))
+            if (string.IsNullOrWhiteSpace(TextField.Text) || string.IsNullOrEmpty(TextField.Text))
             {
                 isValid = AddErrorMessage("Het veld mag niet leeg zijn.");
             }

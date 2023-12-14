@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Model\**" />
+	  <EmbeddedResource Remove="Model\**" />
+	  <None Remove="Model\**" />
+	  <Page Remove="Model\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 		<PackageReference Include="YamlDotNet" Version="13.7.1" />
 		<None Remove="Img\CreateCourse.png" />
@@ -25,10 +32,6 @@
 		<Resource Include="Img\CreateSemester.png" />
 		<Resource Include="Img\GradeIcon.png" />
 		<Resource Include="Img\SemesterIcon.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Model\" />
 	</ItemGroup>
 
 	<ItemGroup>

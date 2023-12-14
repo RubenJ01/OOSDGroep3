@@ -1,5 +1,7 @@
-﻿using SmartUp.DataAccess.SQLServer.Dao;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
+using SmartUp.DataAccess.SQLServer.Util;
 using SmartUpAdmin.Core.NewFolder;
 using SmartUpAdmin.DataAccess.SQLServer.Dao;
 using SmartUpAdmin.DataAccess.SQLServer.Model;
@@ -34,7 +36,6 @@ namespace SmartUpAdmin.WPF
         {
             List<Field> fields = new List<Field>();
             Field nameField = new Field(NameField, 5, 64, new Regex("[%$#@!]\r\n"));
-            Debug.WriteLine(nameField.GetText());
             nameField.AddErrorCheck(() => semesterDao.GetSemesterByName(NameField.Text) != null, "Een semester met deze naam bestaat al.");
             fields.Add(nameField);
             Field afkortingField = new Field(AfkortingField, 2, 5, new Regex("[%$#@!]\r\n"));
@@ -110,16 +111,23 @@ namespace SmartUpAdmin.WPF
         private void AddSemesterToDatabase(Semester semester, List<SemesterCriteria> semesterCriterias,
             List<SemesterCourse> semesterCourses, List<SemesterAvailability> semesterAvailabilities)
         {
-            try
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
-                semesterDao.AddSemester(semester);
-                semesterCriterias.ForEach(semesterCriteria => semesterCriteriaDao.AddSemesterCriteria(semesterCriteria));
-                semesterCourses.ForEach(semesterCourse => semesterCourseDao.AddSemesterCourse(semesterCourse));
-                semesterAvailabilities.ForEach(semesterAvailability => semesterAvailabilityDao.AddSemesterAvailability(semesterAvailability));
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message} {ex.Source.ToUpper()}");
+                try
+                {
+                    semesterDao.AddSemester(semester);
+                    semesterCriterias.ForEach(semesterCriteria => semesterCriteriaDao.AddSemesterCriteria(semesterCriteria));
+                    semesterCourses.ForEach(semesterCourse => semesterCourseDao.AddSemesterCourse(connection, semesterCourse));
+                    semesterAvailabilities.ForEach(semesterAvailability => semesterAvailabilityDao.AddSemesterAvailability(semesterAvailability));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message} {ex.Source.ToUpper()}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
         }
 

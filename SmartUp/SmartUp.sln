@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartUp.WPF", "SmartUp.WPF\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartUp.Console", "SmartUp.Console\SmartUp.Console.csproj", "{07EB454A-032F-4152-AAE1-6BC593E807F9}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SmartUpSetup", "SmartUpSetup\SmartUpSetup.vdproj", "{8BE3183A-48E5-441A-B6B4-A2B5D44FFFEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,8 +39,9 @@ Global
 		{C85C37A3-DA57-4337-ACD4-43DA8D286791}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07EB454A-032F-4152-AAE1-6BC593E807F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07EB454A-032F-4152-AAE1-6BC593E807F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07EB454A-032F-4152-AAE1-6BC593E807F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07EB454A-032F-4152-AAE1-6BC593E807F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07EB454A-032F-4152-AAE1-6BC593E807F9}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE3183A-48E5-441A-B6B4-A2B5D44FFFEB}.Debug|Any CPU.ActiveCfg = Debug
+		{8BE3183A-48E5-441A-B6B4-A2B5D44FFFEB}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
