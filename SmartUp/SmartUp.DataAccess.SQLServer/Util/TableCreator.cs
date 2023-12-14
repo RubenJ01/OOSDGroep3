@@ -49,7 +49,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 infix varchar(5),
                 mentor varchar(32),
                 totalCredits int,
-                totalCreditsFromP int,
                 class varchar(32),
                 PRIMARY KEY (id),
                 FOREIGN KEY (mentor) REFERENCES teacher(id)
@@ -110,7 +109,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 [name] varchar(64),
                 abbreviation varchar(10),
                 [description] TEXT NOT NULL,
-                requiredCreditsFromP int DEFAULT 0,
                 PRIMARY KEY(name)
             );
         END;"
@@ -206,15 +204,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         }
 
+
         public static void FillTables()
         {
-            //CourseDao.GetInstance().FillTable();
-            //TeacherDao.GetInstance().FillTable();
-            //SemesterDao.GetInstance().FillTable();
-            //ClassDao.GetInstance().FillTable();
-            //StudentDao.GetInstance().FillTable();
-            //GradeDao.GetInstance().FillTable();
-            //SemesterCriteriaDao.GetInstance().FillTable();
+            CourseDao.GetInstance().FillTable();
+            TeacherDao.GetInstance().FillTable();
+            SemesterDao.GetInstance().FillTable();
+            ClassDao.GetInstance().FillTable();
+            StudentDao.GetInstance().FillTable();
+            GradeDao.GetInstance().FillTable();
+            SemesterCriteriaDao.GetInstance().FillTable();
             SemesterCourseDao.GetInstance().FillTable();
         }
 
@@ -233,5 +232,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             }
         }
+
+        
     }
 }

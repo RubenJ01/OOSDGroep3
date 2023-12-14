@@ -46,8 +46,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         string lastName = NameGenerator.GenerateRandomName();
                         string studentId = $"S{totalStudents.ToString($"D{6}")}";
                         string mentorId = mentors[random.Next(mentors.Count)];
-                        string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits, totalCreditsFromP, class) " +
-                                             "VALUES (@Id, @FirstName, @Infix, @LastName, @Mentor, @TotalCredits, @TotalCreditsFromP, @Class);";
+                        string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits,  class) " +
+                                             "VALUES (@Id, @FirstName, @Infix, @LastName, @Mentor, @TotalCredits, @Class);";
 
                         using (SqlCommand command = new SqlCommand(insertQuery, con))
                         {
@@ -57,7 +57,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             command.Parameters.AddWithValue("@LastName", lastName);
                             command.Parameters.AddWithValue("@Mentor", mentorId);
                             command.Parameters.AddWithValue("@TotalCredits", 0);
-                            command.Parameters.AddWithValue("@TotalCreditsFromP", 0);
                             command.Parameters.AddWithValue("@Class", className);
                             command.ExecuteNonQuery();
                         }
