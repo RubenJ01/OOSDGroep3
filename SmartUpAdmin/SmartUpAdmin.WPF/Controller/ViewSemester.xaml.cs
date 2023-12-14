@@ -156,8 +156,10 @@ namespace SmartUpAdmin.WPF.View
                     connection.Open();
 
                     Field CourseNameField = new Field(CourseName, 5, 64, new Regex("[%$#@!]\r\n"));
-                    // Error is thrown here because the connection string has not been initialized
+                    //                                           Error is thrown here because the connection string has not been initialized when called when valadating
+                    //                                                                                          vvvvvvvvv
                     CourseNameField.AddErrorCheck(() => SemesterCourseDao.GetInstance().GetSemesterCourseByName(connection, CourseNameField.GetText()) != null, "Een semestervak met deze naam bestaat al."); 
+                    //                                                                                          ^^^^^^^^^
                     fields.Add(CourseNameField);
                     Field CourseECField = new Field(CourseEC, 1, 2, new Regex("\\D"));
                     fields.Add(CourseECField);
