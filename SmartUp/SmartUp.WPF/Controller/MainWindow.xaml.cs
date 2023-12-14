@@ -1,10 +1,8 @@
-﻿using SmartUp.DataAccess.SQLServer.Model;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace SmartUp.UI
 {
@@ -14,6 +12,12 @@ namespace SmartUp.UI
         {
             InitializeComponent();
             AddButtonsStudent();
+        }
+
+
+        public void SetContentArea(Uri uri)
+        {
+            ContentArea.Navigate(uri);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -46,8 +50,8 @@ namespace SmartUp.UI
 
         public void AddButtonsStudent()
         {
-            Button GradeButton  = new Button();
-            GradeButton.Margin = new Thickness(0,120,0,0);
+            Button GradeButton = new Button();
+            GradeButton.Margin = new Thickness(0, 120, 0, 0);
             GradeButton.Background = Brushes.Transparent;
             GradeButton.BorderBrush = Brushes.Transparent;
             GradeButton.Click += Button_Click;
@@ -130,6 +134,5 @@ namespace SmartUp.UI
             stackpanelButtons.Children.Add(Sb_StudentButton);
             stackpanelButtons.Children.Add(ButtonToStudent);
         }
-
-        }
+    }
 }

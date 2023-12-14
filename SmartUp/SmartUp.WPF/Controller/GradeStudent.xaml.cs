@@ -1,12 +1,9 @@
-﻿using SmartUp.DataAccess.SQLServer.Dao;
+﻿using SmartUp.Core.Constants;
+using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
-using System.Diagnostics;
-using System.Reflection.Metadata;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using SmartUp.Core.Constants;
-using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace SmartUp.UI
 {

@@ -2,7 +2,6 @@
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -21,17 +20,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return instance;
         }
-        
+
 
         public List<SemesterRegistration> GetAllSemesterRegistration()
         {
             string query = "SELECT * FROM registrationSemester";
             List<SemesterRegistration> registrationSemesters = new List<SemesterRegistration>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -49,10 +48,15 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return registrationSemesters;
         }
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName) { 
+        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName)
+        {
 
             using SqlConnection con = DatabaseConnection.GetConnection();
             try
@@ -61,16 +65,20 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
                 string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
                 "VALUES (@StudentId, @SemesterName)";
-                        using (SqlCommand command = new SqlCommand(query, con))
-                        {
-                            command.Parameters.AddWithValue("@StudentId", studentId);
-                            command.Parameters.AddWithValue("@SemesterName", semesterName);
-                            command.ExecuteNonQuery();
-                        }
+                using (SqlCommand command = new SqlCommand(query, con))
+                {
+                    command.Parameters.AddWithValue("@StudentId", studentId);
+                    command.Parameters.AddWithValue("@SemesterName", semesterName);
+                    command.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+            finally
+            {
+                DatabaseConnection.CloseConnection(con);
             }
         }
 
@@ -82,7 +90,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@studentid", studentID);
@@ -99,6 +107,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return isEnrolled;
         }
@@ -111,7 +123,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@studentid", studentID);
@@ -129,6 +141,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return isEnrolled;
         }
@@ -140,7 +156,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@studentid", studentID);
@@ -150,6 +166,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
         }

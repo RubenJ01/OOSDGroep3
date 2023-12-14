@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartUp.DataAccess.SQLServer.Model
+﻿namespace SmartUp.DataAccess.SQLServer.Model
 {
     public class GradeStudent
     {
-        public decimal ?GradeNumber { get; set; }
-        public bool ?IsDefinitive { get; set; }
+        public decimal? GradeNumber { get; set; }
+        public bool? IsDefinitive { get; set; }
         public DateTime PublishedOn { get; set; }
         public string CourseName { get; set; }
         public int Credits { get; set; }
@@ -24,17 +18,17 @@ namespace SmartUp.DataAccess.SQLServer.Model
             CourseName = courseName;
             Credits = credits;
         }
-        public GradeStudent(decimal grade, bool isDefinitive,  string courseName, Student student)
+        public GradeStudent(decimal grade, bool isDefinitive, string courseName, Student student)
         {
             GradeNumber = grade;
             IsDefinitive = isDefinitive;
             CourseName = courseName;
-            this.Student = student;
+            Student = student;
         }
         public GradeStudent(string courseName, Student student)
         {
             CourseName = courseName;
-            this.Student = student;
+            Student = student;
             IsDefinitive = null;
             GradeNumber = null;
         }

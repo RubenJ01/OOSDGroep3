@@ -1,41 +1,35 @@
-﻿using SmartUp.Core.Constants;
-using SmartUp.DataAccess.SQLServer.Dao;
+﻿using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SmartUp.UI
+namespace SmartUpAdmin.WPF.View
 {
-    public partial class SemesterStudent : Page
+    public partial class ViewSemester : Page
     {
-        private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
         private static Semester? SelectedSemester { get; set; }
-
-        public SemesterStudent()
+        public ViewSemester()
         {
             InitializeComponent();
             foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
             {
-                if (semester.RequiredCreditsFromP <= CreditsFromP && StudentMeetsSemesterCriteria(Constants.STUDENT_ID, semester))
-                {
-                    AddSemesterBlock(semester);
-                }
+                AddSemesterBlock(semester);
             }
         }
 
-        public void AddSemesterBlock(Semester semester)
+        private void AddSemesterBlock(Semester semester)
         {
             Border card = new Border();
             card.CornerRadius = new CornerRadius(20, 20, 20, 20);
             card.Background = Brushes.Gray;
             card.Margin = new Thickness(5);
-            card.Width = 150;
-            card.Height = 80;
+            card.Width = 245;
+            card.Height = 120;
 
             Grid cardGrid = new Grid();
             RowDefinition rowDefinition0 = new RowDefinition();
@@ -45,30 +39,32 @@ namespace SmartUp.UI
 
             TextBlock semesterName = new TextBlock();
             semesterName.Text = semester.Abbreviation;
-            semesterName.VerticalAlignment = VerticalAlignment.Center;
+            semesterName.VerticalAlignment = VerticalAlignment.Bottom;
             semesterName.HorizontalAlignment = HorizontalAlignment.Center;
-            semesterName.FontSize = 20;
+            semesterName.FontSize = 35;
             semesterName.FontWeight = FontWeights.Bold;
             semesterName.Foreground = Brushes.White;
             Grid.SetRow(semesterName, 0);
 
             Ellipse circle = new Ellipse();
-            circle.Height = 30;
-            circle.Width = 30;
+            circle.Height = 40;
+            circle.Width = 40;
             circle.Fill = Brushes.White;
             circle.HorizontalAlignment = HorizontalAlignment.Right;
-            circle.Margin = new Thickness(0, 0, 10, 0);
+            circle.VerticalAlignment = VerticalAlignment.Bottom;
+            circle.Margin = new Thickness(0, 0, 10, 10);
+            circle.ToolTip = semester.Name;
             Grid.SetRow(circle, 1);
 
             TextBlock informationI = new TextBlock();
-            informationI.Padding = new Thickness(0, 0, 22, 0);
-
+            informationI.Padding = new Thickness(0, 0, 26, 17);
             informationI.Text = "i";
             informationI.FontWeight = FontWeights.Bold;
             informationI.Foreground = Brushes.Black;
-            informationI.FontSize = 15;
+            informationI.FontSize = 20;
             informationI.HorizontalAlignment = HorizontalAlignment.Right;
-            informationI.VerticalAlignment = VerticalAlignment.Center;
+            informationI.VerticalAlignment = VerticalAlignment.Bottom;
+            informationI.ToolTip = semester.Name;
             Grid.SetRow(informationI, 1);
 
             cardGrid.Children.Add(circle);
@@ -109,7 +105,7 @@ namespace SmartUp.UI
                     stringBuilder.Append($"  - {Course.CourseName}\n");
                 }
             }
-            if (CoursesInSemster != null)
+            if (CoursesInSemster.Count > 0)
             {
                 stringBuilder.Append($"\nVakken in dit semester:\n");
                 foreach (string courseName in CoursesInSemster)
@@ -122,55 +118,11 @@ namespace SmartUp.UI
             SemesterDescription.Text = stringBuilder.ToString();
             card.Background = Brushes.DarkGray;
 
-
-            if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(Constants.STUDENT_ID) == true)
-            {
-                EnrollButton.IsEnabled = false;
-            }
-            else
-            {
-                EnrollButton.IsEnabled = true;
-            }
-
-            if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(Constants.STUDENT_ID, semester))
-            {
-                UnsubscribeButton.IsEnabled = true;
-            }
-            else
-            {
-                UnsubscribeButton.IsEnabled = false;
-            }
         }
 
-        private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
+        private void AddSemester(object sender, RoutedEventArgs e)
         {
-            if (SelectedSemester.Name != null)
-            {
-                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Name);
-                UnsubscribeButton.IsEnabled = true;
-                EnrollButton.IsEnabled = false;
-            }
-        }
-
-        private void UnsubscribeFromSemester(object sender, RoutedEventArgs eventArgs)
-        {
-            SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(Constants.STUDENT_ID);
-            UnsubscribeButton.IsEnabled = false;
-            EnrollButton.IsEnabled = true;
-        }
-
-        private bool StudentMeetsSemesterCriteria(string studentID, Semester semester)
-        {
-            List<SemesterCourse> semestersCriteria = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
-            Dictionary<string, decimal> gradesStudent = GradeDao.GetInstance().ReturnGradesAsDictionaryByStudentId(studentID);
-            foreach (SemesterCourse criteria in semestersCriteria)
-            {
-                if (!gradesStudent.ContainsKey(criteria.CourseName) || Convert.ToDecimal(gradesStudent[criteria.CourseName]) < 5.5M)
-                {
-                    return false;
-                }
-            }
-            return true;
+            NavigationService.Navigate(new AddSemester());
         }
     }
 }

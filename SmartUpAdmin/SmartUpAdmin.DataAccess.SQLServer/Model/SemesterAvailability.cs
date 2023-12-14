@@ -2,7 +2,7 @@
 {
     public class SemesterAvailability
     {
-        public string SemesterName { get;  set; }
+        public string SemesterName { get; set; }
         public int AvailableInSemester { get; set; }
 
         public SemesterAvailability(string semesterName, int availableInSemester)

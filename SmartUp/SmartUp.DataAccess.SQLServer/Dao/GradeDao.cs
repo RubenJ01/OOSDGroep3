@@ -1,8 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
-using System;
-using System.Data.SqlClient;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -69,7 +68,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -85,7 +84,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@StudentId", studentId);
@@ -109,13 +108,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
-
             return grades;
         }
-        public List<GradeTeacher> GetGradesByCourse(string CourseName)
+        public ObservableCollection<GradeTeacher> GetGradesByCourse(string CourseName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
             string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
@@ -130,7 +132,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@CourseName", CourseName);
@@ -145,11 +149,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string courseName = reader["courseName"].ToString();
                                 decimal? grade = null;
                                 string? isDefinitive = null;
-                                bool hadGrade = false ;
+                                bool hadGrade = false;
                                 if (reader["grade"] != DBNull.Value && reader["isDefinitive"] != DBNull.Value)
                                 {
                                     grade = Convert.ToDecimal(reader["grade"]);
-                                    if(Convert.ToBoolean(reader["isDefinitive"]) == false)
+                                    if (Convert.ToBoolean(reader["isDefinitive"]) == false)
                                     {
                                         isDefinitive = "Voorlopig";
                                     }
@@ -157,7 +161,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                     {
                                         isDefinitive = "Definitief";
                                     }
-                                    hadGrade = true ;
+                                    hadGrade = true;
                                 }
 
                                 if (!hadGrade)
@@ -177,13 +181,17 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
 
             return grades;
         }
-        public List<GradeTeacher> GetGradesByCourseAndClass(string CourseName, string ClassName)
+        public ObservableCollection<GradeTeacher> GetGradesByCourseAndClass(string CourseName, string ClassName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
             string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId AND grade.courseName = @CourseName " +
@@ -191,7 +199,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 "WHERE student.class = @ClassName " +
                 "UNION SELECT student.id AS studentId, student.firstname, student.lastname, student.infix, grade.grade,  grade.isDefinitive, semesterCourse.courseName " +
                 "FROM student " +
-                "JOIN registrationSemester ON student.id = registrationSemester.studentId " + 
+                "JOIN registrationSemester ON student.id = registrationSemester.studentId " +
                 "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
                 "LEFT JOIN grade ON student.id = grade.studentId AND semesterCourse.courseName = grade.courseName " +
                 "WHERE semesterCourse.courseName = @CourseName AND student.class = @ClassName AND grade.studentId IS NULL;";
@@ -199,7 +207,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@CourseName", CourseName);
@@ -247,6 +255,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
 
             return grades;
@@ -262,7 +274,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@StudentId", studentId);
@@ -287,6 +299,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return null;
         }
@@ -300,7 +316,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@StudentId", studentId);
@@ -320,15 +336,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
 
             return grades;
         }
 
-        public List<GradeTeacher> GetGradesByClass(string ClassName)
+        public ObservableCollection<GradeTeacher> GetGradesByClass(string ClassName)
         {
-            List<GradeTeacher> grades = new List<GradeTeacher>();
-            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " + 
+            ObservableCollection<GradeTeacher> grades = new ObservableCollection<GradeTeacher>();
+            string query = "SELECT student.id, student.firstname, student.lastname, student.infix, grade.grade, grade.isDefinitive, grade.courseName " +
                 "FROM student " +
                 "JOIN grade ON student.id = grade.studentId " +
                 "WHERE student.class = @ClassName " +
@@ -342,7 +362,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@ClassName", ClassName);
@@ -375,11 +395,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 if (!hadGrade)
                                 {
                                     grades.Add(new GradeTeacher(courseName, new Student(firstName, lastName, infix, studentId)));
-                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: test {grade} {isDefinitive}");
                                 }
                                 else
                                 {
-                                    Debug.WriteLine($"Test in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {grade} {isDefinitive}");
                                     grades.Add(new GradeTeacher(grade.GetValueOrDefault(), isDefinitive, courseName, new Student(firstName, lastName, infix, studentId)));
                                 }
 
@@ -390,6 +408,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
 
@@ -409,7 +431,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
-                connection.Open();
+                if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                 try
                 {
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -426,6 +448,75 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
+
+            }
+        }
+        public void UpdateIsDefinitiveByCourseAndClass(string course, string StudentClass)
+        {
+            string query = "UPDATE grade " +
+                "SET isDefinitive = 1 " +
+                "FROM grade " +
+                "JOIN student ON grade.studentId = student.id " +
+                "WHERE grade.courseName = @Course AND student.class = @Class;";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Course", course);
+                        command.Parameters.AddWithValue("@Class", StudentClass);
+
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
+
+            }
+        }
+
+        public void UpdateIsDefinitiveByCourse(string course)
+        {
+            string query = "UPDATE grade " +
+                "SET isDefinitive = 0 " +
+                "WHERE grade.courseName = @Course";
+
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
+                if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Course", course);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
 
             }

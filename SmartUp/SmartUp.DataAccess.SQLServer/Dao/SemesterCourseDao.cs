@@ -1,11 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
-using Renci.SshNet.Security;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Reflection.PortableExecutable;
-using System.Runtime.InteropServices;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -84,19 +80,19 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             };
                 List<string> itSemester = new List<string>
                 {
-                    "Artificial Intelligence and Machine Learning", 
+                    "Artificial Intelligence and Machine Learning",
                     "Capstone Project and Final Assessment",
-                    "Cloud Computing Technologies" , 
-                    "Data Structures and Algorithms ", 
+                    "Cloud Computing Technologies" ,
+                    "Data Structures and Algorithms ",
                     "Database Management Systems ",
-                    "Introduction to Programming", 
+                    "Introduction to Programming",
                     "Networking and Security",
                     "Object-Oriented Programming",
                     "Software Engineering Principles",
                     "Web Development and Design"
                 };
                 int JumpToSemester = 0;
-                for(int i = 0; i < (itCourses.Count -1) ; i++)
+                for (int i = 0; i < (itCourses.Count - 1); i++)
                 {
                     string SemesterName = itSemester[JumpToSemester];
 
@@ -108,7 +104,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     {
                         command.Parameters.AddWithValue("@semester", SemesterName);
                         command.Parameters.AddWithValue("@course", CourseName);
-                        
+
 
                         command.ExecuteNonQuery();
                     }
@@ -118,7 +114,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     }
 
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -128,7 +124,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -137,11 +133,11 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         {
             string query = "SELECT * FROM semesterCourse";
             List<SemesterCourse> semesters = new List<SemesterCourse>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -159,6 +155,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return semesters;
         }
@@ -170,7 +170,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@SemesterName", semesterName);
@@ -187,6 +187,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semestersCourses;

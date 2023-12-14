@@ -20,12 +20,12 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return instance;
         }
-        
+
         public List<SemesterRegistration> GetAllSemesterRegistration()
         {
             string query = "SELECT * FROM registrationSemester";
             List<SemesterRegistration> registrationSemesters = new List<SemesterRegistration>();
-            using(SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
@@ -47,6 +47,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return registrationSemesters;
         }
@@ -60,16 +64,20 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
                 string query = "INSERT INTO registrationSemester (studentId, abbreviation) " +
                 "VALUES (@StudentId, @Abbreviation)";
-                        using (SqlCommand command = new SqlCommand(query, con))
-                        {
-                            command.Parameters.AddWithValue("@StudentId", studentId);
-                            command.Parameters.AddWithValue("@Abbreviation", abbreviation);
-                            command.ExecuteNonQuery();
-                        }
+                using (SqlCommand command = new SqlCommand(query, con))
+                {
+                    command.Parameters.AddWithValue("@StudentId", studentId);
+                    command.Parameters.AddWithValue("@Abbreviation", abbreviation);
+                    command.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+            finally
+            {
+                DatabaseConnection.CloseConnection(con);
             }
         }
 
@@ -97,6 +105,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return isEnrolled;
@@ -128,6 +140,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return isEnrolled;
         }
@@ -149,6 +165,10 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
         }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Util;
-using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -99,7 +98,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 if (con.State != System.Data.ConnectionState.Closed)
                 {
-                    con.Close();
+                    DatabaseConnection.CloseConnection(con);
                 }
             }
         }
@@ -112,7 +111,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -129,26 +128,30 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return courseNames;
         }
         public List<String> GetCoursNameByClass(string className)
         {
             List<String> courseNames = new List<string>();
-        String query = "SELECT semesterCourse.courseName " +
-        "FROM student " +
-        "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
-        "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
-        "WHERE student.class = @Classname " +
-        "UNION SELECT DISTINCT grade.courseName " +
-        "FROM student " +
-        "JOIN grade ON grade.studentId = student.id " +
-        "WHERE student.class = @ClassName; ";
+            String query = "SELECT semesterCourse.courseName " +
+            "FROM student " +
+            "JOIN registrationSemester ON registrationSemester.studentId = student.id " +
+            "JOIN semesterCourse ON registrationSemester.semesterName = semesterCourse.semesterName " +
+            "WHERE student.class = @Classname " +
+            "UNION SELECT DISTINCT grade.courseName " +
+            "FROM student " +
+            "JOIN grade ON grade.studentId = student.id " +
+            "WHERE student.class = @ClassName; ";
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@ClassName", className);
@@ -166,9 +169,13 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
                 }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return courseNames;
         }
     }
-    
+
 }
