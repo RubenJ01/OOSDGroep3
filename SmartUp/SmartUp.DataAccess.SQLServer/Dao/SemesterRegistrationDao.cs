@@ -21,6 +21,43 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return instance;
         }
 
+        public void FillTable()
+        {
+            using SqlConnection con = DatabaseConnection.GetConnection();
+            try
+            {
+                con.Open();
+                int studentCounter = 1;
+                while (studentCounter < 416)
+                {
+                    string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
+                     "VALUES (@Id, @semesterName1); " +
+                     "INSERT INTO registrationSemester (studentId, semesterName) " +
+                     "VALUES (@Id, @semesterName2);";
+                    string studentId = $"S{studentCounter.ToString($"D{6}")}";
+
+                    using (SqlCommand command = new SqlCommand(query, con))
+                    {
+                        command.Parameters.AddWithValue("@Id", studentId);
+                        command.Parameters.AddWithValue("@SemesterName1", "Basic programming 1");
+                        command.Parameters.AddWithValue("@SemesterName2", "Basic programming 2");
+                        command.ExecuteNonQuery();
+                    }
+                    studentCounter++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+            finally
+            {
+                if (con.State != System.Data.ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+        }
 
         public List<SemesterRegistration> GetAllSemesterRegistration()
         {
