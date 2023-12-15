@@ -23,13 +23,7 @@ namespace SmartUp.UI
         public SemesterStudent()
         {
             InitializeComponent();
-            foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
-            {
-                if (semester.RequiredCreditsFromP <= CreditsFromP && StudentMeetsSemesterCriteria(Constants.STUDENT_ID, semester))
-                {
-                    AddSemesterBlock(semester);
-                }
-            }
+            LoadDataAllSemester();
             LoadDatafollowedSemester();
         }
 
@@ -244,6 +238,28 @@ namespace SmartUp.UI
                     {
                         AddSemesterFollowedBlock(semester);
 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(con);
+                }
+            }
+        }
+
+        private void LoadDataAllSemester()
+        {
+            using (SqlConnection con = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithoutRegistration(con, Constants.STUDENT_ID))
+                    {
+                        AddSemesterBlock(semester);
                     }
                 }
                 catch (Exception ex)
