@@ -174,7 +174,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             CREATE TABLE registrationSemester (
                 studentId varchar(32),
                 semesterName varchar(64),
-                PRIMARY KEY(studentId)
+                PRIMARY KEY(studentId, semesterName)
             );
         END;"
             );
@@ -215,7 +215,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             //StudentDao.GetInstance().FillTable();
             //GradeDao.GetInstance().FillTable();
             //SemesterCriteriaDao.GetInstance().FillTable();
-            SemesterCourseDao.GetInstance().FillTable();
+            //SemesterCourseDao.GetInstance().FillTable();
+            //SemesterRegistrationDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)
