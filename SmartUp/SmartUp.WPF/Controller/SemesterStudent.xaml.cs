@@ -1,13 +1,18 @@
-﻿using SmartUp.Core.Constants;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.Core.Constants;
 using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
+using SmartUp.DataAccess.SQLServer.Util;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Microsoft.Data.SqlClient;
 
 namespace SmartUp.UI
 {
@@ -19,13 +24,8 @@ namespace SmartUp.UI
         public SemesterStudent()
         {
             InitializeComponent();
-            foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
-            {
-                if (semester.RequiredCreditsFromP <= CreditsFromP && StudentMeetsSemesterCriteria(Constants.STUDENT_ID, semester))
-                {
-                    AddSemesterBlock(semester);
-                }
-            }
+            LoadDataAllSemester();
+            LoadDatafollowedSemester();
         }
 
         public void AddSemesterBlock(Semester semester)
@@ -83,6 +83,77 @@ namespace SmartUp.UI
             SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
+        public void AddSemesterFollowedBlock(Semester semester, Decimal percentagePassed)
+        {
+            Border card = new Border();
+            card.CornerRadius = new CornerRadius(20, 20, 20, 20);
+            card.Background = Brushes.Gray;
+            card.Margin = new Thickness(5);
+            card.Width = 150;
+            card.Height = 80;
+
+            Grid cardGrid = new Grid();
+            RowDefinition rowDefinition0 = new RowDefinition();
+            RowDefinition rowDefinition1 = new RowDefinition();
+            cardGrid.RowDefinitions.Add(rowDefinition0);
+            cardGrid.RowDefinitions.Add(rowDefinition1);
+
+            TextBlock semesterName = new TextBlock();
+            semesterName.Text = $"{semester.Abbreviation}";
+            semesterName.VerticalAlignment = VerticalAlignment.Center;
+            semesterName.HorizontalAlignment = HorizontalAlignment.Center;
+            semesterName.FontSize = 20;
+            semesterName.FontWeight = FontWeights.Bold;
+            semesterName.Foreground = Brushes.White;
+            Grid.SetRow(semesterName, 0);
+
+            ProgressBar progress = new ProgressBar();
+            progress.Minimum = 0;
+            progress.Maximum = 100;
+            progress.Value = (int)percentagePassed;
+            progress.Width = 80;
+            progress.Height = 12;
+            progress.ToolTip = $"{percentagePassed}%";
+            progress.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF7F8FAF");
+            progress.Margin = new Thickness(15, 0, 0, 0);
+            progress.HorizontalAlignment = HorizontalAlignment.Left;
+            Grid.SetRow(progress, 1);
+
+            Ellipse circle = new Ellipse();
+            circle.Height = 30;
+            circle.Width = 30;
+            circle.Fill = Brushes.White;
+            circle.HorizontalAlignment = HorizontalAlignment.Right;
+            circle.Margin = new Thickness(0, 0, 10, 0);
+            circle.ToolTip = $"{semester.Name}";
+            Grid.SetRow(circle, 1);
+
+            TextBlock informationI = new TextBlock();
+            informationI.ToolTip = $"{semester.Name}";
+            informationI.Padding = new Thickness(0, 0, 22, 0);
+            informationI.Text = "i";
+            informationI.FontWeight = FontWeights.Bold;
+            informationI.Foreground = Brushes.Black;
+            informationI.FontSize = 15;
+            informationI.HorizontalAlignment = HorizontalAlignment.Right;
+            informationI.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetRow(informationI, 1);
+
+            cardGrid.Children.Add(circle);
+            cardGrid.Children.Add(progress);
+            cardGrid.Children.Add(informationI);
+            cardGrid.Children.Add(semesterName);
+
+            card.Child = cardGrid;
+
+            FollowedSemesterWrap.Children.Add(card);
+
+            card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
+            FollowedSemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
+        }
+
+
+
         private static void SemesterWrapMouseDown(Border card)
         {
             if (!card.IsMouseOver)
@@ -96,7 +167,6 @@ namespace SmartUp.UI
             SelectedSemester = semester;
             SemesterName.Text = semester.Name;
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
 
             List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
             List<string> CoursesInSemster = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(semester.Name);
@@ -171,6 +241,52 @@ namespace SmartUp.UI
                 }
             }
             return true;
+        }
+        private void LoadDatafollowedSemester()
+        {
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    Debug.WriteLine("komt in de try");
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(connection, Constants.STUDENT_ID))
+                    {
+                        Debug.WriteLine("komt in de foreach");
+                        AddSemesterFollowedBlock(semester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    Debug.WriteLine("Komt in de finally");
+                    DatabaseConnection.CloseConnection(connection);
+                }
+            }
+        }
+
+        private void LoadDataAllSemester()
+        {
+            using (SqlConnection con = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithoutRegistration(con, Constants.STUDENT_ID))
+                    {
+                        AddSemesterBlock(semester);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(con);
+                }
+            }
         }
     }
 }

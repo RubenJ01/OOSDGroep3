@@ -195,5 +195,71 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semestersCourses;
         }
+
+        public Decimal GetPercentagePassed(SqlConnection? connection, string studentId, string semesterName)
+        {
+            connection.Open();
+            Decimal percentagePassed = 0;
+            string query = @"
+WITH SemesterCourses AS (
+    SELECT
+        s.id AS StudentID,
+        sc.semesterName,
+        c.name AS CourseName,
+        c.credits,
+        g.grade,
+        g.isDefinitive
+    FROM
+        student s
+    JOIN registrationSemester rs ON s.id = rs.studentId
+    JOIN semesterCourse sc ON rs.semesterName = sc.semesterName
+    JOIN course c ON sc.courseName = c.name
+    LEFT JOIN grade g ON s.id = g.studentId AND c.name = g.courseName
+    WHERE
+        s.id = @StudentID
+        AND sc.semesterName = @Semester
+),
+WeightedSum AS (
+    SELECT
+        StudentID,
+        semesterName,
+        CAST(SUM(CASE WHEN grade >= 5.5 AND isDefinitive = 1 THEN credits ELSE 0 END) AS DECIMAL(10, 0)) AS TotalSumCreditsStudent
+    FROM
+        SemesterCourses
+    GROUP BY
+        StudentID, semesterName
+),
+TotalCreditsSemester AS (
+    SELECT
+        StudentID,
+        semesterName,
+        SUM(credits) AS TotalCreditsSemester
+    FROM
+        SemesterCourses
+    GROUP BY
+        StudentID, semesterName
+)
+SELECT
+    CAST(ROUND((100.0 / tc.TotalCreditsSemester) * wc.TotalSumCreditsStudent, 0) AS DECIMAL(10, 0)) AS PercentagePassed
+FROM
+    WeightedSum wc
+JOIN TotalCreditsSemester tc ON wc.StudentID = tc.StudentID AND wc.semesterName = tc.semesterName;
+";
+
+            using(SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Semester", semesterName);
+                command.Parameters.AddWithValue("@StudentID", studentId);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        percentagePassed = Convert.ToDecimal(reader["PercentagePassed"].ToString());
+                    }
+                }
+            }
+            connection.Close();
+            return percentagePassed;
+        }
     }
 }

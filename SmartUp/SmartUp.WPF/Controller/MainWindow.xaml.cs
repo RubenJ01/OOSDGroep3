@@ -14,7 +14,6 @@ namespace SmartUp.UI
             AddButtonsStudent();
         }
 
-
         public void SetContentArea(Uri uri)
         {
             ContentArea.Navigate(uri);
