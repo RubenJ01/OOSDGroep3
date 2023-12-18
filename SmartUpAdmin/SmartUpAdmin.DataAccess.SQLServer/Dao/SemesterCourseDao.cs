@@ -163,31 +163,37 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semestersCourses;
         }
 
-        public void AddSemesterCourse(SemesterCourse semesterCourse)
+        public void AddSemesterCourse(SqlConnection connection, SemesterCourse semesterCourse)
         {
             string query = "INSERT INTO semesterCourse (semesterName, courseName) " +
                 "VALUES(@SemesterName, @CourseName)";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@SemesterName", semesterCourse.SemesterName);
+                command.Parameters.AddWithValue("@CourseName", semesterCourse.CourseName);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public SemesterCourse? GetSemesterCourseByName(SqlConnection? connection, string name)
+        {
+            string query = "SELECT * FROM semesterCourse " +
+                "WHERE courseName = @CourseName";
+            SemesterCourse? semesterCourse = null;
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@CourseName", name);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@SemesterName", semesterCourse.SemesterName);
-                        command.Parameters.AddWithValue("@CourseName", semesterCourse.CourseName);
-                        command.ExecuteNonQuery();
+                        string courseName = reader["courseName"].ToString();
+                        string semesterName = reader["semesterName"].ToString();
+                        semesterCourse = new SemesterCourse(semesterName, courseName);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
             }
+            return semesterCourse;
         }
     }
 }

@@ -18,11 +18,6 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Background="#FF7F8FAF">
-            <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="ButtonToCourse">
-                <Button.Content>
-                    <Image x:Name="ImgCourse" Source="..\Img\CreateCourse.png" Width="100" Height="100"/>
-                </Button.Content>
-            </Button>
             <Button Margin="0,120,0,0" Background="Transparent" BorderBrush="Transparent" FontSize="30" FontWeight="Bold" Foreground="#E2E2E2" Click="Button_Click1">
                 <Button.Content>
                     <Image x:Name="ImgSemester" Source="..\Img\CreateSemester.png" Width="100" Height="100"/>

@@ -12,33 +12,30 @@ namespace SmartUp.DataAccess.SQLServer.Util
 
         public static SqlConnection? GetConnection()
         {
-            if (config.UseServer)
+            SqlConnection? connection = null;
+
+            try
             {
-                try
+                if (config.UseServer)
                 {
                     EstablishSshTunnel();
                     SqlConnectionStringBuilder builder = BuildSqlConnectionString();
-                    return new SqlConnection(builder.ConnectionString);
+                    connection = new SqlConnection(builder.ConnectionString);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-            }
-            else
-            {
-                try
+                else
                 {
                     string connectionUrl = CreateConnectionUrl();
-                    return new SqlConnection(connectionUrl);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error during database connection setup: {ex.Message}");
+                    connection = new SqlConnection(connectionUrl);
                 }
             }
-            return null;
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+
+            return connection;
         }
+
 
         private static string CreateConnectionUrl()
         {
