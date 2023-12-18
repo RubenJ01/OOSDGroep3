@@ -41,35 +41,18 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     { "Capstone Project and Final Assessment", ("CPFA", "Het Capstone-project en de eindbeoordeling (CPFA) vormen het hoogtepunt van het curriculum, waarbij studenten hun opgedane kennis toepassen op een uitgebreid geïntegreerd project. Gedurende deze fase zullen studenten niet alleen technische vaardigheden demonstreren, maar ook hun vermogen om complexe IT-problemen op te lossen, effectief te communiceren en samen te werken in een team. Het project omvat alle aspecten van het IT-gebied, waaronder programmering, databasebeheer, netwerkontwerp en meer. Door dit project zullen studenten niet alleen hun individuele competenties aantonen, maar ook laten zien hoe ze diverse IT-vaardigheden kunnen combineren om robuuste oplossingen te leveren. Het finale assessment zal niet alleen de technische aspecten evalueren, maar ook het vermogen van studenten om projecten te plannen, te documenteren en professioneel te presenteren, waardoor ze klaar zijn om met vertrouwen de arbeidsmarkt te betreden.") }
                  };
 
-
-                Random random = new Random();
                 foreach (var semester in itSemesters)
                 {
                     string name = semester.Key;
                     string abbreviation = semester.Value.Abbreviation;
                     string description = semester.Value.Description;
-                    int randomNumber = random.Next(1, 101);
-                    int requiredCredits;
-                    if (randomNumber <= 75)
-                    {
-                        requiredCredits = 0;
-                    }
-                    else if (randomNumber <= 87)
-                    {
-                        requiredCredits = 45;
-                    }
-                    else
-                    {
-                        requiredCredits = 60;
-                    }
-                    string insertQuery = "INSERT INTO semester (name, abbreviation, description, requiredCreditsFromP) " +
-                        "VALUES(@name, @abbreviation, @description, @requiredCreditsFromP)";
+                    string insertQuery = "INSERT INTO semester (name, abbreviation, description) " +
+                    "VALUES(@name, @abbreviation, @description)";
                     using (SqlCommand command = new SqlCommand(insertQuery, con))
                     {
                         command.Parameters.AddWithValue("@name", name);
                         command.Parameters.AddWithValue("@abbreviation", abbreviation);
                         command.Parameters.AddWithValue("@description", description);
-                        command.Parameters.AddWithValue("@requiredCreditsFromP", requiredCredits);
 
                         command.ExecuteNonQuery();
                     }
@@ -160,13 +143,14 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
-        public List<Semester> GetAllSemestersWithRegistration(SqlConnection connection, string studentId)
+        public List<Semester> GetAllSemestersWithRegistration(SqlConnection? connection, string studentId)
         {
             string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
             "FROM semester " +
             "JOIN registrationSemester ON registrationSemester.semesterName = semester.name " +
             "WHERE registrationSemester.studentId = @studentId;";
             List<Semester> semesters = new List<Semester>();
+
             connection.Open();
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -175,16 +159,18 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 {
                     while (reader.Read())
                     {
-                    string name = reader["name"].ToString();
-                    string abbreviation = reader["abbreviation"].ToString();
-                    string description = reader["description"].ToString();
-                    int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                    semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                        string name = reader["name"].ToString();
+                        string abbreviation = reader["abbreviation"].ToString();
+                        string description = reader["description"].ToString();
+                        int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                        semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
                     }
                 }
             }
+            connection.Close();
             return semesters;
         }
+
         public List<Semester> GetAllSemestersWithoutRegistration(SqlConnection connection, string studentId)
         {
             string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
@@ -208,6 +194,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     }
                 }
             }
+            connection.Close();
             return semesters;
         }
     }
