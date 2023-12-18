@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System;
-using System.Security.Cryptography;
+using System.Linq;
 
 namespace SmartUpAdmin.WPF.View
 {
@@ -24,6 +24,11 @@ namespace SmartUpAdmin.WPF.View
         public ViewSemester()
         {
             InitializeComponent();
+            LoadSemesters();
+        }
+
+        private void LoadSemesters()
+        {
             foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
             {
                 AddSemesterBlock(semester);
@@ -156,10 +161,7 @@ namespace SmartUpAdmin.WPF.View
                     connection.Open();
 
                     Field CourseNameField = new Field(CourseName, 5, 64, new Regex("[%$#@!]\r\n"));
-                    //                                           Error is thrown here because the connection string has not been initialized when called when valadating
-                    //                                                                                          vvvvvvvvv
-                    CourseNameField.AddErrorCheck(() => SemesterCourseDao.GetInstance().GetSemesterCourseByName(connection, CourseNameField.GetText()) != null, "Een semestervak met deze naam bestaat al."); 
-                    //                                                                                          ^^^^^^^^^
+                    CourseNameField.AddErrorCheck(connection => SemesterCourseDao.GetInstance().GetSemesterCourseByName(connection, CourseNameField.GetText()) != null, "Een semestervak met deze naam bestaat al."); 
                     fields.Add(CourseNameField);
                     Field CourseECField = new Field(CourseEC, 1, 2, new Regex("\\D"));
                     fields.Add(CourseECField);
@@ -173,26 +175,11 @@ namespace SmartUpAdmin.WPF.View
                     DatabaseConnection.CloseConnection(connection);
                 }
             }
-
-            foreach (Field field in fields)
-            {
-                Debug.WriteLine(field.ToString());
-            }
         }
 
-        private bool AllFieldsValid(List<Field> fields)
+        private bool AllFieldsValid(List<Field> fields, SqlConnection connection)
         {
-            bool isValid = true;
-            Debug.WriteLine("OpenTest");
-            foreach (Field field in fields)
-            {
-                if (!field.Validate())
-                {
-                    isValid = false;
-                }
-            }
-            Debug.WriteLine("CloseTest");
-            return isValid;
+            return fields.All(field => field.Validate(connection));
         }
         private void CancelClick(object sender, RoutedEventArgs e)
         {
@@ -209,14 +196,10 @@ namespace SmartUpAdmin.WPF.View
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 connection.Open();
-                Debug.WriteLine("open");
                 try
                 {
-                    Debug.WriteLine("try");
-                    Debug.WriteLine(AllFieldsValid(fields));
-                    if (AllFieldsValid(fields))
+                    if (AllFieldsValid(fields, connection))
                     {
-                        Debug.WriteLine("IF-statement passed");
                         Course course = new Course(fields[0].GetText(), Int32.Parse(fields[1].GetText()));
                         SemesterCourse semesterCourse = new SemesterCourse(SelectedSemester.Name, course.Name);
                         CourseDao.GetInstance().AddNewCourse(course.Name, course.Credits);

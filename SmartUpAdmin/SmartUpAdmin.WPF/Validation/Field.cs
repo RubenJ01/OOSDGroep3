@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ namespace SmartUpAdmin.Core.NewFolder
         private Regex BannedCharacters;
         private List<string> ErrorMessages = new List<string>();
         private Dictionary<Func<bool>, string> ErrorChecks = new Dictionary<Func<bool>, string>();
+        private Dictionary<Func<SqlConnection, bool>, string> ErrorChecksConnection = new Dictionary<Func<SqlConnection, bool>, string>();
 
         public Field(TextBox textField, int minLength, int maxLength, Regex bannedCharacters)
         {
@@ -40,6 +42,12 @@ namespace SmartUpAdmin.Core.NewFolder
                 isValid &= ValidateErrorChecks();
             }
             return isValid;
+        }
+        
+        public bool Validate(SqlConnection connection)
+        {
+            bool isValid = Validate();
+            return isValid &= ValidateErrorChecks(connection);
         }
 
         public bool ValidateMinLength()
@@ -88,6 +96,28 @@ namespace SmartUpAdmin.Core.NewFolder
             return isValid;
         }
 
+        public bool ValidateErrorChecks(SqlConnection connection)
+        {
+            bool isValid = true;
+            foreach (KeyValuePair<Func<SqlConnection, bool>, string> errorCheck in ErrorChecksConnection)
+            {
+                if (errorCheck.Key.Invoke(connection))
+                {
+                    ErrorMessages.Add(errorCheck.Value);
+                    TextField.BorderBrush = System.Windows.Media.Brushes.Red;
+                    TextField.Text = errorCheck.Value;
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+
+
+        public void AddErrorCheck(Func<SqlConnection, bool> errorCheck, string errorMessage)
+        {
+            ErrorChecksConnection.Add(errorCheck, errorMessage);
+        }
+        
         public void AddErrorCheck(Func<bool> errorCheck, string errorMessage)
         {
             ErrorChecks.Add(errorCheck, errorMessage);
