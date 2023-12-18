@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.Core.Constants;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Collections.ObjectModel;
@@ -520,6 +521,27 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
 
             }
+        }
+
+        public bool IsGradePassed(SqlConnection connection ,string courseName)
+        {
+            string query = "SELECT grade FROM grade   WHERE studentId = @studentId AND courseName = @courseName";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@studentId", Constants.STUDENT_ID);
+                command.Parameters.AddWithValue("@courseName", courseName);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        decimal grade = Convert.ToDecimal(reader["grade"]);
+                        if (grade >= 5.50m) return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

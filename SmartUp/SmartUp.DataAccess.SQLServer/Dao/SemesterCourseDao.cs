@@ -162,35 +162,20 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
-        public List<string> GetSemesterCoursesBySemesterName(string semesterName)
+        public List<string> GetSemesterCoursesBySemesterName(SqlConnection connection ,string semesterName)
         {
             string query = "SELECT courseName FROM semesterCourse WHERE semesterName = @SemesterName";
             List<string> semestersCourses = new List<string>();
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@SemesterName", semesterName);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@SemesterName", semesterName);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string semesterCourse = reader["courseName"].ToString();
-                                semestersCourses.Add(semesterCourse);
-                            }
-                        }
+                        string semesterCourse = reader["courseName"].ToString();
+                        semestersCourses.Add(semesterCourse);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semestersCourses;

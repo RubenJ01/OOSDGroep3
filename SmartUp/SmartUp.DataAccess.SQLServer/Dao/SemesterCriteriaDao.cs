@@ -102,36 +102,22 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semesters;
         }
 
-        public List<SemesterCourse> GetSemesterCriteriaBySemester(Semester semester)
+        public List<SemesterCourse> GetSemesterCriteriaBySemester(SqlConnection connection ,Semester semester)
         {
             string query = "SELECT * FROM semesterCriteria WHERE semesterName = @SemesterName";
             List<SemesterCourse> semesters = new List<SemesterCourse>();
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@SemesterName", semester.Name);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@SemesterName", semester.Name);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string name = reader["semesterName"].ToString();
-                                string semesterCourse = reader["courseName"].ToString();
-                                semesters.Add(new SemesterCourse(name, semesterCourse));
-                            }
-                        }
+                        string name = reader["semesterName"].ToString();
+                        string semesterCourse = reader["courseName"].ToString();
+                        semesters.Add(new SemesterCourse(name, semesterCourse));
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return semesters;

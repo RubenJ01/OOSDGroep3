@@ -132,68 +132,38 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        public bool IsEnrolledForSemesterByStudentId(string studentID)
+        public bool IsEnrolledForSemesterByStudentId(SqlConnection connection, string studentID)
         {
             string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid";
             bool isEnrolled = false;
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@studentid", studentID);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    if (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@studentid", studentID);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                isEnrolled = true;
-                            }
-                        }
+                        isEnrolled = true;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return isEnrolled;
         }
 
-        public bool IsEnrolledForSemesterByStudentId(string studentID, Semester semester)
+        public bool IsEnrolledForSemesterByStudentId(SqlConnection connection ,string studentID, Semester semester)
         {
             string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid AND semesterName = @SemesterName";
             bool isEnrolled = false;
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@studentid", studentID);
+                command.Parameters.AddWithValue("@SemesterName", semester.Name);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    if (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@studentid", studentID);
-                        command.Parameters.AddWithValue("@SemesterName", semester.Name);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                isEnrolled = true;
-                            }
-                        }
+                        isEnrolled = true;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return isEnrolled;
