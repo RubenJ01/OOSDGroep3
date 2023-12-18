@@ -240,7 +240,7 @@ namespace SmartUp.UI
 
         private void UnsubscribeFromSemester(object sender, RoutedEventArgs eventArgs)
         {
-            SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(Constants.STUDENT_ID);
+            SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(Constants.STUDENT_ID, SelectedSemester.Name);
             UnsubscribeButton.IsEnabled = false;
             EnrollButton.IsEnabled = true;
             UnSubscribeCard();
@@ -303,14 +303,29 @@ namespace SmartUp.UI
 
         private void SubscribeCard()
         {
-            SemesterWrap.Children.Remove(SelectedCard);
-            FollowedSemesterWrap.Children.Add(SelectedCard);
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    SemesterWrap.Children.Remove(SelectedCard);
+                    AddSemesterFollowedBlock(SelectedSemester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, SelectedCard.Name));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
+            }
+
         }
 
         private void UnSubscribeCard()
         {
             FollowedSemesterWrap.Children.Remove(SelectedCard);
-            SemesterWrap.Children.Add(SelectedCard);
+            AddSemesterBlock(SelectedSemester);
         }
     }
 }
