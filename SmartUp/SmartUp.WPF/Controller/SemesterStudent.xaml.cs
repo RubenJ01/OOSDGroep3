@@ -5,12 +5,14 @@ using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Microsoft.Data.SqlClient;
 
 namespace SmartUp.UI
 {
@@ -22,32 +24,8 @@ namespace SmartUp.UI
         public SemesterStudent()
         {
             InitializeComponent();
-            foreach (Semester semester in SemesterDao.GetInstance().GetAllSemesters())
-            {
-                if (semester.RequiredCreditsFromP <= CreditsFromP && StudentMeetsSemesterCriteria(Constants.STUDENT_ID, semester))
-                {
-                    AddSemesterBlock(semester);
-                }
-            }
-            using (SqlConnection connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(connection, Constants.STUDENT_ID))
-                    {
-                        AddSemesterFollowedBlock(semester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
-            }
-
+            LoadDataAllSemester();
+            LoadDatafollowedSemester();
         }
 
         public void AddSemesterBlock(Semester semester)
@@ -263,6 +241,52 @@ namespace SmartUp.UI
                 }
             }
             return true;
+        }
+        private void LoadDatafollowedSemester()
+        {
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    Debug.WriteLine("komt in de try");
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(connection, Constants.STUDENT_ID))
+                    {
+                        Debug.WriteLine("komt in de foreach");
+                        AddSemesterFollowedBlock(semester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    Debug.WriteLine("Komt in de finally");
+                    DatabaseConnection.CloseConnection(connection);
+                }
+            }
+        }
+
+        private void LoadDataAllSemester()
+        {
+            using (SqlConnection con = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithoutRegistration(con, Constants.STUDENT_ID))
+                    {
+                        AddSemesterBlock(semester);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(con);
+                }
+            }
         }
     }
 }

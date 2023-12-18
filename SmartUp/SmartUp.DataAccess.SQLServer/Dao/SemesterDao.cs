@@ -170,5 +170,32 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             connection.Close();
             return semesters;
         }
+
+        public List<Semester> GetAllSemestersWithoutRegistration(SqlConnection connection, string studentId)
+        {
+            string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
+"FROM semester " +
+"LEFT JOIN registrationSemester ON registrationSemester.semesterName = semester.name AND registrationSemester.studentId = 'S000001' " +
+"WHERE registrationSemester.semesterName IS NULL; ";
+            List<Semester> semesters = new List<Semester>();
+            connection.Open();
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@studentId", studentId);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string name = reader["name"].ToString();
+                        string abbreviation = reader["abbreviation"].ToString();
+                        string description = reader["description"].ToString();
+                        int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
+                        semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                    }
+                }
+            }
+            connection.Close();
+            return semesters;
+        }
     }
 }
