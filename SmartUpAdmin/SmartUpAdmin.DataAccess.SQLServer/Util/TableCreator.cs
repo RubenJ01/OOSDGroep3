@@ -84,6 +84,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 [date] DATETIME NOT NULL,
                 PRIMARY KEY (studentId, courseName, attempt),
                 FOREIGN KEY (studentId) REFERENCES student(id)
+                FOREIGN KEY (courseName) REFERENCES course([name])
             );
         END;"
             );

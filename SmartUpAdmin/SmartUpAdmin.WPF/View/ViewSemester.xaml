@@ -50,7 +50,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="20" FontSize="30" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" Grid.Row="0" x:Name="SemesterName"/>
-                    <TextBlock Margin="20" TextWrapping="WrapWithOverflow" FontSize="25" Grid.Row="1" x:Name="SemesterDescription"/>
+                    <StackPanel Margin="20" Grid.Row="1" x:Name="SemesterDescription"/>
                     <Grid x:Name="AddSemesterCourseForm" Grid.Row="1" Visibility="Hidden">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
@@ -68,7 +68,7 @@
                         <TextBlock Text="Naam:" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Margin="0, 0, 20, 0"/>
                         <TextBox x:Name="CourseName" FontSize="25" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="10, 40" Padding="10, 0, 0, 0" VerticalContentAlignment="Center"/>
                         <TextBlock Text="EC:" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Margin="0, 0, 20, 0"/>
-                        <TextBox x:Name="CourseEC" FontSize="25" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10, 40" Padding="10, 0, 0, 0" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="CourseEC" FontSize="25" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10, 40" Padding="10, 0, 0, 0" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox"/>
                         <Button x:Name="Annuleren" Content="Annuleren" FontSize="25" Grid.Row="3" Background="#b3b3b3" Margin="20" Grid.Column="1" Grid.ColumnSpan="2" Click="CancelClick"/>
                         <Button x:Name="Opslaan" Content="Opslaan" FontSize="25" Grid.Row="3" Background="#b3b3b3" Margin="20" Grid.Column="3" Grid.ColumnSpan="2" Click="SaveClick"/>
                     </Grid>

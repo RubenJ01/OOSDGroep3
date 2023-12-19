@@ -138,66 +138,34 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return courseNames;
         }
 
-        public void AddNewCourse(string name, int credits)
+        public void AddNewCourse(SqlConnection connection, string name, int credits)
         {
             string query = "INSERT INTO course (name, credits) VALUES (@name, @credits)";
-
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                connection.Open();
-                try
-                {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@name", name);
-                        command.Parameters.AddWithValue("@credits", credits);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@credits", credits);
 
-                        command.ExecuteNonQuery();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
-
+                command.ExecuteNonQuery();
             }
         }
 
-        public Course GetCourseByCourseName(string name)
+        public Course GetCourseByCourseName(SqlConnection connection, string name)
         {
             string query = "SELECT * FROM course WHERE name = @name";
             Course? course = null;
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                connection.Open();
-                try
+                command.Parameters.AddWithValue("@name", name);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@name", name);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string courseName = reader["name"].ToString();
-                                int credits = Int32.Parse(reader["credits"].ToString());
-                                course = new Course(courseName, credits);
-                            }
-                        }
+                        string courseName = reader["name"].ToString();
+                        int credits = Int32.Parse(reader["credits"].ToString());
+                        course = new Course(courseName, credits);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
                 }
             }
             return course;
@@ -263,6 +231,23 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
             return courses;
+        }
+
+        public void UpdateCourse(SqlConnection connection, Course newCourse, Course oldCourse)
+        {
+            string query = @"UPDATE course
+   SET [name] = @NewCourseName
+      ,[credits] = @NewCourseCredits
+ WHERE [name] = @OldCourseName AND [credits] = @OldCourseCredits";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@NewCourseName", newCourse.Name);
+                command.Parameters.AddWithValue("@NewCourseCredits", newCourse.Credits);
+                command.Parameters.AddWithValue("@OldCourseName", oldCourse.Name);
+                command.Parameters.AddWithValue("@OldCourseCredits", oldCourse.Credits);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
