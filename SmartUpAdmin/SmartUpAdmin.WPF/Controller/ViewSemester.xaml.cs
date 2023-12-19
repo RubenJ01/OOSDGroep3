@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -115,6 +116,8 @@ namespace SmartUpAdmin.WPF.View
             AddSemesterCourseForm.Visibility = Visibility.Hidden;
             CourseName.Text = string.Empty;
             CourseEC.Text = string.Empty;
+            CourseName.BorderBrush = Brushes.Black;
+            CourseEC.BorderBrush = Brushes.Black;
             AddSemesterCourse.Click += (sender, e) => AddSemesterCourseClick();
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
@@ -212,6 +215,12 @@ namespace SmartUpAdmin.WPF.View
             stackPanel.Children.Add(textBlock);
         }
 
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
         private void TextBlock_MouseDown(Course course)
         {
             SelectedCourse = course;
@@ -228,7 +237,6 @@ namespace SmartUpAdmin.WPF.View
             Fields.Add(CourseNameField);
             Field CourseECField = new Field(CourseEC, 1, 2, new Regex("\\D"));
             Fields.Add(CourseECField);
-
         }
 
         private void TextBlock_MouseEnter(TextBlock textBlock)
@@ -291,6 +299,8 @@ namespace SmartUpAdmin.WPF.View
                     SemesterDescription = BuildDescriptionPanel(connection, SelectedSemester);
                     CourseName.Text = string.Empty;
                     CourseEC.Text = string.Empty;
+                    CourseName.BorderBrush = Brushes.Black;
+                    CourseEC.BorderBrush = Brushes.Black;
                 }
                 catch (Exception ex)
                 {
@@ -310,29 +320,26 @@ namespace SmartUpAdmin.WPF.View
                 connection.Open();
                 try
                 {
-                    if (AllFieldsValid(Fields, connection) && IsUpdate)
+                    if (IsUpdate && SelectedCourse.Name.Equals(CourseName.Text) && SelectedCourse.Credits.Equals(Convert.ToInt32(CourseEC.Text)))
                     {
-                        Course course = new Course(Fields[0].GetText(), Int32.Parse(Fields[1].GetText()));
-                        SemesterCourse semesterCourse = new SemesterCourse(SelectedSemester.Name, course.Name);
-                        CourseDao.GetInstance().AddNewCourse(connection, course.Name, course.Credits);
-                        SemesterCourseDao.GetInstance().AddSemesterCourse(connection, semesterCourse);
-                        AddSemesterCourseForm.Visibility = Visibility.Hidden;
-                        AddSemesterCourse.Visibility = Visibility.Visible;
-                        SemesterDescription = BuildDescriptionPanel(connection, SelectedSemester);
-                        SemesterName.Text = SelectedSemester.Name;
-                        CourseName.Text = string.Empty;
-                        CourseEC.Text = string.Empty;
+                        LoadSemesterDescriptionProperties(connection);
                     }
-                    if (AllFieldsValid(Fields, connection) && !IsUpdate)
+                    else if ((SelectedCourse.Name.Equals(CourseName.Text) || AllFieldsValid(Fields, connection)) && IsUpdate)
                     {
                         Course course = new Course(Fields[0].GetText(), Int32.Parse(Fields[1].GetText()));
                         CourseDao.GetInstance().UpdateCourse(connection, course, SelectedCourse);
-                        AddSemesterCourseForm.Visibility = Visibility.Hidden;
-                        AddSemesterCourse.Visibility = Visibility.Visible;
-                        SemesterDescription = BuildDescriptionPanel(connection, SelectedSemester);
-                        SemesterName.Text = SelectedSemester.Name;
-                        CourseName.Text = string.Empty;
-                        CourseEC.Text = string.Empty;
+
+                        LoadSemesterDescriptionProperties(connection);
+                    }
+                    else if (AllFieldsValid(Fields, connection) && !IsUpdate)
+                    {
+                        Course course = new Course(Fields[0].GetText(), Int32.Parse(Fields[1].GetText()));
+                        SemesterCourse semesterCourse = new SemesterCourse(SelectedSemester.Name, course.Name);
+
+                        CourseDao.GetInstance().AddNewCourse(connection, course.Name, course.Credits);
+                        SemesterCourseDao.GetInstance().AddSemesterCourse(connection, semesterCourse);
+
+                        LoadSemesterDescriptionProperties(connection);
                     }
                 }
                 catch (Exception ex)
@@ -345,6 +352,19 @@ namespace SmartUpAdmin.WPF.View
                 }
             }
         }
+
+        private void LoadSemesterDescriptionProperties(SqlConnection? connection)
+        {
+            AddSemesterCourseForm.Visibility = Visibility.Hidden;
+            AddSemesterCourse.Visibility = Visibility.Visible;
+            SemesterDescription = BuildDescriptionPanel(connection, SelectedSemester);
+            SemesterName.Text = SelectedSemester.Name;
+            CourseName.Text = string.Empty;
+            CourseEC.Text = string.Empty;
+            CourseName.BorderBrush = Brushes.Black;
+            CourseEC.BorderBrush = Brushes.Black;
+        }
+
         private void AddSemester(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new AddSemester());
