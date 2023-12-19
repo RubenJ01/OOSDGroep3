@@ -229,21 +229,42 @@ namespace SmartUp.UI
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
         {
-            if (SelectedSemester.Name != null)
-            {
-                SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(Constants.STUDENT_ID, SelectedSemester.Name);
-                UnsubscribeButton.IsEnabled = true;
-                EnrollButton.IsEnabled = false;
-                SubscribeCard();
-            }
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+                try
+                {
+                    SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
+                    UnsubscribeButton.IsEnabled = false;
+                    EnrollButton.IsEnabled = true;
+                    UnSubscribeCard();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
         }
 
         private void UnsubscribeFromSemester(object sender, RoutedEventArgs eventArgs)
         {
-            SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(Constants.STUDENT_ID, SelectedSemester.Name);
-            UnsubscribeButton.IsEnabled = false;
-            EnrollButton.IsEnabled = true;
-            UnSubscribeCard();
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+                try
+                {
+                    SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
+                    UnsubscribeButton.IsEnabled = false;
+                    EnrollButton.IsEnabled = true;
+                    UnSubscribeCard();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
         }
 
         private void LoadDatafollowedSemester()
