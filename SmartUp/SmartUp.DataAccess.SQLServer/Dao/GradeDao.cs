@@ -523,7 +523,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        public bool IsGradePassed(SqlConnection connection ,string courseName)
+        public bool IsGradePassed(SqlConnection connection, string courseName)
         {
             string query = "SELECT grade FROM grade   WHERE studentId = @studentId AND courseName = @courseName";
 
@@ -542,6 +542,26 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
             return false;
+        }
+
+        public bool HasObtainedGrade(SqlConnection connection, string semesterName)
+        {
+            string query = "SELECT grade.studentId, grade.courseName, grade.grade, grade.isDefinitive FROM grade JOIN semesterCourse ON grade.courseName = semesterCourse.courseName WHERE semesterCourse.semesterName = @semesterName AND grade.studentId = @studentId";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@semesterName", semesterName);
+                command.Parameters.AddWithValue("@studentId", Constants.STUDENT_ID);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }
