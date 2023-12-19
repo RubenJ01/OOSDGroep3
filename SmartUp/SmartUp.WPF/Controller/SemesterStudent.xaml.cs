@@ -208,7 +208,7 @@ namespace SmartUp.UI
                         EnrollButton.IsEnabled = false;
                     }
 
-                    if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection ,Constants.STUDENT_ID, semester))
+                    if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection ,Constants.STUDENT_ID, semester) && GradeDao.GetInstance().HasObtainedGrade(connection, SelectedSemester.Name))
                     {
                         UnsubscribeButton.IsEnabled = true;
                     }
