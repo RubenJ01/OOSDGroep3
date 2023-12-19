@@ -185,7 +185,7 @@ namespace SmartUp.UI
                             stringBuilder.Append($"  - {Course.CourseName}\n");
                         }
                     }
-                    if (CoursesInSemester != null)
+                    if (CoursesInSemester.Count > 0)
                     {
                         stringBuilder.Append($"\nVakken in dit semester:\n");
                         foreach (string courseName in CoursesInSemester)
@@ -292,8 +292,6 @@ namespace SmartUp.UI
 
         private bool IsSemesterCriteriaMet(SqlConnection connection, List<SemesterCourse> requiredCourses)
         {
-            if (requiredCourses.Count == 0) return true;
-
             foreach (SemesterCourse course in requiredCourses)
             {
                 if (!GradeDao.GetInstance().IsGradePassed(connection, course.CourseName)) return false;
