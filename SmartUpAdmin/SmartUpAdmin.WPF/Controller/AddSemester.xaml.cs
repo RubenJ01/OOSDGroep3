@@ -86,10 +86,26 @@ namespace SmartUpAdmin.WPF
         private List<SemesterCourse> GetSemesterCourses(string semesterName)
         {
             List<SemesterCourse> semesterCourses = new List<SemesterCourse>();
-            foreach (object selectedItem in Courses.SelectedItems)
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
-                Course course = courseDao.GetCourseByCourseName(selectedItem.ToString());
-                semesterCourses.Add(new SemesterCourse(semesterName, course.Name));
+                try
+                {
+                    connection.Open();
+
+                    foreach (object selectedItem in Courses.SelectedItems)
+                    {
+                        Course course = courseDao.GetCourseByCourseName(connection, selectedItem.ToString());
+                        semesterCourses.Add(new SemesterCourse(semesterName, course.Name));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
             return semesterCourses;
         }
@@ -143,14 +159,30 @@ namespace SmartUpAdmin.WPF
 
         private void OnCourseSelected(object sender, SelectionChangedEventArgs e)
         {
-            int totaleEc = 0;
-
-            foreach (object selectedItem in Courses.SelectedItems)
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
-                Course course = courseDao.GetCourseByCourseName(selectedItem.ToString());
-                totaleEc += course.Credits;
+                try
+                {
+                    connection.Open();
+
+                    int totaleEc = 0;
+
+                    foreach (object selectedItem in Courses.SelectedItems)
+                    {
+                        Course course = courseDao.GetCourseByCourseName(connection, selectedItem.ToString());
+                        totaleEc += course.Credits;
+                    }
+                    GeselecteerdeEC.Text = $"Geselecteerde EC: {totaleEc}";
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
             }
-            GeselecteerdeEC.Text = $"Geselecteerde EC: {totaleEc}";
         }
 
         private void ListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
