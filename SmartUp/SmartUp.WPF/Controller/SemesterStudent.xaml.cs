@@ -175,6 +175,7 @@ namespace SmartUp.UI
                     SelectedCard = card;
                     SemesterName.Text = semester.Name;
                     StringBuilder stringBuilder = new StringBuilder();
+                    int percentagePassed = Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
 
                     List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(connection ,semester);
                     List<string> CoursesInSemester = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(connection ,semester.Name);
@@ -224,7 +225,7 @@ namespace SmartUp.UI
                     SemesterDescription.Text = stringBuilder.ToString();
                     card.Background = Brushes.DarkGray;
 
-                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true && int i = Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name)))
+                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true && CheckPercentage(connection, Percentages))
                     {
                         EnrollButton.IsEnabled = true;
                     }
@@ -371,6 +372,18 @@ namespace SmartUp.UI
         {
             FollowedSemesterWrap.Children.Remove(SelectedCard);
             AddSemesterBlock(SelectedSemester);
+        }
+
+        private bool CheckPercentage(SqlConnection connection, List<SemesterRequiredPercentage> percentages)
+        {
+            foreach(SemesterRequiredPercentage percentage in percentages)
+            {
+                if (percentage.RequiredPercentage >= Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, percentage.RequiredSemester)))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
