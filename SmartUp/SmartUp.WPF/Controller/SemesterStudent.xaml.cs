@@ -82,6 +82,7 @@ namespace SmartUp.UI
 
             card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
             SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
+            FollowedSemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
         public void AddSemesterFollowedBlock(Semester semester, Decimal percentagePassed)
@@ -150,6 +151,7 @@ namespace SmartUp.UI
             FollowedSemesterWrap.Children.Add(card);
 
             card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
+            SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
             FollowedSemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
@@ -176,6 +178,7 @@ namespace SmartUp.UI
 
                     List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(connection ,semester);
                     List<string> CoursesInSemester = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(connection ,semester.Name);
+                    List<SemesterRequiredPercentage> Percentages = SemesterRequiredPercentageDao.GetInstance().GetRequiredPercentages(connection, SelectedSemester.Name);
 
                     if (CriteriaCourses.Count > 0)
                     {
@@ -192,6 +195,16 @@ namespace SmartUp.UI
                             }
                         }
                     }
+
+                    if (Percentages.Count > 0)
+                    {
+                        stringBuilder.Append($"\nVerplicht behaalde percentage behaald om dit semester te volgen \n");
+                        foreach (SemesterRequiredPercentage percentage in Percentages)
+                        {
+                            stringBuilder.Append($"  - {percentage.RequiredSemester} - {percentage.RequiredPercentage}% \n");
+                        }
+                    }
+
                     if (CoursesInSemester.Count > 0)
                     {
                         stringBuilder.Append($"\nVakken in dit semester:\n");
@@ -207,13 +220,11 @@ namespace SmartUp.UI
                             }   
                         }
                     }
-
                     stringBuilder.Append($"\n\n{semester.Description}");
                     SemesterDescription.Text = stringBuilder.ToString();
                     card.Background = Brushes.DarkGray;
 
-
-                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true)
+                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true && int i = Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name)))
                     {
                         EnrollButton.IsEnabled = true;
                     }
@@ -230,6 +241,7 @@ namespace SmartUp.UI
                     {
                         UnsubscribeButton.IsEnabled = false;
                     }
+
                 }
                 catch (Exception ex)
                 {

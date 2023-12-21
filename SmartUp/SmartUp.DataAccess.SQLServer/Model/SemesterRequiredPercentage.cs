@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace SmartUp.DataAccess.SQLServer.Model
 {
-    internal class SemesterRequiredPercentage
+    public class SemesterRequiredPercentage
     {
+        public string SemesterName {  get; set; }
+        public string RequiredSemester {  get; set; }
+        public int RequiredPercentage { get; set; }
+
+        public SemesterRequiredPercentage(string semesterName, string requiredSemester, int requiredPercentage) 
+        {
+            SemesterName = semesterName;
+            RequiredSemester = requiredSemester;
+            RequiredPercentage = requiredPercentage;
+        }
     }
 }
