@@ -22,5 +22,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return instance;
         }
+
+
     }
 }
