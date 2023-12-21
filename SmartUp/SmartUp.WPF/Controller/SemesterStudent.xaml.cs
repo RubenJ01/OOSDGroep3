@@ -182,7 +182,14 @@ namespace SmartUp.UI
                         stringBuilder.Append($"Vakken verplicht gehaald:\n");
                         foreach (SemesterCourse Course in CriteriaCourses)
                         {
-                            stringBuilder.Append($"  - {Course.CourseName}\n");
+                            if(GradeDao.GetInstance().IsGradePassed(connection, Course.CourseName))
+                            {
+                                stringBuilder.Append($"  - {Course.CourseName} √\n");
+                            }
+                            else
+                            {
+                                stringBuilder.Append($"  - {Course.CourseName}\n");
+                            }
                         }
                     }
                     if (CoursesInSemester.Count > 0)
@@ -190,7 +197,14 @@ namespace SmartUp.UI
                         stringBuilder.Append($"\nVakken in dit semester:\n");
                         foreach (string courseName in CoursesInSemester)
                         {
-                            stringBuilder.Append($"  - {courseName}\n");
+                            if (GradeDao.GetInstance().IsGradePassed(connection, courseName))
+                            {
+                                stringBuilder.Append($"  - {courseName} √\n");
+                            }
+                            else
+                            {
+                                stringBuilder.Append($"  - {courseName}\n");
+                            }   
                         }
                     }
 
@@ -235,7 +249,7 @@ namespace SmartUp.UI
                     SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
                     UnsubscribeButton.IsEnabled = false;
                     EnrollButton.IsEnabled = true;
-                    UnSubscribeCard();
+                    SubscribeCard();
                 }
                 catch (Exception ex)
                 {
