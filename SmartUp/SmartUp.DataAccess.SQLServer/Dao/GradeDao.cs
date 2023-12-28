@@ -547,7 +547,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public bool HasObtainedGrade(SqlConnection connection, string semesterName)
         {
             string query = "SELECT grade.studentId, grade.courseName, grade.grade, grade.isDefinitive FROM grade JOIN semesterCourse ON grade.courseName = semesterCourse.courseName WHERE semesterCourse.semesterName = @semesterName AND grade.studentId = @studentId";
-            if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@semesterName", semesterName);

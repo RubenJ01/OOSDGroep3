@@ -173,7 +173,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
         public static void UnsubscribeFromSemesterByStudentId(SqlConnection connection, string studentID, string semesterName)
         {
             string query = "DELETE FROM registrationSemester WHERE studentId = @studentId AND semesterName = @semesterName";
-            if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@studentId", studentID);
