@@ -330,6 +330,7 @@ namespace SmartUp.UI
                     {
                         AddSemesterBlock(semester);
                     }
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
