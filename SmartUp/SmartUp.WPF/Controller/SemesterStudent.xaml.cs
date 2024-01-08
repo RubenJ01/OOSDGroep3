@@ -17,7 +17,7 @@ namespace SmartUp.UI
     public partial class SemesterStudent : Page
     {
         private static Semester? SelectedSemester { get; set; }
-        private static Border SelectedCard {  get; set; }
+        private static Border SelectedCard { get; set; }
 
         public SemesterStudent()
         {
@@ -255,15 +255,17 @@ namespace SmartUp.UI
         }
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
-            {
-                using (SqlConnection? connection = DatabaseConnection.GetConnection())
+        {
+            using (SqlConnection? connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
-                    SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
-                    UnsubscribeButton.IsEnabled = false;
-                    EnrollButton.IsEnabled = true;
-                    SubscribeCard();
+                    connection.Open();
+                    SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(connection, Constants.STUDENT_ID, SelectedSemester.Name);
+                    UnsubscribeButton.IsEnabled = true;
+                    EnrollButton.IsEnabled = false;
+                    SubscribeCard(connection);
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -281,10 +283,12 @@ namespace SmartUp.UI
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
                 try
                 {
+                    connection.Open();
                     SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
                     UnsubscribeButton.IsEnabled = false;
                     EnrollButton.IsEnabled = true;
                     UnSubscribeCard();
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -352,25 +356,10 @@ namespace SmartUp.UI
             return true;
         }
 
-        private void SubscribeCard()
+        private void SubscribeCard(SqlConnection connection)
         {
-            using (SqlConnection connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    SemesterWrap.Children.Remove(SelectedCard);
-                    AddSemesterFollowedBlock(SelectedSemester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, SelectedCard.Name));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
-            }
-
+            SemesterWrap.Children.Remove(SelectedCard);
+            AddSemesterFollowedBlock(SelectedSemester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, SelectedCard.Name));
         }
 
         private void UnSubscribeCard()
@@ -381,7 +370,7 @@ namespace SmartUp.UI
 
         private bool CheckPercentage(SqlConnection connection, List<SemesterRequiredPercentage> percentages)
         {
-            foreach(SemesterRequiredPercentage percentage in percentages)
+            foreach (SemesterRequiredPercentage percentage in percentages)
             {
                 if (percentage.RequiredPercentage >= Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, percentage.RequiredSemester)))
                 {
