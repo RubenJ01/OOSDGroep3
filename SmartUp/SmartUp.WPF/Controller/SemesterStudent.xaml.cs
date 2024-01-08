@@ -5,15 +5,12 @@ using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 
 namespace SmartUp.UI
 {
@@ -115,7 +112,7 @@ namespace SmartUp.UI
             progress.Width = 80;
             progress.Height = 12;
             progress.ToolTip = $"{percentagePassed}%";
-            progress.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF7F8FAF");
+            progress.Foreground = new BrushConverter().ConvertFrom("#FF7F8FAF") as SolidColorBrush;
             progress.Margin = new Thickness(15, 0, 0, 0);
             progress.HorizontalAlignment = HorizontalAlignment.Left;
             Grid.SetRow(progress, 1);

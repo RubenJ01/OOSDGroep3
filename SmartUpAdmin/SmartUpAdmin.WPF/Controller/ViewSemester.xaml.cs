@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using SmartUpAdmin.Core.NewFolder;
+using SmartUpAdmin.DataAccess.SQLServer.Dao;
 using SmartUpAdmin.DataAccess.SQLServer.Model;
 
 
@@ -126,6 +128,7 @@ namespace SmartUpAdmin.WPF.View
                     connection.Open();
                     SemesterDescription = BuildDescriptionPanel(connection, SelectedSemester);
                     card.Background = Brushes.DarkGray;
+                    EditSemesterButton.IsEnabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -142,12 +145,18 @@ namespace SmartUpAdmin.WPF.View
         {
 
             List<SemesterCriteria> criteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(connection, semester);
+            List<SemesterRequiredPercentage> RequiredPercentages = SemesterRequiredPercentageDao.GetInstance().GetAllSemesterRequiredPercentageBySemester(connection, semester);
             List<SemesterCourse> coursesInSemester = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(connection, semester.Name);
+            List<SemesterRequiredPercentage> Percentages = SemesterRequiredPercentageDao.GetInstance().GetRequiredPercentages(connection, SelectedSemester.Name);
 
             double upperMargin = 75;
             if (criteriaCourses.Count > 0)
             {
-                upperMargin += criteriaCourses.Count * 25 + 50;
+                upperMargin += criteriaCourses.Count * 25 + 25;
+            }
+            if (RequiredPercentages.Count > 0)
+            {
+                upperMargin += RequiredPercentages.Count * 25 + 25;
             }
 
             AddSemesterCourse.Margin = new Thickness(0, upperMargin, 40, 0);
@@ -164,6 +173,15 @@ namespace SmartUpAdmin.WPF.View
                 foreach (SemesterCriteria course in criteriaCourses)
                 {
                     AddTextBlock(stackPanel, $"        * {course.CourseName}", false, null);
+                }
+            }
+
+            if (Percentages.Count > 0)
+            {
+                AddTextBlock(stackPanel, $"- Verplicht percentage semester", false, null); 
+                foreach (SemesterRequiredPercentage percentage in Percentages)
+                {
+                    AddTextBlock(stackPanel, $"        * {percentage.RequiredSemesterName} - {percentage.RequiredPercentage}%", false, null);
                 }
             }
 
@@ -328,7 +346,6 @@ namespace SmartUpAdmin.WPF.View
                     {
                         Course course = new Course(Fields[0].GetText(), Int32.Parse(Fields[1].GetText()));
                         CourseDao.GetInstance().UpdateCourse(connection, course, SelectedCourse);
-
                         LoadSemesterDescriptionProperties(connection);
                     }
                     else if (AllFieldsValid(Fields, connection) && !IsUpdate)
@@ -367,7 +384,12 @@ namespace SmartUpAdmin.WPF.View
 
         private void AddSemester(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AddSemester());
+            NavigationService.Navigate(new AddSemester(null));
+        }
+
+        private void EditSemester(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new AddSemester(SelectedSemester));
         }
     }
 }

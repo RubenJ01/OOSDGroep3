@@ -48,28 +48,13 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                     string name = semester.Key;
                     string abbreviation = semester.Value.Abbreviation;
                     string description = semester.Value.Description;
-                    int randomNumber = random.Next(1, 101);
-                    int requiredCredits;
-                    if (randomNumber <= 75)
-                    {
-                        requiredCredits = 0;
-                    }
-                    else if (randomNumber <= 87)
-                    {
-                        requiredCredits = 45;
-                    }
-                    else
-                    {
-                        requiredCredits = 60;
-                    }
-                    string insertQuery = "INSERT INTO semester (name, abbreviation, description, requiredCreditsFromP) " +
-                        "VALUES(@name, @abbreviation, @description, @requiredCreditsFromP)";
+                    string insertQuery = "INSERT INTO semester (name, abbreviation, description) " +
+                        "VALUES(@name, @abbreviation, @description)";
                     using (SqlCommand command = new SqlCommand(insertQuery, con))
                     {
                         command.Parameters.AddWithValue("@name", name);
                         command.Parameters.AddWithValue("@abbreviation", abbreviation);
                         command.Parameters.AddWithValue("@description", description);
-                        command.Parameters.AddWithValue("@requiredCreditsFromP", requiredCredits);
 
                         command.ExecuteNonQuery();
                     }
@@ -139,8 +124,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                                 string name = reader["name"].ToString();
                                 string abbreviation = reader["abbreviation"].ToString();
                                 string description = reader["description"].ToString();
-                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                                semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                                semesters.Add(new Semester(name, abbreviation, description));
                             }
                         }
                     }
@@ -190,35 +174,22 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return names;
         }
 
-        public void AddSemester(Semester semester)
+        public void AddSemester(SqlConnection connection, Semester semester)
         {
-            string query = "INSERT INTO semester (name, abbreviation, description, requiredCreditsFromP) " +
-                "VALUES(@name, @abbreviation, @description, @requiredCreditsFromP)";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@name", semester.Name);
-                        command.Parameters.AddWithValue("@abbreviation", semester.Abbreviation);
-                        command.Parameters.AddWithValue("@description", semester.Description);
-                        command.Parameters.AddWithValue("@requiredCreditsFromP", semester.RequiredCreditsFromP);
+            string query = "INSERT INTO semester (name, abbreviation, description) " +
+                "VALUES(@name, @abbreviation, @description)";
 
-                        command.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@name", semester.Name);
+                command.Parameters.AddWithValue("@abbreviation", semester.Abbreviation);
+                command.Parameters.AddWithValue("@description", semester.Description);
+
+                command.ExecuteNonQuery();
             }
+
         }
+
 
         public Semester GetSemesterByName(string name)
         {
@@ -238,8 +209,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             {
                                 string abbreviation = reader["abbreviation"].ToString();
                                 string description = reader["description"].ToString();
-                                int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                                semester = new Semester(name, abbreviation, description, requiredCreditsFromP);
+                                semester = new Semester(name, abbreviation, description);
                             }
                         }
                     }
@@ -254,6 +224,21 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
             return semester;
+        }
+
+        public void UpdateSemester(SqlConnection connection, Semester semester, Semester OldSemester)
+        {
+            string query = "UPDATE semester SET name = @name, abbreviation = @abbreviation, description = @description WHERE name = @Oldname";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@name", semester.Name);
+                command.Parameters.AddWithValue("@abbreviation", semester.Abbreviation);
+                command.Parameters.AddWithValue("@description", semester.Description);
+                command.Parameters.AddWithValue("@Oldname", OldSemester.Name);
+
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
