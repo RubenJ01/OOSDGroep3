@@ -181,9 +181,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semestersCourses;
         }
 
-        public Decimal GetPercentagePassed(SqlConnection? connection, string studentId, string semesterName)
+        public Decimal GetPercentagePassed(SqlConnection connection, string studentId, string semesterName)
         {
-            connection.Open();
             Decimal percentagePassed = 0;
             string query = @"
 WITH SemesterCourses AS (
@@ -239,11 +238,10 @@ JOIN TotalCreditsSemester tc ON wc.StudentID = tc.StudentID AND wc.semesterName 
                 {
                     while (reader.Read())
                     {
-                        percentagePassed = Convert.ToDecimal(reader["PercentagePassed"].ToString());
+                        percentagePassed = Convert.ToDecimal(reader["PercentagePassed"]);
                     }
                 }
             }
-            connection.Close();
             return percentagePassed;
         }
     }

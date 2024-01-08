@@ -176,6 +176,20 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             );
         END;"
             );
+            CreateTableIfNotExists("semesterRequiredPercentage",
+@"
+        IF OBJECT_ID('semesterRequiredPercentage', 'U') IS NULL
+        BEGIN
+            CREATE TABLE semesterRequiredPercentage (
+                semesterName varchar(64),
+                requiredSemester varchar(64),
+                requiredPercentage int
+                PRIMARY KEY(semesterName, requiredSemester)
+                FOREIGN KEY (semesterName) REFERENCES semester([name]),
+                FOREIGN KEY (requiredSemester) REFERENCES semester([name]),
+            );
+        END;"
+            );
         }
 
         private static void CreateTableIfNotExists(string tableName, string query)
@@ -233,6 +247,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
         }
 
-        
+
     }
 }

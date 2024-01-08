@@ -152,6 +152,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
 
         public bool IsEnrolledForSemesterByStudentId(SqlConnection connection ,string studentID, Semester semester)
         {
+            if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
             string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid AND semesterName = @SemesterName";
             bool isEnrolled = false;
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -169,29 +170,14 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return isEnrolled;
         }
 
-        public static void UnsubscribeFromSemesterByStudentId(string studentID, string semesterName)
+        public static void UnsubscribeFromSemesterByStudentId(SqlConnection connection, string studentID, string semesterName)
         {
             string query = "DELETE FROM registrationSemester WHERE studentId = @studentId AND semesterName = @semesterName";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
-                {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@studentId", studentID);
-                        command.Parameters.AddWithValue("@semesterName", semesterName);
-                        command.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
+                command.Parameters.AddWithValue("@studentId", studentID);
+                command.Parameters.AddWithValue("@semesterName", semesterName);
+                command.ExecuteNonQuery();
             }
         }
 
