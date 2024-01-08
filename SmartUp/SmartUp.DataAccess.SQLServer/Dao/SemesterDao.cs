@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartUp.Core.Constants;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Diagnostics;
@@ -120,14 +121,12 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             int nameIndex = reader.GetOrdinal("name");
                             int abbreviationIndex = reader.GetOrdinal("abbreviation");
                             int descriptionIndex = reader.GetOrdinal("description");
-                            int requiredCreditsFromPIndex = reader.GetOrdinal("requiredCreditsFromP");
                             while (reader.Read())
                             {
                                 string name = reader.GetString(nameIndex);
                                 string abbreviation = reader.GetString(abbreviationIndex);
                                 string description = reader.GetString(descriptionIndex);
-                                int requiredCreditsFromP = reader.GetInt32(requiredCreditsFromPIndex);
-                                semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                                semesters.Add(new Semester(name, abbreviation, description));
                             }
                         }
                     }
@@ -143,15 +142,13 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return semesters;
         }
-        public List<Semester> GetAllSemestersWithRegistration(SqlConnection? connection, string studentId)
+        public List<Semester> GetAllSemestersWithRegistration(SqlConnection connection, string studentId)
         {
-            string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
+            string query = "SELECT semester.name, semester.description, semester.abbreviation " +
             "FROM semester " +
             "JOIN registrationSemester ON registrationSemester.semesterName = semester.name " +
             "WHERE registrationSemester.studentId = @studentId;";
             List<Semester> semesters = new List<Semester>();
-
-            connection.Open();
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@studentId", studentId);
@@ -162,39 +159,36 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         string name = reader["name"].ToString();
                         string abbreviation = reader["abbreviation"].ToString();
                         string description = reader["description"].ToString();
-                        int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                        semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                        semesters.Add(new Semester(name, abbreviation, description));
                     }
                 }
             }
-            connection.Close();
             return semesters;
         }
 
         public List<Semester> GetAllSemestersWithoutRegistration(SqlConnection connection, string studentId)
         {
-            string query = "SELECT semester.name, semester.description, semester.abbreviation, semester.requiredCreditsFromP " +
+            string query = "SELECT semester.name, semester.description, semester.abbreviation " +
 "FROM semester " +
-"LEFT JOIN registrationSemester ON registrationSemester.semesterName = semester.name AND registrationSemester.studentId = 'S000001' " +
+"LEFT JOIN registrationSemester ON registrationSemester.semesterName = semester.name AND registrationSemester.studentId = @studentId " +
 "WHERE registrationSemester.semesterName IS NULL; ";
             List<Semester> semesters = new List<Semester>();
-            connection.Open();
+           
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@studentId", studentId);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
+                    command.Parameters.AddWithValue("@studentId", Constants.STUDENT_ID);
                     while (reader.Read())
                     {
                         string name = reader["name"].ToString();
                         string abbreviation = reader["abbreviation"].ToString();
                         string description = reader["description"].ToString();
-                        int requiredCreditsFromP = Int32.Parse(reader["requiredCreditsFromP"].ToString());
-                        semesters.Add(new Semester(name, abbreviation, description, requiredCreditsFromP));
+                        semesters.Add(new Semester(name, abbreviation, description));
                     }
                 }
             }
-            connection.Close();
             return semesters;
         }
     }
