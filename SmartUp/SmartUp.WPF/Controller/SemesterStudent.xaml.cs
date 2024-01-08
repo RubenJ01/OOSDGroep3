@@ -17,7 +17,7 @@ namespace SmartUp.UI
     public partial class SemesterStudent : Page
     {
         private static Semester? SelectedSemester { get; set; }
-        private static Border SelectedCard {  get; set; }
+        private static Border SelectedCard { get; set; }
 
         public SemesterStudent()
         {
@@ -79,6 +79,7 @@ namespace SmartUp.UI
 
             card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
             SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
+            FollowedSemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
         public void AddSemesterFollowedBlock(Semester semester, Decimal percentagePassed)
@@ -147,6 +148,7 @@ namespace SmartUp.UI
             FollowedSemesterWrap.Children.Add(card);
 
             card.PreviewMouseDown += (sender, e) => CardMouseDown(semester, card);
+            SemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
             FollowedSemesterWrap.MouseDown += (sender, e) => SemesterWrapMouseDown(card);
         }
 
@@ -163,40 +165,66 @@ namespace SmartUp.UI
         private void CardMouseDown(Semester semester, Border card)
         {
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
 
                 try
                 {
+                    connection.Open();
                     SelectedSemester = semester;
                     SelectedCard = card;
                     SemesterName.Text = semester.Name;
                     StringBuilder stringBuilder = new StringBuilder();
+                    int percentagePassed = Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
 
-                    List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(connection ,semester);
-                    List<string> CoursesInSemester = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(connection ,semester.Name);
+                    List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(connection, semester);
+                    List<string> CoursesInSemester = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(connection, semester.Name);
+                    List<SemesterRequiredPercentage> Percentages = SemesterRequiredPercentageDao.GetInstance().GetRequiredPercentages(connection, SelectedSemester.Name);
 
                     if (CriteriaCourses.Count > 0)
                     {
                         stringBuilder.Append($"Vakken verplicht gehaald:\n");
                         foreach (SemesterCourse Course in CriteriaCourses)
                         {
-                            stringBuilder.Append($"  - {Course.CourseName}\n");
+                            if (GradeDao.GetInstance().IsGradePassed(connection, Course.CourseName))
+                            {
+                                stringBuilder.Append($"  - {Course.CourseName} √\n");
+                            }
+                            else
+                            {
+                                stringBuilder.Append($"  - {Course.CourseName}\n");
+                            }
                         }
                     }
+
+                    if (Percentages.Count > 0)
+                    {
+                        stringBuilder.Append($"\nVerplicht behaalde percentage behaald om dit semester te volgen \n");
+                        foreach (SemesterRequiredPercentage percentage in Percentages)
+                        {
+                            stringBuilder.Append($"  - {percentage.RequiredSemester} - {percentage.RequiredPercentage}% \n");
+                        }
+                    }
+
                     if (CoursesInSemester.Count > 0)
                     {
                         stringBuilder.Append($"\nVakken in dit semester:\n");
                         foreach (string courseName in CoursesInSemester)
                         {
-                            stringBuilder.Append($"  - {courseName}\n");
+                            if (GradeDao.GetInstance().IsGradePassed(connection, courseName))
+                            {
+                                stringBuilder.Append($"  - {courseName} √\n");
+                            }
+                            else
+                            {
+                                stringBuilder.Append($"  - {courseName}\n");
+                            }
                         }
                     }
-
                     stringBuilder.Append($"\n\n{semester.Description}");
                     SemesterDescription.Text = stringBuilder.ToString();
                     card.Background = Brushes.DarkGray;
 
-
-                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true)
+                    if (!SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && IsSemesterCriteriaMet(connection, CriteriaCourses) == true && CheckPercentage(connection, Percentages))
                     {
                         EnrollButton.IsEnabled = true;
                     }
@@ -205,7 +233,7 @@ namespace SmartUp.UI
                         EnrollButton.IsEnabled = false;
                     }
 
-                    if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection ,Constants.STUDENT_ID, semester) && GradeDao.GetInstance().HasObtainedGrade(connection, SelectedSemester.Name))
+                    if (SemesterRegistrationDao.GetInstance().IsEnrolledForSemesterByStudentId(connection, Constants.STUDENT_ID, semester) && GradeDao.GetInstance().HasObtainedGrade(connection, SelectedSemester.Name))
                     {
                         UnsubscribeButton.IsEnabled = true;
                     }
@@ -213,6 +241,7 @@ namespace SmartUp.UI
                     {
                         UnsubscribeButton.IsEnabled = false;
                     }
+
                 }
                 catch (Exception ex)
                 {
@@ -222,17 +251,21 @@ namespace SmartUp.UI
                 {
                     DatabaseConnection.CloseConnection(connection);
                 }
+            }
         }
 
         private void EnrollForSemester(object sender, RoutedEventArgs eventArgs)
         {
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            {
                 try
                 {
-                    SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
-                    UnsubscribeButton.IsEnabled = false;
-                    EnrollButton.IsEnabled = true;
-                    UnSubscribeCard();
+                    connection.Open();
+                    SemesterRegistrationDao.CreateRegistrationByStudentIdBasedOnSemester(connection, Constants.STUDENT_ID, SelectedSemester.Name);
+                    UnsubscribeButton.IsEnabled = true;
+                    EnrollButton.IsEnabled = false;
+                    SubscribeCard(connection);
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -242,6 +275,7 @@ namespace SmartUp.UI
                 {
                     DatabaseConnection.CloseConnection(connection);
                 }
+            }
         }
 
         private void UnsubscribeFromSemester(object sender, RoutedEventArgs eventArgs)
@@ -249,10 +283,12 @@ namespace SmartUp.UI
             using (SqlConnection? connection = DatabaseConnection.GetConnection())
                 try
                 {
+                    connection.Open();
                     SemesterRegistrationDao.UnsubscribeFromSemesterByStudentId(connection, Constants.STUDENT_ID, SelectedSemester.Name);
                     UnsubscribeButton.IsEnabled = false;
                     EnrollButton.IsEnabled = true;
                     UnSubscribeCard();
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -270,6 +306,7 @@ namespace SmartUp.UI
             {
                 try
                 {
+                    connection.Open();
                     foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithRegistration(connection, Constants.STUDENT_ID))
                     {
                         AddSemesterFollowedBlock(semester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, semester.Name));
@@ -288,14 +325,16 @@ namespace SmartUp.UI
 
         private void LoadDataAllSemester()
         {
-            using (SqlConnection con = DatabaseConnection.GetConnection())
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
                 try
                 {
-                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithoutRegistration(con, Constants.STUDENT_ID))
+                    connection.Open();
+                    foreach (Semester semester in SemesterDao.GetInstance().GetAllSemestersWithoutRegistration(connection, Constants.STUDENT_ID))
                     {
                         AddSemesterBlock(semester);
                     }
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -303,7 +342,7 @@ namespace SmartUp.UI
                 }
                 finally
                 {
-                    DatabaseConnection.CloseConnection(con);
+                    DatabaseConnection.CloseConnection(connection);
                 }
             }
         }
@@ -317,31 +356,28 @@ namespace SmartUp.UI
             return true;
         }
 
-        private void SubscribeCard()
+        private void SubscribeCard(SqlConnection connection)
         {
-            using (SqlConnection connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    SemesterWrap.Children.Remove(SelectedCard);
-                    AddSemesterFollowedBlock(SelectedSemester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, SelectedCard.Name));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
-            }
-
+            SemesterWrap.Children.Remove(SelectedCard);
+            AddSemesterFollowedBlock(SelectedSemester, SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, SelectedCard.Name));
         }
 
         private void UnSubscribeCard()
         {
             FollowedSemesterWrap.Children.Remove(SelectedCard);
             AddSemesterBlock(SelectedSemester);
+        }
+
+        private bool CheckPercentage(SqlConnection connection, List<SemesterRequiredPercentage> percentages)
+        {
+            foreach (SemesterRequiredPercentage percentage in percentages)
+            {
+                if (percentage.RequiredPercentage >= Convert.ToInt32(SemesterCourseDao.GetInstance().GetPercentagePassed(connection, Constants.STUDENT_ID, percentage.RequiredSemester)))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

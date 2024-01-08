@@ -1,7 +1,12 @@
-﻿using SmartUp.Core.Constants;
+﻿using Microsoft.Data.SqlClient;
+using SmartUp.Core.Constants;
 using SmartUp.DataAccess.SQLServer.Dao;
 using SmartUp.DataAccess.SQLServer.Model;
+using SmartUp.DataAccess.SQLServer.Util;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,8 +18,47 @@ namespace SmartUp.UI
         public GradeStudent()
         {
             InitializeComponent();
+            LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
+            using(SqlConnection connection = DatabaseConnection.GetConnection())
+            {
+                try
+                {
+                    Dictionary<string, int> gradesAttempts = await GetGradesAttemptsAsync(connection);
+
+                    foreach (KeyValuePair<string, int> grade in gradesAttempts)
+                    {
+                        if (grade.Value == 1)
+                        {
+                            Grade gradeFirstAttempt = await GetGradeFirstAttemptAsync(connection, grade.Key);
+                            AddGradeView(gradeFirstAttempt);
+                        }
+                        else
+                        {
+                            List<Grade> gradeAllAttempts = await GetGradeAllAttemptsAsync(connection, grade.Key, grade.Value);
+                            AddGradeView(gradeAllAttempts);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+                finally
+                {
+                    DatabaseConnection.CloseConnection(connection);
+                }
+                
+            }
+        }
+
+        private async Task<Dictionary<string, int>> GetGradesAttemptsAsync(SqlConnection? connection)
+        {
             Dictionary<string, int> gradesAttempts = new Dictionary<string, int>();
-            foreach (Grade grade in gradeDao.GetGradesByStudentId(Constants.STUDENT_ID))
+            foreach (Grade grade in await gradeDao.GetGradesByStudentIdAsync(connection, Constants.STUDENT_ID))
             {
                 if (!gradesAttempts.ContainsKey(grade.CourseName))
                 {
@@ -25,27 +69,25 @@ namespace SmartUp.UI
                     gradesAttempts[grade.CourseName]++;
                 }
             }
+            return gradesAttempts;
+        }
 
-            foreach (KeyValuePair<string, int> grade in gradesAttempts)
+        private async Task<Grade> GetGradeFirstAttemptAsync(SqlConnection? connection, string courseName)
+        {
+            return await gradeDao.GetGradeByAttemptByCourseNameByStudentIdAsync(connection, Constants.STUDENT_ID, courseName, 1);
+        }
+
+        private async Task<List<Grade>> GetGradeAllAttemptsAsync(SqlConnection? connection, string courseName, int attempts)
+        {
+            List<Grade> gradeAllAttempts = new List<Grade>
             {
-                if (grade.Value == 1)
-                {
-                    Grade gradeFirstAttempt = gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value);
-                    AddGradeView(gradeFirstAttempt);
-                }
-                else
-                {
-                    List<Grade> gradeAllAttempts = new List<Grade>
-                    {
-                        gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, grade.Value)
-                    };
-                    for (int i = 1; i <= grade.Value; i++)
-                    {
-                        gradeAllAttempts.Add(gradeDao.GetGradeByAttemptByCourseNameByStudentId(Constants.STUDENT_ID, grade.Key, i));
-                    }
-                    AddGradeView(gradeAllAttempts);
-                }
+                await gradeDao.GetGradeByAttemptByCourseNameByStudentIdAsync(connection, Constants.STUDENT_ID, courseName, attempts)
+            };
+            for (int i = 1; i <= attempts; i++)
+            {
+                gradeAllAttempts.Add(await gradeDao.GetGradeByAttemptByCourseNameByStudentIdAsync(connection, Constants.STUDENT_ID, courseName, i));
             }
+            return gradeAllAttempts;
         }
 
         public void AddGradeView(Grade model)
