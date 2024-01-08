@@ -105,31 +105,16 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return registrationSemesters;
         }
-        public static void CreateRegistrationByStudentIdBasedOnSemester(string studentId, string semesterName)
+        public static void CreateRegistrationByStudentIdBasedOnSemester(SqlConnection connection, string studentId, string semesterName)
         {
-
-            using SqlConnection con = DatabaseConnection.GetConnection();
-            try
-            {
-                con.Open();
-
                 string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
                 "VALUES (@StudentId, @SemesterName)";
-                using (SqlCommand command = new SqlCommand(query, con))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@StudentId", studentId);
                     command.Parameters.AddWithValue("@SemesterName", semesterName);
                     command.ExecuteNonQuery();
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-            }
-            finally
-            {
-                DatabaseConnection.CloseConnection(con);
-            }
         }
 
         public bool IsEnrolledForSemesterByStudentId(SqlConnection connection, string studentID)
