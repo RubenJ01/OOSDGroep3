@@ -77,7 +77,6 @@ BEGIN
 	CREATE TABLE semester (
 		[name] varchar(32),
 		[description] TEXT NOT NULL,
-		requiredCreditsFromP int DEFAULT 0,
 		PRIMARY KEY([name])
 	);
 END;

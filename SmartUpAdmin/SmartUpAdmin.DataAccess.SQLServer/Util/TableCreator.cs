@@ -111,7 +111,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 [name] varchar(64),
                 abbreviation varchar(10),
                 [description] TEXT NOT NULL,
-                requiredCreditsFromP int DEFAULT 0,
                 PRIMARY KEY(name)
             );
         END;"

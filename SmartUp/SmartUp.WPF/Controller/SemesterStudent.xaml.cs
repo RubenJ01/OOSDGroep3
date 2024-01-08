@@ -113,7 +113,7 @@ namespace SmartUp.UI
             progress.Width = 80;
             progress.Height = 12;
             progress.ToolTip = $"{percentagePassed}%";
-            progress.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF7F8FAF");
+            progress.Foreground = new BrushConverter().ConvertFrom("#FF7F8FAF") as SolidColorBrush;
             progress.Margin = new Thickness(15, 0, 0, 0);
             progress.HorizontalAlignment = HorizontalAlignment.Left;
             Grid.SetRow(progress, 1);

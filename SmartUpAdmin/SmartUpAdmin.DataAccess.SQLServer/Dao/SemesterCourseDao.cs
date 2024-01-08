@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SmartUp.DataAccess.SQLServer.Model;
 using SmartUp.DataAccess.SQLServer.Util;
+using SmartUpAdmin.DataAccess.SQLServer.Model;
 using System.Diagnostics;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
@@ -180,6 +181,50 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 }
             }
             return semesterCourse;
+        }
+
+        public void UpdateSemesterCourse(SqlConnection connection, List<SemesterCourse> semesterCoursesOld, List<SemesterCourse> semesterCoursesNew)
+        {
+            List<SemesterCourse> courseToDelete = new List<SemesterCourse>();
+            List<SemesterCourse> courseToInsert = new List<SemesterCourse>();
+            foreach (SemesterCourse oldCourse in semesterCoursesOld)
+            {
+                bool isDelete = !semesterCoursesNew.Any(criteria => oldCourse.CourseName == criteria.CourseName);
+                if (isDelete)
+                {
+                    courseToDelete.Add(oldCourse);
+                }
+            }
+            foreach (SemesterCourse criteria in courseToDelete)
+            {
+                DeleteSemesterCourse(connection, criteria);
+                semesterCoursesOld.Remove(criteria);
+            }
+
+
+            foreach (SemesterCourse criteria in semesterCoursesNew)
+            {
+                bool isInsert = !semesterCoursesOld.Any(oldCriteria => oldCriteria.CourseName == criteria.CourseName);
+                if (isInsert)
+                {
+                    courseToInsert.Add(criteria);
+                }
+            }
+            foreach (SemesterCourse criteria in courseToInsert)
+            {
+                AddSemesterCourse(connection, criteria);
+            }
+        }
+
+        private static void DeleteSemesterCourse(SqlConnection connection, SemesterCourse course)
+        {
+            string query = "DELETE FROM semesterCourse WHERE semesterName = @SemesterName AND courseName = @CourseName";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@SemesterName", course.SemesterName);
+                command.Parameters.AddWithValue("@CourseName", course.CourseName);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

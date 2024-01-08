@@ -41,6 +41,7 @@
                     </Grid.ColumnDefinitions>
                     <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
                     <Button Content="Semester Aanmaken" Background="#b3b3b3" FontSize="25" Margin="20" Grid.Column="2" x:Name="AddSemesterButton" Click="AddSemester" />
+                    <Button Content="Semester Bewerken" Background="#b3b3b3" FontSize="25" Margin="20" Grid.Column="1" x:Name="EditSemesterButton" Click="EditSemester" IsEnabled="False" />
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Column="1" x:Name="Scroll">

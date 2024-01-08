@@ -135,7 +135,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return isEnrolled;
         }
 
-        public bool IsEnrolledForSemesterByStudentId(SqlConnection connection ,string studentID, Semester semester)
+        public bool IsEnrolledForSemesterByStudentId(SqlConnection connection, string studentID, Semester semester)
         {
             if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
             string query = "SELECT * FROM registrationSemester WHERE studentId = @studentid AND semesterName = @SemesterName";
@@ -164,6 +164,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 command.Parameters.AddWithValue("@semesterName", semesterName);
                 command.ExecuteNonQuery();
             }
+
         }
 
     }
