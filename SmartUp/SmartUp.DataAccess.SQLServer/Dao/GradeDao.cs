@@ -563,5 +563,122 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             }
             return true;
         }
+
+        public async Task<List<Grade>> GetGradesByStudentIdAsync(SqlConnection connection, string studentId)
+        {
+            List<Grade> grades = new List<Grade>();
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
+               "FROM grade JOIN course ON course.name = grade.courseName " +
+               "WHERE grade.studentId = @StudentId";
+
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Open) { await connection.OpenAsync(); };
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@StudentId", studentId);
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            decimal gradeValue = Convert.ToDecimal(reader["grade"]);
+                            bool isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                            DateTime date = Convert.ToDateTime(reader["date"]);
+                            string courseName = reader["courseName"].ToString();
+                            int credits = Convert.ToInt32(reader["credits"]);
+                            int attempt = Int32.Parse(reader["attempt"].ToString());
+
+                            grades.Add(new Grade(gradeValue, isDefinitive, date, courseName, credits, attempt));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+
+            return grades;
+        }
+
+
+        public async Task<Grade> GetGradeByAttemptByCourseNameByStudentIdAsync(SqlConnection connection, string studentId, string courseName, int attempt)
+        {
+            string query = "SELECT grade.grade, grade.isDefinitive, grade.date, grade.courseName, course.credits, grade.attempt " +
+                           "FROM grade JOIN course ON course.name = grade.courseName " +
+                           "WHERE grade.studentId = @StudentId AND grade.courseName = @CourseName AND grade.attempt = @Attempt";
+
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Open) { await connection.OpenAsync(); };
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@StudentId", studentId);
+                    command.Parameters.AddWithValue("@CourseName", courseName);
+                    command.Parameters.AddWithValue("@Attempt", attempt);
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            decimal grade = Convert.ToDecimal(reader["grade"]);
+                            bool isDefinitive = Convert.ToBoolean(reader["isDefinitive"]);
+                            DateTime date = Convert.ToDateTime(reader["date"]);
+                            string courseNameResult = reader["courseName"].ToString();
+                            int credits = Convert.ToInt32(reader["credits"]);
+                            int attemptResult = Int32.Parse(reader["attempt"].ToString());
+                            return new Grade(grade, isDefinitive, date, courseNameResult, credits, attemptResult);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+            }
+
+            return null;
+        }
+
+
+        public async Task<bool> IsGradePassedAsync(SqlConnection connection, string courseName)
+        {
+            string query = "SELECT grade FROM grade   WHERE studentId = @studentId AND courseName = @courseName";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@studentId", Constants.STUDENT_ID);
+                command.Parameters.AddWithValue("@courseName", courseName);
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        decimal grade = Convert.ToDecimal(reader["grade"]);
+                        if (grade >= 5.50m) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> HasObtainedGradeAsync(SqlConnection connection, string semesterName)
+        {
+            string query = "SELECT grade.studentId, grade.courseName, grade.grade, grade.isDefinitive FROM grade JOIN semesterCourse ON grade.courseName = semesterCourse.courseName WHERE semesterCourse.semesterName = @semesterName AND grade.studentId = @studentId";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@semesterName", semesterName);
+                command.Parameters.AddWithValue("@studentId", Constants.STUDENT_ID);
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
