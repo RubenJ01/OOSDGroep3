@@ -34,11 +34,9 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 List<String> semesterAbbreviations = SemesterDao.GetInstance().GetAllSemesterAbbreviations();
                 List<String> courseNames = CourseDao.GetInstance().GetAllCourseNames();
 
-                for (int i = 0; i < 7; i++) // Choose 7 random semesters
+                for (int i = 0; i < 7; i++)
                 {
                     string randomSemesterAbbreviation = semesterAbbreviations[random.Next(semesterAbbreviations.Count)];
-
-                    // Decide the number of random semester criteria to add (1 or 2)
                     int numberOfCriteria = random.Next(1, 3);
 
                     for (int j = 0; j < numberOfCriteria; j++)
@@ -124,30 +122,59 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return semesters;
         }
 
-        public void AddSemesterCriteria(SemesterCriteria semesterCriteria)
+        public void AddSemesterCriteria(SqlConnection connection, SemesterCriteria semesterCriteria)
         {
             string query = "INSERT INTO semesterCriteria (semesterName, courseName) " +
                 "VALUES (@SemesterName, @CourseName)";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                try
+                command.Parameters.AddWithValue("@SemesterName", semesterCriteria.SemesterName);
+                command.Parameters.AddWithValue("@CourseName", semesterCriteria.CourseName);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void UpdateSemesterCriteria(SqlConnection connection, List<SemesterCriteria> semesterCriteriaOnSemester, List<SemesterCriteria> semesterCriterias)
+        {
+            List<SemesterCriteria> criteriaToDelete = new List<SemesterCriteria>();
+            List<SemesterCriteria> criteriaToInsert = new List<SemesterCriteria>();
+            foreach (SemesterCriteria oldCriteria in semesterCriteriaOnSemester)
+            {
+                bool isDelete = !semesterCriterias.Any(criteria => oldCriteria.CourseName == criteria.CourseName);
+                if (isDelete)
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@SemesterName", semesterCriteria.SemesterName);
-                        command.Parameters.AddWithValue("@CourseName", semesterCriteria.CourseName);
-                        command.ExecuteNonQuery();
-                    }
+                    criteriaToDelete.Add(oldCriteria);
                 }
-                catch (Exception ex)
+            }
+            foreach (SemesterCriteria criteria in criteriaToDelete)
+            {
+                DeleteSemesterCriteria(connection, criteria);
+                semesterCriteriaOnSemester.Remove(criteria);
+            }
+
+
+            foreach (SemesterCriteria criteria in semesterCriterias)
+            {
+                bool isInsert = !semesterCriteriaOnSemester.Any(oldCriteria => oldCriteria.CourseName == criteria.CourseName);
+                if (isInsert)
                 {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                    criteriaToInsert.Add(criteria);
                 }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
+            }
+            foreach (SemesterCriteria criteria in criteriaToInsert)
+            {
+                AddSemesterCriteria(connection, criteria);
+            }
+        }
+
+        private static void DeleteSemesterCriteria(SqlConnection connection, SemesterCriteria criteria)
+        {
+            string query = "DELETE FROM semesterCriteria WHERE semesterName = @SemesterName AND courseName = @CourseName";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@SemesterName", criteria.SemesterName);
+                command.Parameters.AddWithValue("@CourseName", criteria.CourseName);
+                command.ExecuteNonQuery();
             }
         }
     }

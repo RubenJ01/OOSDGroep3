@@ -20,33 +20,29 @@
 
         <Grid x:Name="formulier" Grid.Row="1" Margin="3,0,-3,0" MouseLeftButtonDown="OnGridClick">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="1.1*"/>
                 <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Naam*:" FontSize="30" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBlock Text="Afkorting*:" FontSize="30" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBlock Text="Criteria:" FontSize="30" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBlock Text="Beschrijving*:" FontSize="30" Grid.Column="1" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBlock Text="EC van P*:" FontSize="30" Grid.Column="1" Grid.Row="5" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
-            <TextBlock Text="Beschikbaar in:" FontSize="30" Grid.Column="1" Grid.Row="6" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" Grid.RowSpan="2"/>
-            <TextBox x:Name="NameField" Grid.Row="1" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center" />
-            <TextBox x:Name="AfkortingField" Grid.Row="2" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
-            <ComboBox x:Name="CriteriaField" Grid.Row="3" Grid.Column="2" Margin="20" FontSize="30" VerticalContentAlignment="Bottom" DropDownClosed="CriteriaField_DropDownClosed" Height="50">
+            <TextBlock Text="Naam*:" FontSize="30" Grid.Column="0" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Afkorting*:" FontSize="30" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Criteria:" FontSize="30" Grid.Column="0" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Beschrijving*:" FontSize="30" Grid.Column="0" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0, 0, 60, 0" />
+            <TextBlock Text="Beschikbaar in:" FontSize="30" Grid.Column="4" Grid.Row="5" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBox x:Name="NameField" Grid.Row="1" Grid.Column="1" Margin="20" FontSize="20" VerticalContentAlignment="Center" />
+            <TextBox x:Name="AfkortingField" Grid.Row="2" Grid.Column="1" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
+            <ComboBox x:Name="CriteriaField" Grid.Row="3" Grid.Column="1" Margin="20" FontSize="30" VerticalContentAlignment="Bottom" DropDownClosed="CriteriaField_DropDownClosed" Height="50">
                 <ComboBox.Template>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
@@ -60,14 +56,39 @@
                     </ControlTemplate>
                 </ComboBox.Template>
             </ComboBox>
-            <TextBox x:Name="BeschrijvingField" Grid.Row="4" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
-            <TextBox x:Name="ECField" Grid.Row="5" Grid.Column="2" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
-            <CheckBox x:Name="Semester1CheckBox" Grid.Row="6" Grid.Column="2" FontSize="30" HorizontalAlignment="left" VerticalContentAlignment="Center" Content="Semester 1"/>
-            <CheckBox x:Name="Semester2CheckBox" Grid.Row="7" Grid.Column="2" FontSize="30" HorizontalAlignment="left" VerticalContentAlignment="Center" Content="Semester 2"/>
-            <TextBlock x:Name="GeselecteerdeEC" Text="Geselecteerde EC: 0" Grid.Row="6" Grid.Column="4" FontSize="30" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-            <TextBlock Text="Vakken Toevoegen " x:Name="VakkenToevoegen" FontSize="30" Grid.Column="4" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-            <ListView x:Name="Courses" Grid.Row="2" Grid.RowSpan="4" Grid.Column="4" Margin="20" FontSize="15" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Left" SelectionChanged="OnCourseSelected" SelectionMode="Multiple"/>
-            <Button x:Name="AddButton" Grid.Row="7" Grid.Column="4" Margin="20" FontSize="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Toevoegen" Click="AddSemesterButtonClick"/>
+            <TextBox x:Name="BeschrijvingField" Grid.Row="4" Grid.Column="1" Margin="20" FontSize="20" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="Semester2CheckBox" Grid.Row="6" Grid.Column="4" FontSize="30" HorizontalAlignment="Right" VerticalContentAlignment="center" Content="Semester 2" Margin="0, 0, 50, 80"/>
+            <CheckBox x:Name="Semester1CheckBox" Grid.Row="6" Grid.Column="4" FontSize="30" HorizontalAlignment="left" VerticalContentAlignment="center" Content="Semester 1" Margin="50,0,0,80"/>
+            <TextBlock x:Name="GeselecteerdeEC" Text="Geselecteerde EC: 0" Grid.Row="4" Grid.Column="4" FontSize="30" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            <TextBlock Text="Vakken Toevoegen " x:Name="VakkenToevoegen" FontSize="30" Grid.Column="4" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            <ListView x:Name="Courses" Grid.Row="1" Grid.RowSpan="4" Grid.Column="4" Margin="20, 20, 20, 50" FontSize="15" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Left" SelectionChanged="OnCourseSelected" SelectionMode="Multiple"/>
+            <Button x:Name="CancelButton" Grid.Row="7" Grid.Column="4" Margin="20" FontSize="30" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Annuleren" Click="CancelAddingSemesterClick" Padding="50, 0"/>
+            <Button x:Name="AddButton" Grid.Row="7" Grid.Column="4" Margin="20" FontSize="30" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Toevoegen" Click="AddSemesterButtonClick" Padding="50, 0"/>
+
+            <Grid Grid.Row="5" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Toevoegen semester percentage:" FontSize="30" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                <Button x:Name="AddSemesterPercentageButton" Grid.Row="0" Grid.Column="3" Content="+" FontSize="50" FontWeight="Heavy" Margin="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10, -14, 10, 0" Background="LimeGreen" Foreground="White" Click="AddSemesterPercentage"/>
+
+                <ScrollViewer Grid.Row="1" Grid.ColumnSpan="4" Background="White">
+                    <StackPanel x:Name="StackPanelPercentage">
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
         </Grid>
     </Grid>
 </Page>
